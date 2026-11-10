@@ -196,6 +196,22 @@ const I18N = {
     'gear.land.name': 'Mảnh Đất Mở Rộng',
     'gear.land.desc': 'Mảnh vali mở rộng diện tích kho đồ.',
 
+
+    // Tutorial Modal
+    'tut.title': 'HƯỚNG DẪN TÂN THỦ',
+    'tut.btn_skip': 'Bỏ qua',
+    'tut.btn_prev': 'Trước',
+    'tut.btn_next': 'Tiếp theo',
+    'tut.btn_start': 'Bắt đầu chơi ngay! 🚀',
+    'tut.step1_title': '🎒 Quản Lý Vali & Sắp Xếp Ô',
+    'tut.step1_desc': 'Đặt trang bị vào các ô đã mở khóa. Dùng cụm phím điều hướng (Trái/Phải/Lên/Xuống) hoặc kéo thả tự do để tối ưu không gian. Mua Mảnh Mở Rộng để tăng diện tích vali!',
+    'tut.step2_title': '⭐ Ghép Nâng Cấp Trang Bị (Merge)',
+    'tut.step2_desc': 'Kéo 2 trang bị CÙNG LOẠI và CÙNG SỐ SAO đè lên nhau để nâng cấp (★1 + ★1 = ★2). Cấp sao càng cao, hỏa lực và hiệu ứng đặc biệt càng mạnh mẽ!',
+    'tut.step3_title': '🛒 Cửa Hàng Roll & Hàng Dự Bị',
+    'tut.step3_desc': 'Bấm "Roll (3 Món)" để rút trang bị ngẫu nhiên bằng tiền trận đấu. Chứa tối đa 5 món ở Hàng Dự Bị hoặc kéo món không dùng vào ô Bán để nhận 2$.',
+    'tut.step4_title': '⚔️ Chiến Đấu & Hạ Gục Boss Khổng Lồ',
+    'tut.step4_desc': 'Bấm "Xuất Trận" để bắt đầu chiến đấu! Toàn bộ vũ khí trong vali sẽ tự động xả đạn tiêu diệt quái vật. Vượt qua các Wave để diện kiến và tiêu diệt Trùm Boss!',
+
     // Interactive Gameplay Tutorial Walkthrough
     'gtut.skip': 'Bỏ qua',
     'gtut.next': 'Tiếp theo 👉',
@@ -392,6 +408,22 @@ const I18N = {
     'gear.speed_loader.desc': '-25% Cooldown (firing rate increase) for all adjacent weapons.',
     'gear.land.name': 'Expansion Tile',
     'gear.land.desc': 'Expands suitcase inventory space.',
+
+
+    // Tutorial Modal
+    'tut.title': 'HOW TO PLAY - TUTORIAL',
+    'tut.btn_skip': 'Skip',
+    'tut.btn_prev': 'Prev',
+    'tut.btn_next': 'Next',
+    'tut.btn_start': 'Start Playing! 🚀',
+    'tut.step1_title': '🎒 Suitcase Management',
+    'tut.step1_desc': 'Place weapons into unlocked grid cells. Use the D-pad (Left/Right/Up/Down) or drag freely to reposition. Buy Expansion Tiles to unlock more space!',
+    'tut.step2_title': '⭐ Weapon Merging (Merge)',
+    'tut.step2_desc': 'Drag two weapons of the SAME TYPE and SAME STAR tier onto each other to upgrade (★1 + ★1 = ★2). Higher tiers deliver massive firepower and abilities!',
+    'tut.step3_title': '🛒 Roll Shop & Stash Bench',
+    'tut.step3_desc': 'Press "Roll (3 Items)" to draw random weapons with match cash. Store up to 5 items in your Stash Bench, or drag unwanted items to the Sell Zone for 2$.',
+    'tut.step4_title': '⚔️ Fight & Defeat Giant Bosses',
+    'tut.step4_desc': 'Press "Fight" to start combat! All weapons inside your suitcase will automatically fire at incoming beasts. Survive the waves and slay giant Bosses!',
 
     // Interactive Gameplay Tutorial Walkthrough
     'gtut.skip': 'Skip',

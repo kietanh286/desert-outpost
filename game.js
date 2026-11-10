@@ -4600,20 +4600,19 @@ class AppController {
       };
     });
 
-    // Auto open on first launch if never finished
+    // Auto open interactive gameplay walkthrough on first launch
     try {
-      const done = localStorage.getItem('desert_outpost_tutorial_done');
+      const done = localStorage.getItem('desert_outpost_gameplay_tut_done');
       if (!done) {
-        setTimeout(() => this.openTutorial(), 700);
+        setTimeout(() => this.startGameplayTutorial(false), 700);
       }
     } catch(e) {}
   }
 
   openTutorial() {
-    this.tutCurrentStep = 0;
-    this.renderTutorialStep();
-    document.getElementById('modal-tutorial')?.classList.remove('hidden');
-    sfx.playTone(400, 'triangle', 0.1, 0.12);
+    // If user clicks ?, open interactive gameplay walkthrough directly
+    document.getElementById('modal-tutorial')?.classList.add('hidden');
+    this.startGameplayTutorial(true);
   }
 
   closeTutorial() {
