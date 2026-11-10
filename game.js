@@ -420,6 +420,27 @@ Object.keys(ADMIN_GEAR_CONFIG).forEach(key => {
   GEAR_TYPES[key] = { ...cfg };
 });
 
+function updateGearTypesI18n() {
+  if (typeof t !== 'function') return;
+  Object.keys(ADMIN_GEAR_CONFIG).forEach(key => {
+    const cfg = ADMIN_GEAR_CONFIG[key];
+    const nameKey = 'gear.' + key + '.name';
+    const descKey = 'gear.' + key + '.desc';
+    const transName = t(nameKey);
+    const transDesc = t(descKey);
+    if (transName && transName !== nameKey) {
+      cfg.name = transName;
+      if (GEAR_TYPES[key]) GEAR_TYPES[key].name = transName;
+    }
+    if (transDesc && transDesc !== descKey) {
+      cfg.desc = transDesc;
+      if (GEAR_TYPES[key]) GEAR_TYPES[key].desc = transDesc;
+    }
+  });
+}
+// Initial sync
+if (typeof t === 'function') updateGearTypesI18n();
+
 
 const LAND_TILE_SHAPES = [
   { name: 'Thanh Ngang 1x2', w: 2, h: 1 },
@@ -4463,7 +4484,186 @@ class AppController {
     this.initDOM();
     this.bindEvents();
     this.initYouTubeSDK();
+    this.initLanguage();
+    this.initTutorial();
     this.renderLobby();
+  }
+
+
+  // --- LANGUAGE / i18n SYSTEM ---
+  initLanguage() {
+    if (typeof applyLanguageToDOM === 'function') {
+      applyLanguageToDOM();
+    }
+    if (typeof updateGearTypesI18n === 'function') {
+      updateGearTypesI18n();
+    }
+
+    const btnLang = document.getElementById('btn-lang-toggle');
+    if (btnLang) {
+      btnLang.onclick = () => {
+        const nextLang = toggleLanguage();
+        updateGearTypesI18n();
+        this.refreshAllText();
+        const msg = nextLang === 'en' ? '🌐 Switched to English language!' : '🌐 Đã chuyển sang Tiếng Việt!';
+        this.showToast(msg);
+        sfx.playTone(440, 'sine', 0.08, 0.1);
+      };
+    }
+  }
+
+  refreshAllText() {
+    if (typeof applyLanguageToDOM === 'function') {
+      applyLanguageToDOM();
+    }
+    if (typeof updateGearTypesI18n === 'function') {
+      updateGearTypesI18n();
+    }
+    this.renderLobby();
+    this.renderBackpack();
+    this.renderRankTab();
+    if (this.renderTutorialStep && !document.getElementById('modal-tutorial')?.classList.contains('hidden')) {
+      this.renderTutorialStep();
+    }
+  }
+
+  // --- TUTORIAL / ONBOARDING SYSTEM ---
+  initTutorial() {
+    this.tutCurrentStep = 0;
+    this.tutSteps = [
+      {
+        icon: '🎒',
+        titleKey: 'tut.step1_title',
+        descKey: 'tut.step1_desc'
+      },
+      {
+        icon: '⭐',
+        titleKey: 'tut.step2_title',
+        descKey: 'tut.step2_desc'
+      },
+      {
+        icon: '🛒',
+        titleKey: 'tut.step3_title',
+        descKey: 'tut.step3_desc'
+      },
+      {
+        icon: '⚔️',
+        titleKey: 'tut.step4_title',
+        descKey: 'tut.step4_desc'
+      }
+    ];
+
+    const btnOpenTut = document.getElementById('btn-tutorial-open');
+    const btnCloseTut = document.getElementById('btn-close-tutorial-x');
+    const btnSkip = document.getElementById('btn-tut-skip');
+    const btnNext = document.getElementById('btn-tut-next');
+    const btnPrev = document.getElementById('btn-tut-prev');
+    const btnStart = document.getElementById('btn-tut-start');
+
+    if (btnOpenTut) {
+      btnOpenTut.onclick = () => this.openTutorial();
+    }
+    if (btnCloseTut) {
+      btnCloseTut.onclick = () => this.closeTutorial();
+    }
+    if (btnSkip) {
+      btnSkip.onclick = () => this.closeTutorial();
+    }
+    if (btnStart) {
+      btnStart.onclick = () => this.closeTutorial();
+    }
+    if (btnNext) {
+      btnNext.onclick = () => {
+        if (this.tutCurrentStep < this.tutSteps.length - 1) {
+          this.tutCurrentStep++;
+          this.renderTutorialStep();
+          sfx.playTone(320, 'sine', 0.05, 0.08);
+        }
+      };
+    }
+    if (btnPrev) {
+      btnPrev.onclick = () => {
+        if (this.tutCurrentStep > 0) {
+          this.tutCurrentStep--;
+          this.renderTutorialStep();
+          sfx.playTone(280, 'sine', 0.05, 0.08);
+        }
+      };
+    }
+
+    document.querySelectorAll('.tut-dot').forEach(dot => {
+      dot.onclick = () => {
+        const step = parseInt(dot.getAttribute('data-step') || '0', 10);
+        this.tutCurrentStep = step;
+        this.renderTutorialStep();
+      };
+    });
+
+    // Auto open on first launch if never finished
+    try {
+      const done = localStorage.getItem('desert_outpost_tutorial_done');
+      if (!done) {
+        setTimeout(() => this.openTutorial(), 700);
+      }
+    } catch(e) {}
+  }
+
+  openTutorial() {
+    this.tutCurrentStep = 0;
+    this.renderTutorialStep();
+    document.getElementById('modal-tutorial')?.classList.remove('hidden');
+    sfx.playTone(400, 'triangle', 0.1, 0.12);
+  }
+
+  closeTutorial() {
+    document.getElementById('modal-tutorial')?.classList.add('hidden');
+    try {
+      localStorage.setItem('desert_outpost_tutorial_done', 'true');
+    } catch(e) {}
+    sfx.playTone(300, 'sine', 0.08, 0.1);
+  }
+
+  renderTutorialStep() {
+    const stepData = this.tutSteps[this.tutCurrentStep];
+    if (!stepData) return;
+
+    const iconEl = document.getElementById('tut-slide-icon');
+    const titleEl = document.getElementById('tut-slide-title');
+    const descEl = document.getElementById('tut-slide-desc');
+    const btnPrev = document.getElementById('btn-tut-prev');
+    const btnNext = document.getElementById('btn-tut-next');
+    const btnStart = document.getElementById('btn-tut-start');
+
+    if (iconEl) iconEl.textContent = stepData.icon;
+    if (titleEl) titleEl.textContent = typeof t === 'function' ? t(stepData.titleKey) : stepData.titleKey;
+    if (descEl) descEl.textContent = typeof t === 'function' ? t(stepData.descKey) : stepData.descKey;
+
+    // Dots indicator
+    document.querySelectorAll('.tut-dot').forEach((dot, idx) => {
+      if (idx === this.tutCurrentStep) {
+        dot.classList.add('active');
+      } else {
+        dot.classList.remove('active');
+      }
+    });
+
+    // Prev button visibility
+    if (btnPrev) {
+      if (this.tutCurrentStep > 0) {
+        btnPrev.classList.remove('hidden');
+      } else {
+        btnPrev.classList.add('hidden');
+      }
+    }
+
+    // Next vs Start button
+    if (this.tutCurrentStep === this.tutSteps.length - 1) {
+      if (btnNext) btnNext.classList.add('hidden');
+      if (btnStart) btnStart.classList.remove('hidden');
+    } else {
+      if (btnNext) btnNext.classList.remove('hidden');
+      if (btnStart) btnStart.classList.add('hidden');
+    }
   }
 
   // --- YOUTUBE PLAYABLES CLOUD SAVE & SDK LIFECYCLE ---
