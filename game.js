@@ -94,7 +94,7 @@ function getGearIconPath(type, tier = 1) {
 const ADMIN_GEAR_CONFIG = {
   bow: {
     id: 'bow',
-    name: 'Cung Nỏ Săn Bắn',
+    name: 'Nỏ Tác Chiến',
     icon: 'assets/weapons/bow_lv1.png',
     w: 2, h: 2,
     category: 'weapon',
@@ -104,7 +104,7 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Bắn mũi tên nỏ công nghệ cao xuyên thấu và gây bạo kích cực lớn.',
+    desc: 'Bắn mũi tên nỏ xuyên giáp và gây bạo kích cực lớn.',
     sellPrice: 4,
     rollWeight: 9,
     color: '#10b981'
@@ -720,7 +720,7 @@ const STAGE_BOSS_MAX_HP = {
 // MAPPING MỞ KHÓA TRANG BỊ MỚI THEO CHIẾN CÔNG MỖI MÀN
 const STAGE_GEAR_UNLOCKS = {
   1: [
-    { id: 'bow', name: 'Cung Nỏ Săn Bắn', category: 'weapon', desc: 'Bắn mũi tên nỏ công nghệ cao xuyên thấu và gây bạo kích cực lớn.' },
+    { id: 'bow', name: 'Nỏ Tác Chiến', category: 'weapon', desc: 'Bắn mũi tên nỏ công nghệ cao xuyên thấu và gây bạo kích cực lớn.' },
     { id: 'barrier', name: 'Thanh Chắn Gai', category: 'obstacle', desc: 'Dựng chướng ngại vật cản và làm chậm quái sa mạc.' }
   ],
   2: [
@@ -1980,10 +1980,8 @@ class InRunState {
   // TÍNH GIÁ BÁN THEO BẬC TIER: Tier 1: basePrice, Tier 2: +1$, Tier 3: +2$, Tier 4: +3$...
   calculateSellPrice(item) {
     if (!item) return 0;
-    if (item.isLand) return 2;
-    const basePrice = ADMIN_GEAR_CONFIG[item.type]?.sellPrice || 2;
-    const tier = item.tier || 1;
-    return basePrice + (tier - 1) * 1;
+    // ĐỒNG GIÁ BÁN 2$ CHO MỌI TRANG BỊ & MẢNH ĐẤT (CHỐNG LẠM PHÁT)
+    return 2;
   }
 
   // DỜI VÙNG VALI (3x3 TRÁI, PHẢI, LÊN, XUỐNG - YÊU CẦU 5)
@@ -4464,7 +4462,60 @@ class AppController {
 
     this.initDOM();
     this.bindEvents();
+    this.initYouTubeSDK();
     this.renderLobby();
+  }
+
+  // --- YOUTUBE PLAYABLES CLOUD SAVE & SDK LIFECYCLE ---
+  initYouTubeSDK() {
+    try {
+      // 1. YouTube Playables gameReady()
+      if (typeof window !== 'undefined' && window.ytgame && window.ytgame.game && typeof window.ytgame.game.firstFrameReady === 'function') {
+        try { window.ytgame.game.firstFrameReady(); } catch(e){}
+      }
+      if (typeof window !== 'undefined' && window.YT && window.YT.playable && typeof window.YT.playable.gameReady === 'function') {
+        window.YT.playable.gameReady();
+        console.log('[YouTube Playables] gameReady() active');
+      }
+
+      // 2. Audio Mute Sync
+      if (typeof window !== 'undefined' && window.YT && window.YT.playable && typeof window.YT.playable.onAudioMuted === 'function') {
+        window.YT.playable.onAudioMuted((isMuted) => {
+          sfx.enabled = !isMuted;
+          const sndImg = document.getElementById('img-sound-icon');
+          if (sndImg) sndImg.src = sfx.enabled ? 'assets/icons/sound_on.png' : 'assets/icons/sound_off.png';
+        });
+      }
+
+      // 3. YouTube Cloud Save: loadData()
+      if (typeof window !== 'undefined' && window.YT && window.YT.playable && typeof window.YT.playable.loadData === 'function') {
+        window.YT.playable.loadData().then((savedStr) => {
+          if (savedStr && typeof savedStr === 'string' && savedStr.startsWith('DS_')) {
+            console.log('[YouTube Playables] Đã tìm thấy dữ liệu Cloud Save của Account YouTube, tự động nạp...');
+            this.loadFromSaveCode(savedStr, true);
+          }
+        }).catch(err => {
+          console.log('[YouTube Playables] No cloud save found or standalone mode:', err);
+        });
+      }
+    } catch (e) {
+      console.warn('[YouTube Playables SDK init]', e);
+    }
+  }
+
+  saveToYouTubeCloud() {
+    try {
+      if (typeof window !== 'undefined' && window.YT && window.YT.playable && typeof window.YT.playable.saveData === 'function') {
+        const code = this.generateSaveCode();
+        window.YT.playable.saveData(code).then(() => {
+          console.log('[YouTube Playables] Đồng bộ Cloud Save thành công');
+        }).catch(err => {
+          console.warn('[YouTube Playables] saveData error:', err);
+        });
+      }
+    } catch (e) {
+      console.warn('[YouTube Playables saveData]', e);
+    }
   }
 
   initDOM() {
@@ -5610,7 +5661,13 @@ class AppController {
           this.ghostAvatar.style.left = `${moveEvent.clientX - ghostW / 2}px`;
           this.ghostAvatar.style.top = `${moveEvent.clientY - ghostH / 2}px`;
 
-          // Grid hover check
+          // Grid hover check with touch coordinates
+          const boardRect = this.backpackGridBoard.getBoundingClientRect();
+          const cellW = boardRect.width / 7;
+          const cellH = boardRect.height / 7;
+          dragObj.currentTouchCol = Math.floor((moveEvent.clientX - boardRect.left) / cellW);
+          dragObj.currentTouchRow = Math.floor((moveEvent.clientY - boardRect.top) / cellH);
+
           const target = calcGridTarget(moveEvent.clientX, moveEvent.clientY);
           if (target) {
             this.highlightBackpackHover(target.row, target.col, dragObj);
@@ -5702,9 +5759,17 @@ class AppController {
         }
 
         // Drop on Backpack Grid
+        const boardRect = this.backpackGridBoard.getBoundingClientRect();
+        const cellW = boardRect.width / 7;
+        const cellH = boardRect.height / 7;
+        dragObj.touchCol = Math.floor((upEvent.clientX - boardRect.left) / cellW);
+        dragObj.touchRow = Math.floor((upEvent.clientY - boardRect.top) / cellH);
+
         const finalTarget = currentHoverTarget || calcGridTarget(upEvent.clientX, upEvent.clientY);
         if (finalTarget) {
           this.handleDropToBackpack(finalTarget.row, finalTarget.col, dragObj);
+        } else if (dragObj.touchRow >= 0 && dragObj.touchRow < 7 && dragObj.touchCol >= 0 && dragObj.touchCol < 7) {
+          this.handleDropToBackpack(dragObj.touchRow, dragObj.touchCol, dragObj);
         }
 
         this.dragItem = null;
@@ -5749,6 +5814,16 @@ class AppController {
       }
     } else {
       const movingItem = dragObj.item;
+
+      // Ưu tiên phát hiện mục tiêu Ghép Sao trực tiếp
+      let directMergeTarget = null;
+      if (dragObj.currentTouchRow >= 0 && dragObj.currentTouchRow < 7 && dragObj.currentTouchCol >= 0 && dragObj.currentTouchCol < 7) {
+        const direct = this.getBackpackItemAt(dragObj.currentTouchRow, dragObj.currentTouchCol);
+        if (direct && direct.uid !== movingItem.uid && direct.type === movingItem.type && direct.tier === movingItem.tier && direct.tier < 10) {
+          directMergeTarget = direct;
+        }
+      }
+
       let allUnlocked = true;
       const occupiedItems = [];
 
@@ -5767,16 +5842,28 @@ class AppController {
         }
       }
 
+      if (!directMergeTarget) {
+        const matchOcc = occupiedItems.find(o => o.type === movingItem.type && o.tier === movingItem.tier && o.tier < 10);
+        if (matchOcc) directMergeTarget = matchOcc;
+      }
+
+      if (directMergeTarget) {
+        const tow = GEAR_TYPES[directMergeTarget.type]?.w || directMergeTarget.w || 1;
+        const toh = GEAR_TYPES[directMergeTarget.type]?.h || directMergeTarget.h || 1;
+        for (let dr = 0; dr < toh; dr++) {
+          for (let dc = 0; dc < tow; dc++) {
+            const cell = this.getBpCell(directMergeTarget.r + dr, directMergeTarget.c + dc);
+            if (cell) cell.classList.add('highlight-merge');
+          }
+        }
+        return;
+      }
+
       let highlightClass = 'highlight-valid';
       if (!allUnlocked) {
         highlightClass = 'highlight-invalid';
       } else if (occupiedItems.length === 1) {
-        const other = occupiedItems[0];
-        if (other.type === movingItem.type && other.tier === movingItem.tier) {
-          highlightClass = 'highlight-merge';
-        } else {
-          highlightClass = 'highlight-valid'; // Swap is supported
-        }
+        highlightClass = 'highlight-valid'; // Swap is supported
       } else if (occupiedItems.length > 1) {
         highlightClass = 'highlight-invalid';
       }
@@ -5940,8 +6027,56 @@ class AppController {
       return;
     }
 
-    // B. WEAPON / GEAR PLACEMENT WITH STRICT OVERLAP PREVENTION
+    // B. WEAPON / GEAR PLACEMENT WITH SMART DIRECT MERGE
     const movingItem = dragObj.item;
+
+    // --- ƯU TIÊN SỐ 1: GHÉP SAO THÔNG MINH (SMART DIRECT MERGE) ---
+    // Người chơi chạm/thả trực tiếp hoặc chạm mép vào trang bị cùng loại & cùng sao -> Hợp nhất ngay!
+    let mergeTarget = null;
+
+    if (dragObj.touchRow >= 0 && dragObj.touchRow < 7 && dragObj.touchCol >= 0 && dragObj.touchCol < 7) {
+      const directItem = this.getBackpackItemAt(dragObj.touchRow, dragObj.touchCol);
+      if (directItem && directItem.uid !== movingItem.uid && directItem.type === movingItem.type && directItem.tier === movingItem.tier && directItem.tier < 10) {
+        mergeTarget = directItem;
+      }
+    }
+
+    if (!mergeTarget) {
+      for (const other of this.run.backpackItems) {
+        if (other.uid === movingItem.uid) continue;
+        if (other.type === movingItem.type && other.tier === movingItem.tier && other.tier < 10) {
+          const ow = GEAR_TYPES[other.type]?.w || other.w || 1;
+          const oh = GEAR_TYPES[other.type]?.h || other.h || 1;
+          const overlaps = !(
+            rootR + h <= other.r ||
+            other.r + oh <= rootR ||
+            rootC + w <= other.c ||
+            other.c + ow <= rootC
+          );
+          if (overlaps) {
+            mergeTarget = other;
+            break;
+          }
+        }
+      }
+    }
+
+    if (mergeTarget) {
+      mergeTarget.tier++;
+      if (dragObj.source === 'backpack') {
+        this.run.backpackItems = this.run.backpackItems.filter(x => x.uid !== movingItem.uid);
+      } else if (dragObj.source === 'shop') {
+        const sIdx = dragObj.slotIndex !== undefined ? dragObj.slotIndex : (dragObj.item?.slotIndex ?? 0);
+        this.run.shopSlots[sIdx] = null;
+      } else if (dragObj.source === 'stash') {
+        this.run.stashSlots[dragObj.stashIndex] = null;
+      }
+      sfx.merge();
+      if (navigator.vibrate) { try { navigator.vibrate([40, 30, 60]); } catch(e){} }
+      this.showToast(`✨ Hợp nhất  lên ★!`);
+      this.renderBackpack();
+      return;
+    }
 
     // 1. Kiểm tra toàn bộ ô của vùng đặt mới: phải nằm trong 0..6 và ĐÃ MỞ KHÓA
     for (let dr = 0; dr < h; dr++) {
