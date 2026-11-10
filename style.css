@@ -27,20 +27,26 @@
   --tier-5: #f59e0b;
 }
 
-body {
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
   background-color: #030712;
   color: #f8fafc;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 #game-container {
   width: 100vw;
   max-width: 440px;
-  height: 100vh;
+  height: 100%;
+  height: 100dvh;
   max-height: 920px;
   background: #0b0f19 url('assets/environment/bg_mafia_lobby.png') center top / cover no-repeat;
   image-rendering: pixelated;
@@ -57,6 +63,13 @@ body {
 body.is-dragging .bp-cell,
 body.is-dragging .shop-card-content {
   pointer-events: none !important;
+}
+
+body.is-dragging,
+body.is-dragging #game-container,
+body.is-dragging #view-backpack {
+  overflow: hidden !important;
+  touch-action: none !important;
 }
 
 /* --- TOP GLOBAL HUD --- */
@@ -114,6 +127,19 @@ body.is-dragging .shop-card-content {
 
 .game-view.active {
   display: flex !important;
+}
+
+#view-backpack.active {
+  display: flex !important;
+  flex-direction: column;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+#view-backpack::-webkit-scrollbar {
+  display: none;
 }
 
 /* ============================================== */
@@ -1104,8 +1130,17 @@ body.is-dragging .shop-card-content {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
-  padding: 8px 10px 10px;
-  gap: 6px;
+  padding: 6px 8px 14px;
+  gap: 5px;
+  flex: 1;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+#view-backpack::-webkit-scrollbar {
+  display: none;
 }
 
 .backpack-top-bar {
@@ -1204,35 +1239,38 @@ body.is-dragging .shop-card-content {
 
 /* SUITCASE FRAME */
 .suitcase-wrapper {
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 0;
+  padding: 2px 0;
 }
 
 .suitcase-frame {
   width: 100%;
-  max-width: 380px;
+  max-width: min(340px, 39vh);
   aspect-ratio: 1 / 1;
   background: #1a1513;
-  border: 6px solid #451a03;
-  border-radius: 16px;
-  padding: 6px;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.9), 0 8px 24px rgba(0, 0, 0, 0.8);
+  border: 5px solid #451a03;
+  border-radius: 14px;
+  padding: 4px;
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.9), 0 6px 18px rgba(0, 0, 0, 0.8);
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .suitcase-handle {
   position: absolute;
-  top: -12px;
-  width: 70px;
-  height: 10px;
+  top: -10px;
+  width: 60px;
+  height: 9px;
   background: #78350f;
   border: 2px solid #b45309;
-  border-radius: 6px 6px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 
 /* 7x7 DUAL-LAYER GRID BOARD */
@@ -1490,12 +1528,13 @@ body.is-dragging .shop-card-content {
 .stash-bench-wrapper {
   background: #111726;
   border: 1.5px solid #23304a;
-  border-radius: 10px;
-  padding: 6px 8px;
+  border-radius: 8px;
+  padding: 4px 6px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  gap: 3px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
 }
 
 .stash-header {
@@ -1524,7 +1563,7 @@ body.is-dragging .shop-card-content {
 }
 
 .stash-slot {
-  height: 48px;
+  height: clamp(38px, 5.5vh, 46px);
   background: #090e18;
   border: 1.5px solid #28374d;
   border-radius: 6px;
@@ -1582,11 +1621,12 @@ body.is-dragging .shop-card-content {
 .backpack-shop-panel {
   background: #101520;
   border: 1px solid #222d42;
-  border-radius: 12px;
-  padding: 8px 10px;
+  border-radius: 10px;
+  padding: 6px 8px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
+  flex-shrink: 0;
 }
 
 .shop-header-row {
@@ -1642,8 +1682,8 @@ body.is-dragging .shop-card-content {
 }
 
 .shop-item-slot {
-  min-height: 98px;
-  height: 98px;
+  min-height: clamp(68px, 9.8vh, 88px);
+  height: clamp(68px, 9.8vh, 88px);
   background: #131b2a;
   border: 2px solid #334155;
   border-radius: 10px;
@@ -1769,8 +1809,9 @@ body.is-dragging .shop-card-content {
 .sell-drop-zone {
   background: #2a151b;
   border: 1.5px dashed #dc2626;
-  border-radius: 8px;
-  padding: 8px;
+  border-radius: 6px;
+  padding: 5px 8px;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1818,7 +1859,8 @@ body.is-dragging .shop-card-content {
   color: #fff;
   border: 2px solid #4ade80;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 6px 10px;
+  min-height: 38px;
   gap: 6px;
   display: flex;
   align-items: center;
@@ -4201,4 +4243,96 @@ html::-webkit-scrollbar,
   font-weight: 900;
   color: #64748b;
   letter-spacing: 0.5px;
+}
+
+
+/* ============================================== */
+/* MOBILE VIEWPORT & SHORT SCREEN RESPONSIVENESS  */
+/* ============================================== */
+@media (max-height: 740px), (max-width: 400px) {
+  #global-hud {
+    padding: 3px 8px;
+  }
+  .hud-stat {
+    font-size: 11px;
+    padding: 2px 5px;
+    gap: 3px;
+  }
+  .hud-mini-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 11px;
+  }
+  #view-backpack {
+    padding: 4px 6px 14px;
+    gap: 4px;
+  }
+  .backpack-top-bar {
+    gap: 4px;
+  }
+  .wave-indicator {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+  .grid-shift-bar {
+    padding: 2px 4px;
+    margin-bottom: 1px;
+  }
+  .shift-hint {
+    font-size: 8px;
+  }
+  .btn-shift {
+    padding: 2px 5px;
+    font-size: 9px;
+  }
+  .suitcase-frame {
+    max-width: min(290px, 35vh);
+    padding: 3px;
+    border-width: 4px;
+  }
+  .stash-bench-wrapper {
+    padding: 3px 5px;
+    gap: 2px;
+  }
+  .stash-slot {
+    height: 35px;
+  }
+  .stash-lock-chip {
+    font-size: 7px;
+  }
+  .backpack-shop-panel {
+    padding: 4px 6px;
+    gap: 4px;
+  }
+  .shop-item-slot {
+    min-height: 64px;
+    height: 64px;
+    padding: 2px 4px;
+  }
+  .shop-item-name {
+    font-size: 9px;
+  }
+  .shop-item-stats {
+    font-size: 7.5px;
+  }
+  .shop-card-icon-wrap {
+    height: 18px;
+  }
+  .sell-drop-zone {
+    padding: 4px;
+    font-size: 9px;
+  }
+  .btn-refresh, .btn-fight {
+    padding: 5px 8px;
+    min-height: 34px;
+  }
+  .btn-refresh .btn-main-title {
+    font-size: 11px;
+  }
+  .btn-refresh .btn-sub-cost {
+    font-size: 10px;
+  }
+  .btn-fight-title {
+    font-size: 12px;
+  }
 }
