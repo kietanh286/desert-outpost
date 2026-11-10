@@ -51,8 +51,8 @@
         </div>
         <div class="milestone-progress-group">
           <div class="milestone-label-row">
-            <span class="milestone-season-title">Cột Mốc Vượt Màn & Diệt Quái</span>
-            <span class="milestone-badge"><span id="milestone-pts-text">450 / 2000</span> <b id="milestone-btn-badge" class="milestone-claim-pill hidden"><img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Quà</b></span>
+            <span class="milestone-season-title" data-i18n="lobby.milestone_title">Cột Mốc Vượt Màn & Diệt Quái</span>
+            <span class="milestone-badge"><span id="milestone-pts-text">450 / 2000</span> <b id="milestone-btn-badge" class="milestone-claim-pill hidden"><img src="assets/icons/star.png" class="pixel-mini-icon"> <span data-i18n="lobby.claim_reward">Nhận Quà</span></b></span>
           </div>
           <div class="milestone-bar-bg">
             <div id="milestone-bar-fill" class="milestone-bar-fill" style="width: 22%;"></div>
@@ -83,7 +83,7 @@
 
           <!-- BOSS SPECIAL TRAIT BANNER & UNLOCK REQUIREMENT -->
           <div class="boss-trait-card">
-            <div class="trait-icon-badge"><img src="assets/icons/star.png" class="pixel-mini-icon"> Kỹ Năng Boss</div>
+            <div class="trait-icon-badge"><img src="assets/icons/star.png" class="pixel-mini-icon"> <span data-i18n="lobby.boss_trait">Kỹ Năng Boss</span></div>
             <p id="boss-trait-desc" class="boss-trait-desc">
               Phóng chùm tia Mega Laser thiêu đốt & Triệu hồi bọ cạp bọc thép càn quét căn cứ!
             </p>
@@ -92,18 +92,18 @@
           <!-- STAGE RECORD STATS CHIPS -->
           <div class="lobby-record-stats">
             <div class="record-chip wave-chip">
-              <span class="rc-label">Độ Dài Màn</span>
+              <span class="rc-label" data-i18n="lobby.stage_length">Độ Dài Màn</span>
               <b id="lobby-max-wave">10 Waves</b>
             </div>
             <div class="record-chip score-chip">
-              <span class="rc-label">Thưởng Diệt Boss</span>
+              <span class="rc-label" data-i18n="lobby.boss_reward">Thưởng Diệt Boss</span>
               <b id="lobby-max-score"><img src="assets/icons/gem.png" class="pixel-mini-icon"> +5</b>
             </div>
           </div>
 
           <!-- GAME MODE TOGGLE IN LOBBY -->
           <div class="lobby-mode-selector">
-            <span class="mode-select-title">CHẾ ĐỘ CHIẾN DỊCH:</span>
+            <span class="mode-select-title" data-i18n="lobby.mode_label">CHẾ ĐỘ CHIẾN DỊCH:</span>
             <button id="btn-lobby-mode" class="btn-lobby-mode" type="button" title="Bấm để đổi chế độ">
               <span id="lobby-mode-badge" class="mode-badge normal-mode">Thường (Bán Vali: BẬT)</span>
             </button>
@@ -112,8 +112,8 @@
           <!-- LOADOUT PREVIEW IN BATTLE TAB -->
           <div class="lobby-loadout-preview-bar">
             <div class="ll-header">
-              <span class="ll-title">BỘ TRANG BỊ VÀO TRẬN:</span>
-              <button id="btn-goto-equip-tab" class="btn-ll-edit" type="button">Chọn Món &gt;</button>
+              <span class="ll-title" data-i18n="lobby.loadout_title">BỘ TRANG BỊ VÀO TRẬN:</span>
+              <button id="btn-goto-equip-tab" class="btn-ll-edit" type="button" data-i18n="lobby.btn_choose">Chọn Món &gt;</button>
             </div>
             <div id="battle-tab-loadout-icons" class="ll-icons-row">
               <!-- Rendered dynamically -->
@@ -126,7 +126,7 @@
               <span class="btn-battle-glow"></span>
               <span id="btn-battle-icon-el" class="btn-battle-icon"><img src="assets/icons/swords.png" class="pixel-btn-icon" alt=""></span>
               <div class="btn-battle-text">
-                <span id="btn-battle-title-el" class="battle-title-main">XUẤT TRẬN CHIẾN DỊCH</span>
+                <span id="btn-battle-title-el" class="battle-title-main" data-i18n="lobby.btn_battle">XUẤT TRẬN CHIẾN DỊCH</span>
                 <span id="btn-battle-sub-el" class="battle-cost-sub">Sắp xếp vali & Hỏa lực (Tốn <img src="assets/icons/energy.png" class="pixel-mini-icon"> 5)</span>
               </div>
             </button>
@@ -137,8 +137,8 @@
       <!-- TAB 2: ARSENAL WEAPON UPGRADES (KHO VŨ KHÍ CHI TIẾT CHỈ SỐ) -->
       <div id="lobby-tab-arsenal" class="lobby-tab-pane">
         <div class="arsenal-view-header">
-          <h3>KHO VŨ KHÍ & BỘ TRANG BỊ RA TRẬN</h3>
-          <p>Chọn tối đa 5-7 món mang vào ván đấu & Tiến hóa nâng cấp vĩnh viễn</p>
+          <h3 data-i18n="arsenal.title">KHO VŨ KHÍ & BỘ TRANG BỊ RA TRẬN</h3>
+          <p data-i18n="arsenal.subtitle">Chọn tối đa 5-7 món mang vào ván đấu & Tiến hóa nâng cấp vĩnh viễn</p>
         </div>
         <!-- KHUNG BỘ TRANG BỊ LOADOUT (5..7 Ô) -->
         <div id="arsenal-loadout-container" class="arsenal-loadout-box">
@@ -152,8 +152,8 @@
       <!-- TAB 3: LEADERBOARD CLUB & BẢNG XẾP HẠNG MAFIA TOÀN CẦU -->
       <div id="lobby-tab-rank" class="lobby-tab-pane">
         <div class="rank-view-header">
-          <h3>BẢNG XẾP HẠNG LIÊN MINH & MAFIA CLUB</h3>
-          <p>Điểm Kỷ Lục (Max Score) xác định Danh Vọng & Bậc Hạng Thế Giới Ngầm!</p>
+          <h3 data-i18n="lb.title">BẢNG XẾP HẠNG LIÊN MINH & MAFIA CLUB</h3>
+          <p data-i18n="lb.subtitle">Điểm Kỷ Lục (Max Score) xác định Danh Vọng & Bậc Hạng Thế Giới Ngầm!</p>
         </div>
 
         <!-- PLAYER RANK TIER CARD -->
@@ -164,30 +164,30 @@
           </div>
           <div class="cpc-stats-col">
             <div class="cpc-stat-item">
-              <span class="cpc-stat-lbl">Hạng Hiện Tại:</span>
+              <span class="cpc-stat-lbl" data-i18n="lb.cur_rank">Hạng Hiện Tại:</span>
               <b id="club-player-rank-num" class="cpc-stat-val text-gold">Top 4</b>
             </div>
             <div class="cpc-stat-item">
-              <span class="cpc-stat-lbl">Kỷ Lục Max Score:</span>
+              <span class="cpc-stat-lbl" data-i18n="lb.max_score">Kỷ Lục Max Score:</span>
               <b id="club-player-max-score" class="cpc-stat-val">1.206.000</b>
             </div>
             <div class="cpc-stat-item">
-              <span class="cpc-stat-lbl">Màn Cao Nhất:</span>
+              <span class="cpc-stat-lbl" data-i18n="lb.max_stage">Màn Cao Nhất:</span>
               <b id="club-player-max-stage" class="cpc-stat-val">Màn 1 / 5</b>
             </div>
           </div>
           <button id="btn-claim-weekly-rank" class="btn btn-claim-rank">
-            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thưởng Tuần (+50 <img src="assets/icons/gem.png" class="pixel-mini-icon">)
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> <span data-i18n="lb.weekly_claim">Nhận Thưởng Tuần (+50 Kim Cương)</span>
           </button>
         </div>
 
         <!-- LEADERBOARD TOP PLAYERS -->
         <div class="leaderboard-container">
           <div class="lb-header-row">
-            <span>Hạng</span>
-            <span>Trùm / Liên Minh</span>
-            <span>Max Wave</span>
-            <span>Max Score</span>
+            <span data-i18n="lb.col_rank">Hạng</span>
+            <span data-i18n="lb.col_user">Trùm / Liên Minh</span>
+            <span data-i18n="lb.col_wave">Max Wave</span>
+            <span data-i18n="lb.col_score">Max Score</span>
           </div>
           <div id="leaderboard-rows-list" class="leaderboard-rows-list">
             <!-- Rendered dynamically -->
@@ -198,52 +198,52 @@
       <!-- TAB 4: BLACK MARKET SHOP - HÒM BÍ ẨN & TIẾP TẾ QC -->
       <div id="lobby-tab-shop" class="lobby-tab-pane">
         <div class="shop-view-header">
-          <h3>CHỢ ĐEN MAFIA - HÒM BÍ ẨN & TIẾP TẾ</h3>
-          <p>Mở Hòm ngẫu nhiên nhận mảnh vũ khí & Nhận quà miễn phí bằng cách xem Quảng Cáo!</p>
+          <h3 data-i18n="shop.title">CHỢ ĐEN MAFIA - HÒM BÍ ẨN & TIẾP TẾ</h3>
+          <p data-i18n="shop.subtitle">Mở Hòm ngẫu nhiên nhận mảnh vũ khí & Nhận quà miễn phí bằng cách xem Quảng Cáo!</p>
         </div>
 
         <!-- FREE AD SUPPLY CHESTS SECTION -->
-        <div class="shop-section-title"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> TIẾP TẾ QUẢNG CÁO MIỄN PHÍ</div>
+        <div class="shop-section-title"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> <span data-i18n="shop.sec_free">TIẾP TẾ QUẢNG CÁO MIỄN PHÍ</span></div>
         <div class="market-deals-grid free-ad-grid">
           <div class="deal-card ad-deal-card">
             <div class="deal-icon">
               <img src="assets/icons/chest_energy.png" class="pixel-chest-img" alt="Hòm Năng Lượng">
             </div>
-            <h4>Hòm Năng Lượng Miễn Phí</h4>
-            <p>Hồi ngay lập tức <b>+10</b> <img src="assets/icons/energy.png" class="pixel-mini-icon"> Năng Lượng để tiếp tục xuất trận cày chiến dịch!</p>
+            <h4 data-i18n="shop.chest_energy_title">Hòm Năng Lượng Miễn Phí</h4>
+            <p data-i18n="shop.chest_energy_desc">Hồi ngay lập tức +10 Năng Lượng để tiếp tục xuất trận cày chiến dịch!</p>
             <button id="btn-ad-free-energy" class="btn btn-ad-claim">
-              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> Xem QC (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)
+              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> <span data-i18n="shop.btn_ad_energy">Xem QC (+10 Năng Lượng)</span>
             </button>
           </div>
           <div class="deal-card ad-deal-card">
             <div class="deal-icon">
               <img src="assets/icons/chest_diamond.png" class="pixel-chest-img" alt="Hòm Kim Cương">
             </div>
-            <h4>Hòm Kim Cương Miễn Phí</h4>
-            <p>Nhận ngay <b>+10</b> <img src="assets/icons/gem.png" class="pixel-mini-icon"> Kim Cương dùng để mở hòm Bố Già hoặc hồi sinh căn cứ!</p>
+            <h4 data-i18n="shop.chest_gem_title">Hòm Kim Cương Miễn Phí</h4>
+            <p data-i18n="shop.chest_gem_desc">Nhận ngay +10 Kim Cương dùng để mở hòm Bố Già hoặc hồi sinh căn cứ!</p>
             <button id="btn-ad-free-gems" class="btn btn-ad-claim">
-              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> Xem QC (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)
+              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> <span data-i18n="shop.btn_ad_gem">Xem QC (+10 Kim Cương)</span>
             </button>
           </div>
         </div>
 
         <!-- MYSTERY CHESTS SECTION -->
-        <div class="shop-section-title"><img src="assets/icons/chest_gold.png" class="pixel-mini-icon"> HÒM VŨ KHÍ & NGUYÊN LIỆU GACHA</div>
+        <div class="shop-section-title"><img src="assets/icons/chest_gold.png" class="pixel-mini-icon"> <span data-i18n="shop.sec_chests">HÒM VŨ KHÍ & NGUYÊN LIỆU GACHA</span></div>
         <div class="market-deals-grid chests-grid">
           <div class="deal-card chest-wood">
             <div class="deal-icon">
               <img src="assets/icons/chest_wood.png" class="pixel-chest-img" alt="Hòm Gỗ">
             </div>
-            <h4>Hòm Gỗ Tiếp Tế</h4>
-            <p>Chứa <b>10 - 25 Mảnh</b> vũ khí thường & phòng thủ ngẫu nhiên.</p>
-            <button id="btn-buy-wood-chest" class="btn btn-buy-deal"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> 500 Mua Hòm</button>
+            <h4 data-i18n="shop.chest_wood_title">Hòm Gỗ Tiếp Tế</h4>
+            <p data-i18n="shop.chest_wood_desc">Chứa 10 - 25 Mảnh vũ khí thường & phòng thủ ngẫu nhiên.</p>
+            <button id="btn-buy-wood-chest" class="btn btn-buy-deal"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> <span data-i18n="shop.btn_wood_buy">500 Mua Hòm</span></button>
           </div>
           <div class="deal-card chest-silver">
             <div class="deal-icon">
               <img src="assets/icons/chest_silver.png" class="pixel-chest-img" alt="Hòm Bạc">
             </div>
-            <h4>Hòm Bạc Tinh Anh</h4>
-            <p>Chứa <b>35 - 75 Mảnh</b> vũ khí & Tăng tỉ lệ rớt Cung Nỏ và Pháo Laser!</p>
+            <h4 data-i18n="shop.chest_silver_title">Hòm Bạc Tinh Anh</h4>
+            <p data-i18n="shop.chest_silver_desc">Chứa 35 - 75 Mảnh vũ khí & Tăng tỉ lệ rớt Cung Nỏ và Pháo Laser!</p>
             <div class="chest-dual-btns">
               <button id="btn-buy-silver-coin" class="btn btn-buy-deal"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> 1.500</button>
               <button id="btn-buy-silver-gem" class="btn btn-buy-deal gem-deal"><img src="assets/icons/gem.png" class="pixel-mini-icon"> 25</button>
@@ -253,9 +253,9 @@
             <div class="deal-icon">
               <img src="assets/icons/chest_gold.png" class="pixel-chest-img" alt="Hòm Hoàng Kim">
             </div>
-            <h4>Hòm Hoàng Kim Bố Già</h4>
-            <p>Chứa <b>80 - 160 Mảnh</b> vũ khí cao cấp! Đảm bảo rớt mảnh Cung Nỏ Huyền Thoại & Cơ hội Jackpot!</p>
-            <button id="btn-buy-gold-chest" class="btn btn-buy-deal gem-deal"><img src="assets/icons/gem.png" class="pixel-mini-icon"> 80 Mua Hòm</button>
+            <h4 data-i18n="shop.chest_gold_title">Hòm Hoàng Kim Bố Già</h4>
+            <p data-i18n="shop.chest_gold_desc">Chứa 80 - 160 Mảnh vũ khí cao cấp! Đảm bảo rớt mảnh Cung Nỏ Huyền Thoại & Cơ hội Jackpot!</p>
+            <button id="btn-buy-gold-chest" class="btn btn-buy-deal gem-deal"><img src="assets/icons/gem.png" class="pixel-mini-icon"> <span data-i18n="shop.btn_gold_buy">80 Mua Hòm</span></button>
           </div>
         </div>
       </div>
@@ -391,7 +391,7 @@
           <div class="progress-bar-bg">
             <div id="battle-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
           </div>
-          <span class="enemies-badge">Quái: <b id="battle-enemies-left">00</b></span>
+          <span class="enemies-badge"><span data-i18n="battle.monsters">Quái:</span> <b id="battle-enemies-left">00</b></span>
           
           <!-- IN-WAVE EXP & LEVEL UP SYSTEM (ẢNH 3: Lv.58) -->
           <div class="inwave-exp-group">
@@ -403,10 +403,10 @@
         </div>
         <div class="score-meters">
           <div class="score-chip orange-chip">
-            <span>Score: <b id="current-score-text">0</b></span>
+            <span><span data-i18n="battle.score">Score:</span> <b id="current-score-text">0</b></span>
           </div>
           <div class="score-chip green-chip">
-            <span>Kỷ Lục: <b id="high-score-text">0</b></span>
+            <span><span data-i18n="battle.high_score">Kỷ Lục:</span> <b id="high-score-text">0</b></span>
           </div>
         </div>
       </div>
@@ -868,6 +868,24 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- INTERACTIVE GAMEPLAY TUTORIAL OVERLAY -->
+    <!-- ============================================== -->
+    <div id="gameplay-tutorial-overlay" class="gameplay-tutorial-overlay hidden">
+      <div id="tut-guide-banner" class="tut-guide-banner">
+        <div class="tut-guide-content">
+          <span id="gtut-step-tag" class="tut-guide-step-tag">BƯỚC 1</span>
+          <span id="gtut-step-text" class="tut-guide-text">👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và căn cứ tiền đồn!</span>
+        </div>
+        <div class="tut-banner-btns">
+          <button id="btn-gtut-action" class="btn btn-gtut-action hidden">Tiếp theo 👉</button>
+          <button id="btn-gtut-skip" class="btn-tut-skip-banner">Bỏ qua</button>
+        </div>
+      </div>
+      <div id="tut-pointer-hand" class="tut-pointer-hand">👆</div>
     </div>
 
 </body>

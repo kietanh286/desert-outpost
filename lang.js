@@ -1,5 +1,5 @@
 /**
- * DESERT OUTPOST: MERGE DEFENSE - MULTI-LANGUAGE SYSTEM (i18n)
+ * DESERT OUTPOST: MERGE DEFENSE - EXHAUSTIVE MULTI-LANGUAGE SYSTEM (i18n)
  * Supports: Tiếng Việt (vi) & English (en)
  */
 
@@ -13,30 +13,118 @@ const I18N = {
     'hud.save_code_title': 'Sao Chép hoặc Nạp mã lưu tiến trình (Cloud Save Code)',
     'hud.pause': 'Tạm Dừng',
     'hud.sound': 'Bật/Tắt âm thanh',
-    'hud.tutorial': 'Hướng Dẫn Tân Thủ',
+    'hud.tutorial': 'Hướng Dẫn Gameplay',
     'hud.lang': 'Tiếng Việt',
 
-    // Lobby
+    // Lobby Top & Header
     'lobby.milestone_title': 'Cột Mốc Vượt Màn & Diệt Quái',
     'lobby.claim_reward': 'Nhận Quà',
     'lobby.season_title': 'Mùa 1: Sa Mạc Tử Thần',
     'lobby.boss_arena': 'TRÙM ĐẠI CHIẾN SA MẠC',
-    'lobby.boss_trait': 'Đặc Điểm Boss',
+    'lobby.boss_trait': 'Kỹ Năng Boss',
+    'lobby.boss_trait_unlocked': '★ Kỹ Năng Boss (Đã Mở)',
+    'lobby.boss_locked_badge': '🔒 MÀN CHƯA MỞ KHÓA',
     'lobby.boss_locked': 'Chưa Mở Khóa Màn Này',
     'lobby.boss_locked_desc': 'Vượt qua các màn trước để mở khóa trùm chiến này.',
+    'lobby.stage_length': 'Độ Dài Màn',
+    'lobby.boss_reward': 'Thưởng Diệt Boss',
     'lobby.record_wave': 'KỶ LỤC WAVE',
     'lobby.high_score': 'ĐIỂM CAO NHẤT',
+    'lobby.mode_label': 'CHẾ ĐỘ CHIẾN DỊCH:',
     'lobby.mode_normal': 'Chế độ: Thường (Bán Vali)',
     'lobby.mode_hardcore': 'Hardcore (Cấm Bán Vali)',
-    'lobby.btn_battle': 'VÀO CHIẾN DỊCH',
+    'lobby.mode_normal_badge': 'Thường (Bán Vali: BẬT)',
+    'lobby.mode_hardcore_badge': 'Hardcore (Khóa Bán Vali)',
+    'lobby.loadout_title': 'BỘ TRANG BỊ VÀO TRẬN:',
+    'lobby.btn_choose': 'Chọn Món >',
+    'lobby.btn_battle': 'XUẤT TRẬN CHIẾN DỊCH',
     'lobby.btn_battle_locked': 'CHƯA MỞ KHÓA',
-    'lobby.cost_energy': 'Hao phí',
+    'lobby.cost_energy': 'Tốn',
+    'lobby.deploy_stage': 'XUẤT TRẬN MÀN',
+    'lobby.deploy_sub': 'Vượt {waves} Waves & Diệt Boss (Tốn 5 Năng Lượng)',
+    'lobby.stage_tag': 'MÀN {stage} / 5 • {area}',
+    'lobby.stage_locked_tag': 'MÀN {stage} / 5 • VÙNG ĐẤT BÍ ẨN 🔒',
+    'lobby.mystery_boss': '??? TRÙM BÍ ẨN ???',
+    'lobby.stage_unlock_req': '🔒 Cần vượt qua Màn {prev} và tiêu diệt Boss để mở khóa!',
+
+    // Boss Data
+    'boss.chizuru.area': 'TIỀN ĐỒN SA MẠC',
+    'boss.chizuru.name': 'CAPO CHIZURU YAMAMOTO',
+    'boss.chizuru.trait': 'Phóng chùm tia Mega Laser thiêu đốt & Triệu hồi bọ cạp bọc thép càn quét căn cứ!',
+    'boss.mech_titan.area': 'THÀNH PHỐ NGẦM MECH',
+    'boss.mech_titan.name': 'CHÚA TỂ CƠ GIỚI MECH GM-X',
+    'boss.mech_titan.trait': 'Khiên lượng tử phản xạ đạn & Nã pháo chùm tên lửa hủy diệt diện rộng!',
+    'boss.golden_scorpion.area': 'ỐC ĐẢO ĐỘC HOÀNG KIM',
+    'boss.golden_scorpion.name': 'ĐỘC HẠT HOÀNG KIM SA MẠC',
+    'boss.golden_scorpion.trait': 'Phun nọc độc sa mạc làm tê liệt rào chắn & Càng thép nghiền nát căn cứ!',
+    'boss.cyber_dragon.area': 'PHÁO ĐÀI BAY KHÔNG GIAN',
+    'boss.cyber_dragon.name': 'RỒNG MÁY CYBER SHENRON',
+    'boss.cyber_dragon.trait': 'Hơi thở Plasma hủy diệt toàn màn hình & Phân thân bóng ma né đạn!',
+    'boss.godfather_void.area': 'TỬ ĐỊA VÔ TẬN',
+    'boss.godfather_void.name': 'BỐ GIÀ HOÀNG KIM SA MẠC',
+    'boss.godfather_void.trait': 'Cường hóa toàn bộ quái vật, triệu hồi bão cát sa mạc nuốt chửng căn cứ!',
 
     // Nav Tabs
     'tab.battle': 'Chiến Trận',
-    'tab.equip': 'Trang Bị',
-    'tab.club': 'Bảng Xếp Hạng',
+    'tab.equip': 'Kho Đồ',
+    'tab.club': 'Xếp Hạng',
     'tab.shop': 'Chợ Đen',
+
+    // Tab 2: Arsenal
+    'arsenal.title': 'KHO VŨ KHÍ & BỘ TRANG BỊ RA TRẬN',
+    'arsenal.subtitle': 'Chọn tối đa 5-7 món mang vào ván đấu & Tiến hóa nâng cấp vĩnh viễn',
+    'arsenal.btn_upgrade': 'Nâng Cấp',
+    'arsenal.btn_equip': 'Trang Bị',
+    'arsenal.btn_unequip': 'Tháo Ra',
+    'arsenal.stat_dmg': 'Sát Thương',
+    'arsenal.stat_spd': 'Tốc Độ',
+    'arsenal.stat_aoe': 'Phạm Vi',
+
+    // Tab 3: Leaderboard
+    'lb.title': 'BẢNG XẾP HẠNG LIÊN MINH & MAFIA CLUB',
+    'lb.subtitle': 'Điểm Kỷ Lục (Max Score) xác định Danh Vọng & Bậc Hạng Thế Giới Ngầm!',
+    'lb.cur_rank': 'Hạng Hiện Tại:',
+    'lb.max_score': 'Kỷ Lục Max Score:',
+    'lb.max_stage': 'Màn Cao Nhất:',
+    'lb.weekly_claim': '🎁 Nhận Thưởng Tuần (+50 Kim Cương & +1.000 Vàng)',
+    'lb.weekly_claimed': '✅ Đã Nhận Thưởng Tuần Này',
+    'lb.col_rank': 'Hạng',
+    'lb.col_user': 'Trùm / Liên Minh',
+    'lb.col_wave': 'Max Wave',
+    'lb.col_score': 'Max Score',
+    // Extra Leaderboard & Tier Keys
+    'lb.tier_godfather': 'GOLDEN GODFATHER',
+    'lb.tier_diamond': 'DIAMOND SYNDICATE',
+    'lb.tier_gold': 'GOLD UNDERBOSS',
+    'lb.tier_silver': 'SILVER CAPO',
+    'lb.tier_bronze': 'BRONZE ENFORCER',
+    'lb.stage_label': 'Stage',
+    'lb.player_you': 'You',
+    'shop.btn_wood_buy': '500 Buy Chest',
+    'shop.btn_gold_buy': '80 Buy Chest',
+    'battle.monsters': 'Beasts:',
+    'battle.score': 'Score:',
+    'battle.high_score': 'Best:',
+
+
+    // Tab 4: Shop
+    'shop.title': 'CHỢ ĐEN MAFIA - HÒM BÍ ẨN & TIẾP TẾ',
+    'shop.subtitle': 'Mở Hòm ngẫu nhiên nhận mảnh vũ khí & Nhận quà miễn phí bằng cách xem Quảng Cáo!',
+    'shop.sec_free': 'TIẾP TẾ QUẢNG CÁO MIỄN PHÍ',
+    'shop.chest_energy_title': 'Hòm Năng Lượng Miễn Phí',
+    'shop.chest_energy_desc': 'Hồi ngay lập tức +10 Năng Lượng để tiếp tục xuất trận cày chiến dịch!',
+    'shop.btn_ad_energy': 'Xem QC (+10 Năng Lượng)',
+    'shop.chest_gem_title': 'Hòm Kim Cương Miễn Phí',
+    'shop.chest_gem_desc': 'Nhận ngay +10 Kim Cương dùng để mở hòm Bố Già hoặc hồi sinh căn cứ!',
+    'shop.btn_ad_gem': 'Xem QC (+10 Kim Cương)',
+    'shop.sec_chests': 'HÒM VŨ KHÍ & NGUYÊN LIỆU GACHA',
+    'shop.chest_wood_title': 'Hòm Gỗ Tiếp Tế',
+    'shop.chest_wood_desc': 'Chứa 10 - 25 Mảnh vũ khí thường & phòng thủ ngẫu nhiên.',
+    'shop.chest_silver_title': 'Hòm Bạc Tinh Anh',
+    'shop.chest_silver_desc': 'Chứa 35 - 75 Mảnh vũ khí & Tăng tỉ lệ rớt Cung Nỏ và Pháo Laser!',
+    'shop.chest_gold_title': 'Hòm Hoàng Kim Bố Già',
+    'shop.chest_gold_desc': 'Chứa 80 - 160 Mảnh vũ khí cao cấp! Đảm bảo rớt mảnh Cung Nỏ Huyền Thoại & Cơ hội Jackpot!',
+    'shop.btn_buy': 'Mua Hòm',
 
     // Backpack View
     'bp.wave': 'Wave',
@@ -65,19 +153,6 @@ const I18N = {
     'battle.adjust': 'Chỉnh Vali',
     'battle.paused': 'ĐÃ TẠM DỪNG',
     'battle.resume': 'Tiếp Tục',
-
-    // Leaderboard
-    'lb.title': 'BẢNG XẾP HẠNG LIÊN MINH & MAFIA CLUB',
-    'lb.subtitle': 'Điểm Kỷ Lục (Max Score) xác định Danh Vọng & Bậc Hạng Thế Giới Ngầm!',
-    'lb.cur_rank': 'Hạng Hiện Tại:',
-    'lb.max_score': 'Kỷ Lục Max Score:',
-    'lb.max_stage': 'Màn Cao Nhất:',
-    'lb.weekly_claim': '🎁 Nhận Thưởng Tuần (+50 Kim Cương & +1.000 Vàng)',
-    'lb.weekly_claimed': '✅ Đã Nhận Thưởng Tuần Này',
-    'lb.col_rank': 'HẠNG',
-    'lb.col_user': 'TRÙM / LIÊN MINH',
-    'lb.col_wave': 'MAX WAVE',
-    'lb.col_score': 'MAX SCORE',
 
     // Gears
     'gear.bow.name': 'Nỏ Tác Chiến',
@@ -121,30 +196,23 @@ const I18N = {
     'gear.land.name': 'Mảnh Đất Mở Rộng',
     'gear.land.desc': 'Mảnh vali mở rộng diện tích kho đồ.',
 
-    // Tutorial Modal
-    'tut.title': 'HƯỚNG DẪN TÂN THỦ',
-    'tut.btn_skip': 'Bỏ qua',
-    'tut.btn_prev': 'Trước',
-    'tut.btn_next': 'Tiếp theo',
-    'tut.btn_start': 'Bắt đầu chơi ngay! 🚀',
-    'tut.step1_title': '🎒 Quản Lý Vali & Sắp Xếp Ô',
-    'tut.step1_desc': 'Đặt vũ khí vào các ô vali màu sáng. Dùng nút Dời Vali (Trái/Phải/Lên/Xuống) hoặc kéo thả tự do để căn chỉnh. Mua thêm Mảnh Đất để mở rộng vali!',
-    'tut.step2_title': '⭐ Hợp Nhất Ghép Sao (Merge)',
-    'tut.step2_desc': 'Kéo 2 vũ khí CÙNG LOẠI và CÙNG CẤP SAO đè lên nhau để nâng cấp lên sao cao hơn (★1 + ★1 = ★2). Cấp sao càng cao, sức mạnh bắn phá càng khủng!',
-    'tut.step3_title': '🛒 Roll Shop & Hàng Dự Bị',
-    'tut.step3_desc': 'Bấm nút "Roll (3 Món)" để mua vũ khí mới bằng tiền ván đấu. Cất tối đa 5 món vào Hàng Dự Bị, hoặc kéo trang bị vào ô Bán để nhận lại 2$.',
-    'tut.step4_title': '⚔️ Xuất Trận & Diệt Trùm Boss',
-    'tut.step4_desc': 'Bấm "Xuất Trận" để bước vào đấu trường! Mọi vũ khí trong vali sẽ tự động xả đạn tiêu diệt quái. Trụ vững qua các Wave và hạ gục Trùm Boss khổng lồ!',
-
-    // Modals & General
-    'modal.victory': 'CHIẾN THẮNG HUY HOÀNG!',
-    'modal.defeat': 'CĂN CỨ THẤT THỦ!',
-    'modal.levelup': 'NÂNG CẤP ĐẶC HUẤN TRẬN ĐẤU',
-    'modal.pause': 'TẠM DỪNG TRẬN ĐẤU',
-    'modal.save_title': 'MÃ TIẾN TRÌNH LƯU TRỮ GAME',
-    'modal.save_copy': 'Sao Chép Mã',
-    'modal.save_import': 'Nạp Mã Tiến Trình',
-    'modal.save_hint': 'Dán mã lưu (DS_...) vào đây để tiếp tục ván chơi trên máy khác:'
+    // Interactive Gameplay Tutorial Walkthrough
+    'gtut.skip': 'Bỏ qua',
+    'gtut.next': 'Tiếp theo 👉',
+    'gtut.done': 'Hoàn tất 🎉',
+    'gtut.step1_tag': 'BƯỚC 1: VÀO CHIẾN DỊCH',
+    'gtut.step1_text': '👉 Bấm nút [XUẤT TRẬN CHIẾN DỊCH] để vào căn cứ vali!',
+    'gtut.step2_tag': 'BƯỚC 2: QUAY TRANG BỊ',
+    'gtut.step2_text': '🎲 Bấm nút [Roll (3 Món)] để quay nhận 3 trang bị mới bằng tiền ván!',
+    'gtut.step3_tag': 'BƯỚC 3: XẾP VÀO VALI',
+    'gtut.step3_text': '🖐️ Chạm giữ và Kéo vũ khí từ Shop thả vào ô sáng trong Vali!',
+    'gtut.step4_tag': 'BƯỚC 4: HỢP NHẤT & BÁN ĐỒ',
+    'gtut.step4_text': '⭐ Kéo 2 vũ khí giống nhau đè lên nhau để Ghép Sao ★! Kéo vào ô đỏ để BÁN lấy 2$.',
+    'gtut.step5_tag': 'BƯỚC 5: RA TRẬN',
+    'gtut.step5_text': '⚔️ Đội hình đã sẵn sàng! Bấm [Xuất Trận] để bắt đầu bảo vệ căn cứ!',
+    'gtut.step6_tag': 'BƯỚC 6: CHIẾN ĐẤU',
+    'gtut.step6_text': '🔥 Vũ khí tự động xả đạn! Tiêu diệt quái vật và hạ gục Trùm Boss sa mạc!',
+    'gtut.complete_text': '🎉 Tuyệt vời! Bạn đã hoàn thành hướng dẫn gameplay. Chúc bạn chiến thắng!'
   },
 
   en: {
@@ -156,30 +224,104 @@ const I18N = {
     'hud.save_code_title': 'Copy or Import Cloud Save Code',
     'hud.pause': 'Pause',
     'hud.sound': 'Toggle Audio',
-    'hud.tutorial': 'How to Play',
+    'hud.tutorial': 'Gameplay Tutorial',
     'hud.lang': 'English',
 
-    // Lobby
+    // Lobby Top & Header
     'lobby.milestone_title': 'Stage & Boss Milestones',
     'lobby.claim_reward': 'Claim',
     'lobby.season_title': 'Season 1: Death Desert',
     'lobby.boss_arena': 'DESERT BOSS ARENA',
     'lobby.boss_trait': 'Boss Trait',
+    'lobby.boss_trait_unlocked': '★ Boss Trait (Unlocked)',
+    'lobby.boss_locked_badge': '🔒 STAGE LOCKED',
     'lobby.boss_locked': 'Stage Locked',
     'lobby.boss_locked_desc': 'Defeat previous stages to unlock this giant boss.',
+    'lobby.stage_length': 'Stage Length',
+    'lobby.boss_reward': 'Boss Reward',
     'lobby.record_wave': 'RECORD WAVE',
     'lobby.high_score': 'HIGH SCORE',
+    'lobby.mode_label': 'CAMPAIGN MODE:',
     'lobby.mode_normal': 'Mode: Normal (Sell Vali)',
     'lobby.mode_hardcore': 'Hardcore (No Selling)',
+    'lobby.mode_normal_badge': 'Normal (Sell Vali: ON)',
+    'lobby.mode_hardcore_badge': 'Hardcore (No Selling)',
+    'lobby.loadout_title': 'EQUIPPED ARSENAL:',
+    'lobby.btn_choose': 'Select >',
     'lobby.btn_battle': 'START MISSION',
     'lobby.btn_battle_locked': 'LOCKED',
     'lobby.cost_energy': 'Cost',
+    'lobby.deploy_stage': 'DEPLOY STAGE',
+    'lobby.deploy_sub': 'Clear {waves} Waves & Defeat Boss (Cost 5 Energy)',
+    'lobby.stage_tag': 'STAGE {stage} / 5 • {area}',
+    'lobby.stage_locked_tag': 'STAGE {stage} / 5 • MYSTERIOUS LAND 🔒',
+    'lobby.mystery_boss': '??? MYSTERIOUS BOSS ???',
+    'lobby.stage_unlock_req': '🔒 Clear Stage {prev} and defeat the Boss to unlock!',
+
+    // Boss Data
+    'boss.chizuru.area': 'DESERT OUTPOST',
+    'boss.chizuru.name': 'CAPO CHIZURU YAMAMOTO',
+    'boss.chizuru.trait': 'Fires searing Mega Laser beams & Summons armored scorpions!',
+    'boss.mech_titan.area': 'UNDERGROUND MECH CITY',
+    'boss.mech_titan.name': 'MECH LORD GM-X TITAN',
+    'boss.mech_titan.trait': 'Quantum shield reflects bullets & Fires cluster missile barrages!',
+    'boss.golden_scorpion.area': 'GOLDEN POISON OASIS',
+    'boss.golden_scorpion.name': 'GOLDEN DESERT SCORPION',
+    'boss.golden_scorpion.trait': 'Spews paralyzing venom & Steel pincers crush your outpost!',
+    'boss.cyber_dragon.area': 'AERIAL DREADNOUGHT',
+    'boss.cyber_dragon.name': 'CYBER SHENRON MECHA-DRAGON',
+    'boss.cyber_dragon.trait': 'Screen-wiping Plasma breath & Ghost phase-shifting decoys!',
+    'boss.godfather_void.area': 'ENDLESS VOID REALM',
+    'boss.godfather_void.name': 'DESERT GOLDEN GODFATHER',
+    'boss.godfather_void.trait': 'Empowers all minions & Summons colossal sandstorms devouring your base!',
 
     // Nav Tabs
     'tab.battle': 'Battle',
     'tab.equip': 'Arsenal',
-    'tab.club': 'Leaderboard',
-    'tab.shop': 'Black Market',
+    'tab.club': 'Rankings',
+    'tab.shop': 'Shop',
+
+    // Tab 2: Arsenal
+    'arsenal.title': 'ARSENAL & BATTLE LOADOUT',
+    'arsenal.subtitle': 'Equip up to 5-7 weapons for battle & Evolve permanent upgrades',
+    'arsenal.btn_upgrade': 'Upgrade',
+    'arsenal.btn_equip': 'Equip',
+    'arsenal.btn_unequip': 'Unequip',
+    'arsenal.stat_dmg': 'Damage',
+    'arsenal.stat_spd': 'Speed',
+    'arsenal.stat_aoe': 'AoE',
+
+    // Tab 3: Leaderboard
+    'lb.title': 'SYNDICATE & MAFIA CLUB LEADERBOARD',
+    'lb.subtitle': 'High Score determines your Reputation & Global Rank in the Underworld!',
+    'lb.cur_rank': 'Current Rank:',
+    'lb.max_score': 'Max High Score:',
+    'lb.max_stage': 'Highest Stage:',
+    'lb.weekly_claim': '🎁 Claim Weekly Rewards (+50 Gems & +1,000 Gold)',
+    'lb.weekly_claimed': '✅ Claimed This Week',
+    'lb.col_rank': 'Rank',
+    'lb.col_user': 'Boss / Alliance',
+    'lb.col_wave': 'Max Wave',
+    'lb.col_score': 'Max Score',
+
+    // Tab 4: Shop
+    'shop.title': 'BLACK MARKET - MYSTERY CHESTS & SUPPLY',
+    'shop.subtitle': 'Open random chests for weapon shards & Claim free ad supplies!',
+    'shop.sec_free': 'FREE AD SUPPLY',
+    'shop.chest_energy_title': 'Free Energy Chest',
+    'shop.chest_energy_desc': 'Instantly restores +10 Energy to keep battling in campaign!',
+    'shop.btn_ad_energy': 'Watch Ad (+10 Energy)',
+    'shop.chest_gem_title': 'Free Diamond Chest',
+    'shop.chest_gem_desc': 'Receive +10 Gems to open Godfather chests or revive base!',
+    'shop.btn_ad_gem': 'Watch Ad (+10 Gems)',
+    'shop.sec_chests': 'WEAPON & MATERIAL CHESTS',
+    'shop.chest_wood_title': 'Wooden Supply Chest',
+    'shop.chest_wood_desc': 'Contains 10 - 25 Common & Defensive weapon shards.',
+    'shop.chest_silver_title': 'Elite Silver Chest',
+    'shop.chest_silver_desc': 'Contains 35 - 75 Shards & High chance for Crossbow and Laser!',
+    'shop.chest_gold_title': 'Godfather Golden Chest',
+    'shop.chest_gold_desc': 'Contains 80 - 160 High-tier shards with guaranteed legendary drops!',
+    'shop.btn_buy': 'Buy Chest',
 
     // Backpack View
     'bp.wave': 'Wave',
@@ -208,19 +350,6 @@ const I18N = {
     'battle.adjust': 'Adjust Grid',
     'battle.paused': 'PAUSED',
     'battle.resume': 'Resume',
-
-    // Leaderboard
-    'lb.title': 'SYNDICATE & MAFIA CLUB LEADERBOARD',
-    'lb.subtitle': 'High Score determines your Reputation & Global Rank in the Underworld!',
-    'lb.cur_rank': 'Current Rank:',
-    'lb.max_score': 'Max High Score:',
-    'lb.max_stage': 'Highest Stage:',
-    'lb.weekly_claim': '🎁 Claim Weekly Rewards (+50 Gems & +1,000 Gold)',
-    'lb.weekly_claimed': '✅ Claimed This Week',
-    'lb.col_rank': 'RANK',
-    'lb.col_user': 'BOSS / ALLIANCE',
-    'lb.col_wave': 'MAX WAVE',
-    'lb.col_score': 'MAX SCORE',
 
     // Gears
     'gear.bow.name': 'Tactical Crossbow',
@@ -264,30 +393,23 @@ const I18N = {
     'gear.land.name': 'Expansion Tile',
     'gear.land.desc': 'Expands suitcase inventory space.',
 
-    // Tutorial Modal
-    'tut.title': 'HOW TO PLAY - TUTORIAL',
-    'tut.btn_skip': 'Skip',
-    'tut.btn_prev': 'Prev',
-    'tut.btn_next': 'Next',
-    'tut.btn_start': 'Start Playing! 🚀',
-    'tut.step1_title': '🎒 Suitcase Management',
-    'tut.step1_desc': 'Place weapons into the unlocked grid cells. Use the D-pad (Left/Right/Up/Down) or drag freely to reposition. Buy Expansion Tiles to unlock more space!',
-    'tut.step2_title': '⭐ Weapon Merging (Merge)',
-    'tut.step2_desc': 'Drag two weapons of the SAME TYPE and SAME STAR tier onto each other to upgrade (★1 + ★1 = ★2). Higher tiers deliver massive firepower and abilities!',
-    'tut.step3_title': '🛒 Roll Shop & Stash Bench',
-    'tut.step3_desc': 'Press "Roll (3 Items)" to draw random weapons with match cash. Store up to 5 items in your Stash Bench, or drag unwanted items to the Sell Zone for 2$.',
-    'tut.step4_title': '⚔️ Fight & Defeat Giant Bosses',
-    'tut.step4_desc': 'Press "Fight" to start combat! All weapons inside your suitcase will automatically fire at incoming beasts. Survive the waves and slay giant Bosses!',
-
-    // Modals & General
-    'modal.victory': 'STAGE CLEAR - VICTORY!',
-    'modal.defeat': 'OUTPOST FALLEN!',
-    'modal.levelup': 'COMBAT PERK UPGRADE',
-    'modal.pause': 'GAME PAUSED',
-    'modal.save_title': 'GAME SAVE CODE',
-    'modal.save_copy': 'Copy Save Code',
-    'modal.save_import': 'Import Save Code',
-    'modal.save_hint': 'Paste your save code (DS_...) here to resume on any device:'
+    // Interactive Gameplay Tutorial Walkthrough
+    'gtut.skip': 'Skip',
+    'gtut.next': 'Next 👉',
+    'gtut.done': 'Done 🎉',
+    'gtut.step1_tag': 'STEP 1: START MISSION',
+    'gtut.step1_text': '👉 Tap [START MISSION] to enter your suitcase outpost!',
+    'gtut.step2_tag': 'STEP 2: ROLL WEAPONS',
+    'gtut.step2_text': '🎲 Tap [Roll (3 Items)] to draw new weapons with match cash!',
+    'gtut.step3_tag': 'STEP 3: PLACE IN VALI',
+    'gtut.step3_text': '🖐️ Touch & Drag weapon from Shop into the suitcase grid!',
+    'gtut.step4_tag': 'STEP 4: MERGE & SELL',
+    'gtut.step4_text': '⭐ Drag matching weapons together to Merge ★! Drag to red zone to SELL for 2$.',
+    'gtut.step5_tag': 'STEP 5: FIGHT',
+    'gtut.step5_text': '⚔️ Formation ready! Tap [Fight] to defend your outpost!',
+    'gtut.step6_tag': 'STEP 6: COMBAT',
+    'gtut.step6_text': '🔥 Weapons fire automatically! Slay beasts and giant desert Bosses!',
+    'gtut.complete_text': '🎉 Great job! You completed the tutorial. Have fun playing!'
   }
 };
 
@@ -298,9 +420,15 @@ try {
   if (saved === 'en' || saved === 'vi') currentLang = saved;
 } catch(e) {}
 
-function t(key, fallback = '') {
+function t(key, fallback = '', vars = null) {
   const langDict = I18N[currentLang] || I18N['vi'];
-  return (langDict && langDict[key]) || (I18N['vi'] && I18N['vi'][key]) || fallback || key;
+  let str = (langDict && langDict[key] !== undefined) ? langDict[key] : ((I18N['vi'] && I18N['vi'][key] !== undefined) ? I18N['vi'][key] : (fallback || key));
+  if (vars && typeof vars === 'object') {
+    Object.keys(vars).forEach(k => {
+      str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+    });
+  }
+  return str;
 }
 
 function setLanguage(lang) {
@@ -314,7 +442,7 @@ function setLanguage(lang) {
   applyLanguageToDOM();
 
   // If game app is running, trigger its re-render
-  if (window.gameApp && typeof window.gameApp.refreshAllText === 'function') {
+  if (typeof window !== 'undefined' && window.gameApp && typeof window.gameApp.refreshAllText === 'function') {
     window.gameApp.refreshAllText();
   }
 }
@@ -326,6 +454,7 @@ function toggleLanguage() {
 }
 
 function applyLanguageToDOM() {
+  if (typeof document === 'undefined') return;
   // Update language button display
   const langBtn = document.getElementById('btn-lang-toggle');
   if (langBtn) {

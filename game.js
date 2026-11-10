@@ -1875,6 +1875,7 @@ class MetagameState {
 // ==========================================
 // IN-RUN STATE
 // ==========================================
+
 class InRunState {
   constructor(meta) {
     this.meta = meta;
@@ -4561,7 +4562,7 @@ class AppController {
     const btnStart = document.getElementById('btn-tut-start');
 
     if (btnOpenTut) {
-      btnOpenTut.onclick = () => this.openTutorial();
+      btnOpenTut.onclick = () => this.startGameplayTutorial(true);
     }
     if (btnCloseTut) {
       btnCloseTut.onclick = () => this.closeTutorial();
@@ -4877,10 +4878,10 @@ class AppController {
     if (this.lobbyModeBadge) {
       if (this.meta.gameMode === 'hardcore') {
         this.lobbyModeBadge.className = 'mode-badge hardcore-mode';
-        this.lobbyModeBadge.textContent = 'Hardcore (Khóa Bán Vali)';
+        this.lobbyModeBadge.textContent = typeof t === 'function' ? t('lobby.mode_hardcore_badge', 'Hardcore (Khóa Bán Vali)') : 'Hardcore (Khóa Bán Vali)';
       } else {
         this.lobbyModeBadge.className = 'mode-badge normal-mode';
-        this.lobbyModeBadge.textContent = 'Thường (Bán Vali: BẬT)';
+        this.lobbyModeBadge.textContent = typeof t === 'function' ? t('lobby.mode_normal_badge', 'Thường (Bán Vali: BẬT)') : 'Thường (Bán Vali: BẬT)';
       }
     }
 
@@ -5013,20 +5014,22 @@ class AppController {
 
     if (score >= 2000000) {
       badgeIcon = '👑';
-      badgeTitle = 'BỐ GIÀ HOÀNG KIM';
+      badgeTitle = typeof t === 'function' ? t('lb.tier_godfather', 'BỐ GIÀ HOÀNG KIM') : 'BỐ GIÀ HOÀNG KIM';
       rankPos = 'Top 1';
     } else if (score >= 1500000) {
       badgeIcon = 'KC';
-      badgeTitle = 'BẬC KIM CƯƠNG';
+      badgeTitle = typeof t === 'function' ? t('lb.tier_diamond', 'BẬC KIM CƯƠNG') : 'BẬC KIM CƯƠNG';
       rankPos = 'Top 3';
     } else if (score >= 1000000) {
       badgeIcon = '🥇';
-      badgeTitle = 'BẬC VÀNG MAFIA';
+      badgeTitle = typeof t === 'function' ? t('lb.tier_gold', 'BẬC VÀNG MAFIA') : 'BẬC VÀNG MAFIA';
       rankPos = 'Top 4';
     } else if (score >= 500000) {
       badgeIcon = '🥈';
-      badgeTitle = 'BẬC BẠC MAFIA';
+      badgeTitle = typeof t === 'function' ? t('lb.tier_silver', 'BẬC BẠC MAFIA') : 'BẬC BẠC MAFIA';
       rankPos = 'Top 7';
+    } else {
+      badgeTitle = typeof t === 'function' ? t('lb.tier_bronze', 'BẬC ĐỒNG MAFIA') : 'BẬC ĐỒNG MAFIA';
     }
 
     const iconEl = document.getElementById('club-player-badge-icon');
@@ -5039,15 +5042,15 @@ class AppController {
     if (titleEl) titleEl.textContent = badgeTitle;
     if (rankEl) rankEl.textContent = rankPos;
     if (scoreEl) scoreEl.textContent = score.toLocaleString();
-    if (stageEl) stageEl.textContent = `Màn ${this.meta.unlockedStage || 1} / 5`;
+    if (stageEl) stageEl.textContent = `${typeof t === 'function' ? t('lb.stage_label', 'Màn') : 'Màn'} ${this.meta.unlockedStage || 1} / 5`;
 
     const weeklyBtn = document.getElementById('btn-claim-weekly-rank');
     if (weeklyBtn) {
       if (this.meta.claimedWeeklyRank) {
-        weeklyBtn.textContent = '✅ Đã Nhận Thưởng Tuần Này';
+        weeklyBtn.textContent = typeof t === 'function' ? t('lb.weekly_claimed', '✅ Đã Nhận Thưởng Tuần Này') : '✅ Đã Nhận Thưởng Tuần Này';
         weeklyBtn.classList.add('btn-claimed');
       } else {
-        weeklyBtn.textContent = '🎁 Nhận Thưởng Tuần (+50 Kim Cương & +1.000 Vàng)';
+        weeklyBtn.textContent = typeof t === 'function' ? t('lb.weekly_claim', '🎁 Nhận Thưởng Tuần (+50 Kim Cương & +1.000 Vàng)') : '🎁 Nhận Thưởng Tuần (+50 Kim Cương & +1.000 Vàng)';
         weeklyBtn.classList.remove('btn-claimed');
       }
     }
@@ -5060,7 +5063,7 @@ class AppController {
       { rank: 1, name: 'Don Vito Corleone', clan: 'The Syndicate', wave: 242, score: 2850000, isPlayer: false },
       { rank: 2, name: 'Yamamoto Chizuru', clan: 'Tokyo Neon', wave: 218, score: 2120000, isPlayer: false },
       { rank: 3, name: 'Mech GM-X Titan', clan: 'Cyber Core', wave: 195, score: 1680000, isPlayer: false },
-      { rank: 4, name: '⭐ Bạn (Capo Black Gold)', clan: 'Black Gold Citadel', wave: this.meta.maxWave, score: score, isPlayer: true },
+      { rank: 4, name: `⭐ ${typeof t === 'function' ? t('lb.player_you', 'Bạn') : 'Bạn'} (Capo Black Gold)`, clan: 'Black Gold Citadel', wave: this.meta.maxWave, score: score, isPlayer: true },
       { rank: 5, name: 'Tony Montana', clan: 'Scarface Cartel', wave: 140, score: 950000, isPlayer: false },
       { rank: 6, name: 'Heisenberg', clan: 'Blue Crystal', wave: 115, score: 820000, isPlayer: false },
       { rank: 7, name: 'Tommy Shelby', clan: 'Peaky Blinders', wave: 95, score: 680000, isPlayer: false },
@@ -5102,21 +5105,27 @@ class AppController {
     const traitCardEl = document.querySelector('.boss-trait-card');
     const traitBadgeEl = document.querySelector('.trait-icon-badge');
 
+    const areaName = typeof t === 'function' ? t(`boss.${stage.id}.area`, stage.areaName) : stage.areaName;
+    const bossName = typeof t === 'function' ? t(`boss.${stage.id}.name`, stage.name) : stage.name;
+    const bossTrait = typeof t === 'function' ? t(`boss.${stage.id}.trait`, stage.trait) : stage.trait;
+
     if (isStageUnlocked) {
-      if (this.bossSubtitleTag) this.bossSubtitleTag.textContent = `MÀN ${stageNum} / 5 • ${stage.areaName}`;
-      if (this.bossNameHeading) this.bossNameHeading.textContent = stage.name;
+      if (this.bossSubtitleTag) {
+        this.bossSubtitleTag.textContent = typeof t === 'function' ? t('lobby.stage_tag', `MÀN ${stageNum} / 5 • ${areaName}`, { stage: stageNum, area: areaName }) : `MÀN ${stageNum} / 5 • ${areaName}`;
+      }
+      if (this.bossNameHeading) this.bossNameHeading.textContent = bossName;
       if (this.bossLvlBadge) {
         this.bossLvlBadge.textContent = `LV. ${stage.level}`;
         this.bossLvlBadge.classList.remove('is-locked');
       }
-      if (traitBadgeEl) traitBadgeEl.textContent = '★ Kỹ Năng Boss (Đã Mở)';
-      if (this.bossTraitDesc) this.bossTraitDesc.textContent = stage.trait;
+      if (traitBadgeEl) traitBadgeEl.textContent = typeof t === 'function' ? t('lobby.boss_trait_unlocked', '★ Kỹ Năng Boss (Đã Mở)') : '★ Kỹ Năng Boss (Đã Mở)';
+      if (this.bossTraitDesc) this.bossTraitDesc.textContent = bossTrait;
       if (traitCardEl) traitCardEl.classList.remove('is-locked');
 
       if (this.giantBossAvatarWrapper) {
         this.giantBossAvatarWrapper.innerHTML = `
           <div class="pixel-boss-showcase">
-            <img src="assets/bosses/boss_stage${stageNum}.png" alt="${stage.name}" class="giant-pixel-boss-img" onerror="this.onerror=null;this.parentElement.innerHTML=stage.svgFn();">
+            <img src="assets/bosses/boss_stage${stageNum}.png" alt="${bossName}" class="giant-pixel-boss-img" onerror="this.onerror=null;this.parentElement.innerHTML=stage.svgFn();">
           </div>
         `;
       }
@@ -5125,18 +5134,27 @@ class AppController {
         btnEnter.disabled = false;
         btnEnter.classList.remove('stage-locked-btn');
       }
-      if (titleEl) titleEl.textContent = `XUẤT TRẬN MÀN ${stageNum}`;
-      if (subEl) subEl.textContent = `Vượt ${stage.totalWaves} Waves & Diệt Boss (Tốn 5 Năng Lượng)`;
+      if (titleEl) {
+        const deployPrefix = typeof t === 'function' ? t('lobby.deploy_stage', 'XUẤT TRẬN MÀN') : 'XUẤT TRẬN MÀN';
+        titleEl.textContent = `${deployPrefix} ${stageNum}`;
+      }
+      if (subEl) {
+        subEl.textContent = typeof t === 'function' ? t('lobby.deploy_sub', `Vượt ${stage.totalWaves} Waves & Diệt Boss (Tốn 5 Năng Lượng)`, { waves: stage.totalWaves }) : `Vượt ${stage.totalWaves} Waves & Diệt Boss (Tốn 5 Năng Lượng)`;
+      }
       if (iconEl) iconEl.textContent = '⚔️';
     } else {
-      if (this.bossSubtitleTag) this.bossSubtitleTag.textContent = `MÀN ${stageNum} / 5 • VÙNG ĐẤT BÍ ẨN 🔒`;
-      if (this.bossNameHeading) this.bossNameHeading.textContent = '??? TRÙM BÍ ẨN ???';
+      if (this.bossSubtitleTag) {
+        this.bossSubtitleTag.textContent = typeof t === 'function' ? t('lobby.stage_locked_tag', `MÀN ${stageNum} / 5 • VÙNG ĐẤT BÍ ẨN 🔒`, { stage: stageNum }) : `MÀN ${stageNum} / 5 • VÙNG ĐẤT BÍ ẨN 🔒`;
+      }
+      if (this.bossNameHeading) this.bossNameHeading.textContent = typeof t === 'function' ? t('lobby.mystery_boss', '??? TRÙM BÍ ẨN ???') : '??? TRÙM BÍ ẨN ???';
       if (this.bossLvlBadge) {
         this.bossLvlBadge.textContent = 'LV. ???';
         this.bossLvlBadge.classList.add('is-locked');
       }
-      if (traitBadgeEl) traitBadgeEl.textContent = '🔒 MÀN CHƯA MỞ KHÓA';
-      if (this.bossTraitDesc) this.bossTraitDesc.textContent = `🔒 Cần vượt qua Màn ${stageNum - 1} và tiêu diệt Boss để mở khóa khu vực chiến dịch này!`;
+      if (traitBadgeEl) traitBadgeEl.textContent = typeof t === 'function' ? t('lobby.boss_locked_badge', '🔒 MÀN CHƯA MỞ KHÓA') : '🔒 MÀN CHƯA MỞ KHÓA';
+      if (this.bossTraitDesc) {
+        this.bossTraitDesc.textContent = typeof t === 'function' ? t('lobby.stage_unlock_req', `🔒 Cần vượt qua Màn ${stageNum - 1} và tiêu diệt Boss để mở khóa!`, { prev: stageNum - 1 }) : `🔒 Cần vượt qua Màn ${stageNum - 1} và tiêu diệt Boss để mở khóa khu vực chiến dịch này!`;
+      }
       if (traitCardEl) traitCardEl.classList.add('is-locked');
 
       if (this.giantBossAvatarWrapper) {
@@ -5151,13 +5169,13 @@ class AppController {
         btnEnter.disabled = true;
         btnEnter.classList.add('stage-locked-btn');
       }
-      if (titleEl) titleEl.textContent = `🔒 MÀN ${stageNum} ĐANG BỊ KHÓA`;
-      if (subEl) subEl.textContent = `Hãy tiêu diệt Trùm Màn ${stageNum - 1} để mở khóa`;
+      if (titleEl) titleEl.textContent = typeof t === 'function' ? t('lobby.btn_battle_locked', 'CHƯA MỞ KHÓA') : `🔒 MÀN ${stageNum} ĐANG BỊ KHÓA`;
+      if (subEl) subEl.textContent = typeof t === 'function' ? t('lobby.stage_unlock_req', `Cần hạ Boss Màn ${stageNum - 1} trước`, { prev: stageNum - 1 }) : `Hãy tiêu diệt Trùm Màn ${stageNum - 1} để mở khóa`;
       if (iconEl) iconEl.textContent = '🔒';
     }
 
     if (this.lobbyMaxWave) this.lobbyMaxWave.textContent = `${stage.totalWaves} Waves`;
-    if (this.lobbyMaxScore) this.lobbyMaxScore.textContent = `+${stage.diamondReward} Kim Cương`;
+    if (this.lobbyMaxScore) this.lobbyMaxScore.innerHTML = `<img src="assets/icons/gem.png" class="pixel-mini-icon"> +${stage.diamondReward}`;
   }
 
   // --- BỘ TRANG BỊ RA TRẬN & KHO VŨ KHÍ TIẾN HÓA (LOADOUT & ARSENAL METAGAME) ---
@@ -7030,6 +7048,7 @@ class AppController {
     this.battle.bossSpawnedThisWave = false;
     this.battle.waveCleared = false;
     this.showView('lobby');
+    setTimeout(() => this.startGameplayTutorial(false), 800);
   }
 
   onDefeat(isBossBreach = false) {
@@ -7378,9 +7397,12 @@ class AppController {
       const raidBar = document.getElementById('boss-raid-bar');
       if (raidBar) raidBar.classList.add('hidden');
       this.meta.energy -= 5;
-      this.run = new InRunState(this.meta);
+            this.run = new InRunState(this.meta);
       this.battle.state = this.run;
       this.showView('backpack');
+      if (this.gtutActive && this.gtutStep === 1) {
+        setTimeout(() => this.setGameplayTutorialStep(2), 350);
+      }
     };
 
     // 4-Tab Bottom Navigation in Lobby (Battle, Equip, Club, Shop)
@@ -7689,6 +7711,9 @@ class AppController {
         this.showToast(`⚠️ Cần ${this.run.refreshCost} $ để Roll 3 trang bị!`);
       } else {
         sfx.coin();
+        if (this.gtutActive && this.gtutStep === 2) {
+          setTimeout(() => this.setGameplayTutorialStep(3), 250);
+        }
         if (this.run._lastAutoSoldInfo) {
           this.showToast(`🔄 Tự động bán ${this.run._lastAutoSoldInfo.count} món cũ (+${this.run._lastAutoSoldInfo.cash} $) → Roll 3 món mới!`);
         }
@@ -7990,6 +8015,140 @@ class AppController {
       this.showDefeatModal(false); // Chuyển sang bảng tổng kết chiến lợi phẩm khi chết
     };
   }
+
+  // ========================================================
+  // INTERACTIVE IN-GAME GAMEPLAY TUTORIAL WALKTHROUGH
+  // ========================================================
+  startGameplayTutorial(force = false) {
+    if (!force) {
+      try {
+        if (localStorage.getItem('desert_outpost_gameplay_tut_done') === 'true') return;
+      } catch(e) {}
+    }
+    this.gtutActive = true;
+    this.gtutStep = 1;
+    const overlay = document.getElementById('gameplay-tutorial-overlay');
+    if (overlay) overlay.classList.remove('hidden');
+
+    const btnSkip = document.getElementById('btn-gtut-skip');
+    if (btnSkip) {
+      btnSkip.onclick = () => this.hideGameplayTutorial();
+    }
+    const btnAction = document.getElementById('btn-gtut-action');
+    if (btnAction) {
+      btnAction.onclick = () => {
+        if (this.gtutStep === 4) {
+          this.setGameplayTutorialStep(5);
+        } else if (this.gtutStep === 6) {
+          this.hideGameplayTutorial();
+        }
+      };
+    }
+
+    if (!this._gtutResizeBound) {
+      window.addEventListener('resize', () => {
+        if (this.gtutActive) this.updateGameplayTutorialPosition();
+      });
+      this._gtutResizeBound = true;
+    }
+
+    this.setGameplayTutorialStep(1);
+  }
+
+  setGameplayTutorialStep(step) {
+    if (!this.gtutActive) return;
+    this.gtutStep = step;
+
+    document.querySelectorAll('.tut-highlight-pulse').forEach(el => el.classList.remove('tut-highlight-pulse'));
+
+    const stepTag = document.getElementById('gtut-step-tag');
+    const stepText = document.getElementById('gtut-step-text');
+    const btnAction = document.getElementById('btn-gtut-action');
+    const hand = document.getElementById('tut-pointer-hand');
+
+    if (btnAction) btnAction.classList.add('hidden');
+    if (hand) hand.classList.remove('hidden');
+
+    let targetEl = null;
+
+    if (step === 1) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step1_tag', 'BƯỚC 1: XUẤT TRẬN') : 'BƯỚC 1: XUẤT TRẬN';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step1_text', '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!') : '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!';
+      targetEl = document.getElementById('btn-enter-run');
+    } else if (step === 2) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step2_tag', 'BƯỚC 2: ROLL VŨ KHÍ') : 'BƯỚC 2: ROLL VŨ KHÍ';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step2_text', '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!') : '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!';
+      targetEl = document.getElementById('btn-refresh-shop');
+    } else if (step === 3) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step3_tag', 'BƯỚC 3: XẾP VÀO VALI') : 'BƯỚC 3: XẾP VÀO VALI';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step3_text', '🖐️ Chạm & Kéo trang bị từ Cửa Hàng vào ô vali trống!') : '🖐️ Chạm & Kéo trang bị từ Cửa Hàng vào ô vali trống!';
+      targetEl = document.getElementById('shop-slot-0') || document.getElementById('shop-triple-slots-row');
+    } else if (step === 4) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step4_tag', 'BƯỚC 4: GHÉP & BÁN') : 'BƯỚC 4: GHÉP & BÁN';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step4_text', '⭐ Kéo 2 món CÙNG LOẠI & SAO đè lên nhau để GHÉP! Kéo ô đỏ để BÁN (2$).') : '⭐ Kéo 2 món CÙNG LOẠI & SAO đè lên nhau để GHÉP! Kéo ô đỏ để BÁN (2$).';
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+      }
+      targetEl = document.getElementById('sell-drop-zone') || document.getElementById('backpack-grid-board');
+    } else if (step === 5) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step5_tag', 'BƯỚC 5: VÀO TRẬN') : 'BƯỚC 5: VÀO TRẬN';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step5_text', '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!') : '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!';
+      targetEl = document.getElementById('btn-fight');
+    } else if (step === 6) {
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step6_tag', 'BƯỚC 6: CHIẾN ĐẤU') : 'BƯỚC 6: CHIẾN ĐẤU';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step6_text', '🔥 Vũ khí TỰ ĐỘNG BẮN! Tiêu diệt quái vật và hạ gục Boss Sa Mạc!') : '🔥 Vũ khí TỰ ĐỘNG BẮN! Tiêu diệt quái vật và hạ gục Boss Sa Mạc!';
+      if (hand) hand.classList.add('hidden');
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('gtut.done', 'Hoàn tất 🎉') : 'Hoàn tất 🎉';
+      }
+      setTimeout(() => {
+        if (this.gtutActive && this.gtutStep === 6) {
+          this.hideGameplayTutorial();
+        }
+      }, 5000);
+      return;
+    }
+
+    if (targetEl) {
+      targetEl.classList.add('tut-highlight-pulse');
+      this.positionHandOnElement(targetEl);
+    }
+  }
+
+  positionHandOnElement(targetEl) {
+    const hand = document.getElementById('tut-pointer-hand');
+    if (!hand || !targetEl) return;
+    const rect = targetEl.getBoundingClientRect();
+    if (rect.width === 0 && rect.height === 0) return;
+    const x = rect.left + rect.width / 2 - 16;
+    const y = rect.bottom + 4;
+    hand.style.left = `${Math.max(10, Math.min(window.innerWidth - 40, x))}px`;
+    hand.style.top = `${Math.max(60, y)}px`;
+  }
+
+  updateGameplayTutorialPosition() {
+    if (!this.gtutActive) return;
+    let targetEl = null;
+    if (this.gtutStep === 1) targetEl = document.getElementById('btn-enter-run');
+    else if (this.gtutStep === 2) targetEl = document.getElementById('btn-refresh-shop');
+    else if (this.gtutStep === 3) targetEl = document.getElementById('shop-slot-0') || document.getElementById('shop-triple-slots-row');
+    else if (this.gtutStep === 4) targetEl = document.getElementById('sell-drop-zone');
+    else if (this.gtutStep === 5) targetEl = document.getElementById('btn-fight');
+    if (targetEl) this.positionHandOnElement(targetEl);
+  }
+
+  hideGameplayTutorial() {
+    this.gtutActive = false;
+    document.querySelectorAll('.tut-highlight-pulse').forEach(el => el.classList.remove('tut-highlight-pulse'));
+    const overlay = document.getElementById('gameplay-tutorial-overlay');
+    if (overlay) overlay.classList.add('hidden');
+    try {
+      localStorage.setItem('desert_outpost_gameplay_tut_done', 'true');
+    } catch(e) {}
+  }
+
 }
 
 // ==========================================
