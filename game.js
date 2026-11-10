@@ -5869,8 +5869,9 @@ class AppController {
           this.ghostAvatar.style.height = `${ghostH}px`;
           this.ghostAvatar.innerHTML = getGearSVG(itemData.isLand ? 'land' : itemData.type, itemData.tier || 1, itemData.isLand);
           document.body.appendChild(this.ghostAvatar);
-
           element.style.opacity = '0.4';
+          const tutHand = document.getElementById('tut-pointer-hand');
+          if (tutHand) tutHand.classList.add('hidden');
         }
 
         if (isDragging && this.ghostAvatar) {
@@ -6291,6 +6292,7 @@ class AppController {
       sfx.merge();
       if (navigator.vibrate) { try { navigator.vibrate([40, 30, 60]); } catch(e){} }
       this.showToast(`✨ Hợp nhất  lên ★!`);
+      if (this.gtutActive && (this.gtutStep === 3 || this.gtutStep === 4)) setTimeout(() => this.setGameplayTutorialStep(5), 100);
       this.renderBackpack();
       return;
     }
@@ -6357,6 +6359,7 @@ class AppController {
       }
 
       sfx.playTone(350, 'sine', 0.08, 0.1);
+      if (this.gtutActive && this.gtutStep === 3) setTimeout(() => this.setGameplayTutorialStep(4), 100);
       this.renderBackpack();
       return;
     }
@@ -8036,8 +8039,19 @@ class AppController {
     const btnAction = document.getElementById('btn-gtut-action');
     if (btnAction) {
       btnAction.onclick = () => {
-        if (this.gtutStep === 4) {
+        if (this.gtutStep === 1) {
+          const btnEnter = document.getElementById('btn-enter-run');
+          if (btnEnter) btnEnter.click();
+        } else if (this.gtutStep === 2) {
+          const btnRoll = document.getElementById('btn-refresh-shop');
+          if (btnRoll) btnRoll.click();
+        } else if (this.gtutStep === 3) {
+          this.setGameplayTutorialStep(4);
+        } else if (this.gtutStep === 4) {
           this.setGameplayTutorialStep(5);
+        } else if (this.gtutStep === 5) {
+          const btnFight = document.getElementById('btn-fight');
+          if (btnFight) btnFight.click();
         } else if (this.gtutStep === 6) {
           this.hideGameplayTutorial();
         }
@@ -8065,7 +8079,6 @@ class AppController {
     const btnAction = document.getElementById('btn-gtut-action');
     const hand = document.getElementById('tut-pointer-hand');
 
-    if (btnAction) btnAction.classList.add('hidden');
     if (hand) hand.classList.remove('hidden');
 
     let targetEl = null;
@@ -8073,18 +8086,31 @@ class AppController {
     if (step === 1) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step1_tag', 'BƯỚC 1: XUẤT TRẬN') : 'BƯỚC 1: XUẤT TRẬN';
       if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step1_text', '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!') : '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!';
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+      }
       targetEl = document.getElementById('btn-enter-run');
     } else if (step === 2) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step2_tag', 'BƯỚC 2: ROLL VŨ KHÍ') : 'BƯỚC 2: ROLL VŨ KHÍ';
       if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step2_text', '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!') : '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!';
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+      }
       targetEl = document.getElementById('btn-refresh-shop');
     } else if (step === 3) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step3_tag', 'BƯỚC 3: XẾP VÀO VALI') : 'BƯỚC 3: XẾP VÀO VALI';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step3_text', '🖐️ Chạm & Kéo trang bị từ Cửa Hàng vào ô vali trống!') : '🖐️ Chạm & Kéo trang bị từ Cửa Hàng vào ô vali trống!';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step3_text', '🖐️ Chạm & Kéo vũ khí từ Cửa Hàng thả vào ô sáng trong Vali!') : '🖐️ Chạm & Kéo vũ khí từ Cửa Hàng thả vào ô sáng trong Vali!';
+      // ALWAYS provide 'Tiếp theo 👉' so user is never blocked!
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+      }
       targetEl = document.getElementById('shop-slot-0') || document.getElementById('shop-triple-slots-row');
     } else if (step === 4) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step4_tag', 'BƯỚC 4: GHÉP & BÁN') : 'BƯỚC 4: GHÉP & BÁN';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step4_text', '⭐ Kéo 2 món CÙNG LOẠI & SAO đè lên nhau để GHÉP! Kéo ô đỏ để BÁN (2$).') : '⭐ Kéo 2 món CÙNG LOẠI & SAO đè lên nhau để GHÉP! Kéo ô đỏ để BÁN (2$).';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step4_text', '⭐ Kéo 2 món CÙNG LOẠI & CÙNG SAO đè lên nhau để GHÉP! Hoặc kéo ô đỏ để BÁN (2$).') : '⭐ Kéo 2 món CÙNG LOẠI & CÙNG SAO đè lên nhau để GHÉP! Hoặc kéo ô đỏ để BÁN (2$).';
       if (btnAction) {
         btnAction.classList.remove('hidden');
         btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
@@ -8093,6 +8119,10 @@ class AppController {
     } else if (step === 5) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step5_tag', 'BƯỚC 5: VÀO TRẬN') : 'BƯỚC 5: VÀO TRẬN';
       if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step5_text', '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!') : '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!';
+      if (btnAction) {
+        btnAction.classList.remove('hidden');
+        btnAction.textContent = typeof t === 'function' ? t('bp.btn_fight', 'Vào Trận 👉') : 'Vào Trận 👉';
+      }
       targetEl = document.getElementById('btn-fight');
     } else if (step === 6) {
       if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step6_tag', 'BƯỚC 6: CHIẾN ĐẤU') : 'BƯỚC 6: CHIẾN ĐẤU';
@@ -8121,10 +8151,22 @@ class AppController {
     if (!hand || !targetEl) return;
     const rect = targetEl.getBoundingClientRect();
     if (rect.width === 0 && rect.height === 0) return;
-    const x = rect.left + rect.width / 2 - 16;
-    const y = rect.bottom + 4;
-    hand.style.left = `${Math.max(10, Math.min(window.innerWidth - 40, x))}px`;
-    hand.style.top = `${Math.max(60, y)}px`;
+
+    // Use downward hand if target is in bottom half of viewport
+    if (rect.top > window.innerHeight * 0.55) {
+      hand.textContent = '👇';
+      const x = rect.left + rect.width / 2 - 16;
+      const y = rect.top - 38;
+      hand.style.left = `${Math.max(10, Math.min(window.innerWidth - 40, x))}px`;
+      hand.style.top = `${Math.max(60, y)}px`;
+    } else {
+      hand.textContent = '👆';
+      const x = rect.left + rect.width / 2 - 16;
+      const y = rect.bottom + 4;
+      hand.style.left = `${Math.max(10, Math.min(window.innerWidth - 40, x))}px`;
+      hand.style.top = `${Math.max(60, y)}px`;
+    }
+    hand.classList.remove('hidden');
   }
 
   updateGameplayTutorialPosition() {
@@ -8133,7 +8175,7 @@ class AppController {
     if (this.gtutStep === 1) targetEl = document.getElementById('btn-enter-run');
     else if (this.gtutStep === 2) targetEl = document.getElementById('btn-refresh-shop');
     else if (this.gtutStep === 3) targetEl = document.getElementById('shop-slot-0') || document.getElementById('shop-triple-slots-row');
-    else if (this.gtutStep === 4) targetEl = document.getElementById('sell-drop-zone');
+    else if (this.gtutStep === 4) targetEl = document.getElementById('sell-drop-zone') || document.getElementById('backpack-grid-board');
     else if (this.gtutStep === 5) targetEl = document.getElementById('btn-fight');
     if (targetEl) this.positionHandOnElement(targetEl);
   }
@@ -8143,6 +8185,8 @@ class AppController {
     document.querySelectorAll('.tut-highlight-pulse').forEach(el => el.classList.remove('tut-highlight-pulse'));
     const overlay = document.getElementById('gameplay-tutorial-overlay');
     if (overlay) overlay.classList.add('hidden');
+    const hand = document.getElementById('tut-pointer-hand');
+    if (hand) hand.classList.add('hidden');
     try {
       localStorage.setItem('desert_outpost_gameplay_tut_done', 'true');
     } catch(e) {}

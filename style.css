@@ -4575,30 +4575,33 @@ html::-webkit-scrollbar,
 }
 
 .tut-pointer-hand {
-  position: absolute;
-  font-size: 34px;
+  position: fixed;
+  font-size: 32px;
   pointer-events: none;
+  user-select: none;
   z-index: 1000000;
-  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 12px #fbbf24);
-  animation: tutHandBounce 0.8s infinite alternate ease-in-out;
+  transition: transform 0.15s ease-out;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+  animation: tutHandBounce 0.9s infinite alternate ease-in-out;
+  will-change: transform;
+}
+.tut-pointer-hand.hidden {
+  display: none !important;
 }
 
 @keyframes tutHandBounce {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-12px) scale(1.1); }
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
 }
 
 .tut-highlight-pulse {
-  position: relative;
-  z-index: 999998 !important;
   outline: 3px solid #fbbf24 !important;
-  box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.5), 0 0 25px rgba(251, 191, 36, 0.8) !important;
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.5), 0 0 15px rgba(251, 191, 36, 0.7) !important;
   animation: tutPulseRing 1.2s infinite ease-in-out !important;
 }
 
 @keyframes tutPulseRing {
-  0% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.8), 0 0 10px rgba(251, 191, 36, 0.6); }
-  50% { box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.2), 0 0 30px rgba(251, 191, 36, 0.9); }
-  100% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.8), 0 0 10px rgba(251, 191, 36, 0.6); }
+  0% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.8), 0 0 8px rgba(251, 191, 36, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.2), 0 0 20px rgba(251, 191, 36, 0.8); }
+  100% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.8), 0 0 8px rgba(251, 191, 36, 0.5); }
 }
