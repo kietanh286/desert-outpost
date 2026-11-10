@@ -1,0 +1,12 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nrgChest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+  <rect x="15" y="45" width="70" height="42" rx="6" fill="url(#nrgChest)" stroke="#082f49" stroke-width="4"/>
+  <path d="M15 45 C15 28 85 28 85 45 Z" fill="#0284c7" stroke="#082f49" stroke-width="4"/>
+  <polygon points="53,34 38,54 48,54 45,68 62,48 51,48" fill="#fef08a" stroke="#ca8a04" stroke-width="1.5"/>
+  <line x1="15" y1="45" x2="85" y2="45" stroke="#bae6fd" stroke-width="2.5"/>
+</svg>

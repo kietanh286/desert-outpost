@@ -1,0 +1,7 @@
+# Ignore heavy demo video clips & temporary video frames
+*.mp4
+frame_*.jpg
+end_frame_*.jpg
+frame1.jpg
+frame_backpack.jpg
+*.bat

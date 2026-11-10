@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Desert Outpost: Merge Defense</title>
+  <!-- YOUTUBE PLAYABLES SDK -->
+  <script src="https://www.youtube.com/game_api/v1"></script>
+  <link rel="stylesheet" href="style.css?v=20261110_full_compact_save">
+</head>
+<body>
+  <div id="game-container">
+
+    <!-- TOP GLOBAL HUD -->
+    <header id="global-hud">
+      <div class="hud-stat">
+        <img id="hud-currency-icon" class="hud-icon pixel-icon" src="assets/icons/gold_coin.png" alt="Vàng">
+        <span id="player-cash" class="hud-text">150</span>
+      </div>
+      <div class="hud-stat">
+        <img class="hud-icon pixel-icon" src="assets/icons/gem.png" alt="Kim Cương">
+        <span id="player-gems" class="hud-text">10</span>
+      </div>
+      <div class="hud-stat">
+        <img class="hud-icon pixel-icon" src="assets/icons/energy.png" alt="Năng Lượng">
+        <span id="player-energy" class="hud-text">30/30</span>
+      </div>
+      <div class="hud-tools">
+        <button id="btn-save-code" class="btn-pkg-reset" title="Sao Chép hoặc Nạp mã lưu tiến trình (Cloud Save Code)">
+          <img src="assets/icons/save_code.png" class="pixel-mini-icon" alt="">
+          <span>Mã Lưu</span>
+        </button>
+        <button id="btn-battle-pause" class="btn-battle-pause-top hidden" title="Tạm Dừng Trận Đấu">
+          <img src="assets/icons/pause.png" class="pixel-btn-icon" alt="Pause">
+          <span>Pause</span>
+        </button>
+        <button id="btn-sound" class="hud-mini-btn" title="Bật/Tắt âm thanh"><img id="img-sound-icon" src="assets/icons/sound_on.png" class="pixel-btn-icon" alt="Âm thanh" style="margin:0;"></button>
+      </div>
+    </header>
+
+    <!-- ============================================== -->
+    <!-- VIEW 1: LOBBY & ARSENAL METAGAME UPGRADE (ẢNH 5 & VIDEO LOBBY) -->
+    <!-- ============================================== -->
+    <section id="view-lobby" class="game-view active">
+      <!-- TOP LOBBY MILESTONE BAR (BATTLE PASS CHIẾN DỊCH MÙA) -->
+      <div id="btn-open-milestone" class="lobby-milestone-bar" title="Bấm để xem và nhận quà Cột Mốc Vượt Màn & Diệt Quái!">
+        <div class="milestone-trophy">
+          <img src="assets/icons/trophy.png" class="pixel-trophy-img" alt="Trophy">
+        </div>
+        <div class="milestone-progress-group">
+          <div class="milestone-label-row">
+            <span class="milestone-season-title">Cột Mốc Vượt Màn & Diệt Quái</span>
+            <span class="milestone-badge"><span id="milestone-pts-text">450 / 2000</span> <b id="milestone-btn-badge" class="milestone-claim-pill hidden"><img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Quà</b></span>
+          </div>
+          <div class="milestone-bar-bg">
+            <div id="milestone-bar-fill" class="milestone-bar-fill" style="width: 22%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 1: BATTLE & STAGE SELECTOR SHOWCASE -->
+      <div id="lobby-tab-battle" class="lobby-tab-pane active">
+        <div class="giant-boss-stage">
+          <div class="boss-spotlight"></div>
+          
+          <!-- STAGE / BOSS SWITCHER HEADER (5 MÀN CHƠI) -->
+          <div class="boss-switch-row">
+            <button id="btn-prev-boss" class="btn-boss-arrow" title="Màn trước">◀</button>
+            <div class="boss-title-container">
+              <span id="boss-subtitle-tag" class="boss-subtitle-tag">MÀN 1 / 5 • TIỀN ĐỒN SA MẠC</span>
+              <h2 id="boss-name-heading" class="boss-name-heading">CAPO CHIZURU YAMAMOTO</h2>
+              <span id="boss-lvl-badge" class="boss-lvl-badge">LV. 10</span>
+            </div>
+            <button id="btn-next-boss" class="btn-boss-arrow" title="Màn kế">▶</button>
+          </div>
+
+          <!-- GIANT BOSS AVATAR DISPLAY (HIỆN NGUYÊN HÌNH HOẶC BÓNG ĐEN BÍ ẨN CÓ ?) -->
+          <div id="giant-boss-avatar-wrapper" class="giant-boss-avatar-wrapper">
+            <!-- Rendered dynamically as high-res animated SVG boss art or mysterious silhouette -->
+          </div>
+
+          <!-- BOSS SPECIAL TRAIT BANNER & UNLOCK REQUIREMENT -->
+          <div class="boss-trait-card">
+            <div class="trait-icon-badge"><img src="assets/icons/star.png" class="pixel-mini-icon"> Kỹ Năng Boss</div>
+            <p id="boss-trait-desc" class="boss-trait-desc">
+              Phóng chùm tia Mega Laser thiêu đốt & Triệu hồi bọ cạp bọc thép càn quét căn cứ!
+            </p>
+          </div>
+
+          <!-- STAGE RECORD STATS CHIPS -->
+          <div class="lobby-record-stats">
+            <div class="record-chip wave-chip">
+              <span class="rc-label">Độ Dài Màn</span>
+              <b id="lobby-max-wave">10 Waves</b>
+            </div>
+            <div class="record-chip score-chip">
+              <span class="rc-label">Thưởng Diệt Boss</span>
+              <b id="lobby-max-score"><img src="assets/icons/gem.png" class="pixel-mini-icon"> +5</b>
+            </div>
+          </div>
+
+          <!-- GAME MODE TOGGLE IN LOBBY -->
+          <div class="lobby-mode-selector">
+            <span class="mode-select-title">CHẾ ĐỘ CHIẾN DỊCH:</span>
+            <button id="btn-lobby-mode" class="btn-lobby-mode" type="button" title="Bấm để đổi chế độ">
+              <span id="lobby-mode-badge" class="mode-badge normal-mode">Thường (Bán Vali: BẬT)</span>
+            </button>
+          </div>
+
+          <!-- LOADOUT PREVIEW IN BATTLE TAB -->
+          <div class="lobby-loadout-preview-bar">
+            <div class="ll-header">
+              <span class="ll-title">BỘ TRANG BỊ VÀO TRẬN:</span>
+              <button id="btn-goto-equip-tab" class="btn-ll-edit" type="button">Chọn Món &gt;</button>
+            </div>
+            <div id="battle-tab-loadout-icons" class="ll-icons-row">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- BIG BATTLE LAUNCH ACTION -->
+          <div class="boss-battle-action">
+            <button id="btn-enter-run" class="btn btn-giant-battle">
+              <span class="btn-battle-glow"></span>
+              <span id="btn-battle-icon-el" class="btn-battle-icon"><img src="assets/icons/swords.png" class="pixel-btn-icon" alt=""></span>
+              <div class="btn-battle-text">
+                <span id="btn-battle-title-el" class="battle-title-main">XUẤT TRẬN CHIẾN DỊCH</span>
+                <span id="btn-battle-sub-el" class="battle-cost-sub">Sắp xếp vali & Hỏa lực (Tốn <img src="assets/icons/energy.png" class="pixel-mini-icon"> 5)</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: ARSENAL WEAPON UPGRADES (KHO VŨ KHÍ CHI TIẾT CHỈ SỐ) -->
+      <div id="lobby-tab-arsenal" class="lobby-tab-pane">
+        <div class="arsenal-view-header">
+          <h3>KHO VŨ KHÍ & BỘ TRANG BỊ RA TRẬN</h3>
+          <p>Chọn tối đa 5-7 món mang vào ván đấu & Tiến hóa nâng cấp vĩnh viễn</p>
+        </div>
+        <!-- KHUNG BỘ TRANG BỊ LOADOUT (5..7 Ô) -->
+        <div id="arsenal-loadout-container" class="arsenal-loadout-box">
+          <!-- Rendered dynamically -->
+        </div>
+        <div id="arsenal-detailed-list" class="arsenal-detailed-list">
+          <!-- Rendered dynamically with DMG, SPD, Ability comparisons -->
+        </div>
+      </div>
+
+      <!-- TAB 3: LEADERBOARD CLUB & BẢNG XẾP HẠNG MAFIA TOÀN CẦU -->
+      <div id="lobby-tab-rank" class="lobby-tab-pane">
+        <div class="rank-view-header">
+          <h3>BẢNG XẾP HẠNG LIÊN MINH & MAFIA CLUB</h3>
+          <p>Điểm Kỷ Lục (Max Score) xác định Danh Vọng & Bậc Hạng Thế Giới Ngầm!</p>
+        </div>
+
+        <!-- PLAYER RANK TIER CARD -->
+        <div class="club-player-card">
+          <div class="cpc-badge-col">
+            <span id="club-player-badge-icon" class="cpc-icon"><img src="assets/icons/crown.png" class="pixel-mini-icon" alt=""></span>
+            <span id="club-player-badge-title" class="cpc-tier-name">BỐ GIÀ HOÀNG KIM</span>
+          </div>
+          <div class="cpc-stats-col">
+            <div class="cpc-stat-item">
+              <span class="cpc-stat-lbl">Hạng Hiện Tại:</span>
+              <b id="club-player-rank-num" class="cpc-stat-val text-gold">Top 4</b>
+            </div>
+            <div class="cpc-stat-item">
+              <span class="cpc-stat-lbl">Kỷ Lục Max Score:</span>
+              <b id="club-player-max-score" class="cpc-stat-val">1.206.000</b>
+            </div>
+            <div class="cpc-stat-item">
+              <span class="cpc-stat-lbl">Màn Cao Nhất:</span>
+              <b id="club-player-max-stage" class="cpc-stat-val">Màn 1 / 5</b>
+            </div>
+          </div>
+          <button id="btn-claim-weekly-rank" class="btn btn-claim-rank">
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thưởng Tuần (+50 <img src="assets/icons/gem.png" class="pixel-mini-icon">)
+          </button>
+        </div>
+
+        <!-- LEADERBOARD TOP PLAYERS -->
+        <div class="leaderboard-container">
+          <div class="lb-header-row">
+            <span>Hạng</span>
+            <span>Trùm / Liên Minh</span>
+            <span>Max Wave</span>
+            <span>Max Score</span>
+          </div>
+          <div id="leaderboard-rows-list" class="leaderboard-rows-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: BLACK MARKET SHOP - HÒM BÍ ẨN & TIẾP TẾ QC -->
+      <div id="lobby-tab-shop" class="lobby-tab-pane">
+        <div class="shop-view-header">
+          <h3>CHỢ ĐEN MAFIA - HÒM BÍ ẨN & TIẾP TẾ</h3>
+          <p>Mở Hòm ngẫu nhiên nhận mảnh vũ khí & Nhận quà miễn phí bằng cách xem Quảng Cáo!</p>
+        </div>
+
+        <!-- FREE AD SUPPLY CHESTS SECTION -->
+        <div class="shop-section-title"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> TIẾP TẾ QUẢNG CÁO MIỄN PHÍ</div>
+        <div class="market-deals-grid free-ad-grid">
+          <div class="deal-card ad-deal-card">
+            <div class="deal-icon">
+              <img src="assets/icons/chest_energy.png" class="pixel-chest-img" alt="Hòm Năng Lượng">
+            </div>
+            <h4>Hòm Năng Lượng Miễn Phí</h4>
+            <p>Hồi ngay lập tức <b>+10</b> <img src="assets/icons/energy.png" class="pixel-mini-icon"> Năng Lượng để tiếp tục xuất trận cày chiến dịch!</p>
+            <button id="btn-ad-free-energy" class="btn btn-ad-claim">
+              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> Xem QC (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)
+            </button>
+          </div>
+          <div class="deal-card ad-deal-card">
+            <div class="deal-icon">
+              <img src="assets/icons/chest_diamond.png" class="pixel-chest-img" alt="Hòm Kim Cương">
+            </div>
+            <h4>Hòm Kim Cương Miễn Phí</h4>
+            <p>Nhận ngay <b>+10</b> <img src="assets/icons/gem.png" class="pixel-mini-icon"> Kim Cương dùng để mở hòm Bố Già hoặc hồi sinh căn cứ!</p>
+            <button id="btn-ad-free-gems" class="btn btn-ad-claim">
+              <span class="ad-tag-mini"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span> Xem QC (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)
+            </button>
+          </div>
+        </div>
+
+        <!-- MYSTERY CHESTS SECTION -->
+        <div class="shop-section-title"><img src="assets/icons/chest_gold.png" class="pixel-mini-icon"> HÒM VŨ KHÍ & NGUYÊN LIỆU GACHA</div>
+        <div class="market-deals-grid chests-grid">
+          <div class="deal-card chest-wood">
+            <div class="deal-icon">
+              <img src="assets/icons/chest_wood.png" class="pixel-chest-img" alt="Hòm Gỗ">
+            </div>
+            <h4>Hòm Gỗ Tiếp Tế</h4>
+            <p>Chứa <b>10 - 25 Mảnh</b> vũ khí thường & phòng thủ ngẫu nhiên.</p>
+            <button id="btn-buy-wood-chest" class="btn btn-buy-deal"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> 500 Mua Hòm</button>
+          </div>
+          <div class="deal-card chest-silver">
+            <div class="deal-icon">
+              <img src="assets/icons/chest_silver.png" class="pixel-chest-img" alt="Hòm Bạc">
+            </div>
+            <h4>Hòm Bạc Tinh Anh</h4>
+            <p>Chứa <b>35 - 75 Mảnh</b> vũ khí & Tăng tỉ lệ rớt Cung Nỏ và Pháo Laser!</p>
+            <div class="chest-dual-btns">
+              <button id="btn-buy-silver-coin" class="btn btn-buy-deal"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> 1.500</button>
+              <button id="btn-buy-silver-gem" class="btn btn-buy-deal gem-deal"><img src="assets/icons/gem.png" class="pixel-mini-icon"> 25</button>
+            </div>
+          </div>
+          <div class="deal-card chest-gold">
+            <div class="deal-icon">
+              <img src="assets/icons/chest_gold.png" class="pixel-chest-img" alt="Hòm Hoàng Kim">
+            </div>
+            <h4>Hòm Hoàng Kim Bố Già</h4>
+            <p>Chứa <b>80 - 160 Mảnh</b> vũ khí cao cấp! Đảm bảo rớt mảnh Cung Nỏ Huyền Thoại & Cơ hội Jackpot!</p>
+            <button id="btn-buy-gold-chest" class="btn btn-buy-deal gem-deal"><img src="assets/icons/gem.png" class="pixel-mini-icon"> 80 Mua Hòm</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOBBY 4-TAB BOTTOM NAVIGATION (GIỐNG IDLE MAFIA VIDEO 34) -->
+      <nav class="lobby-bottom-nav">
+        <button class="nav-tab-btn active" data-tab="battle">
+          <span class="nav-icon"><img src="assets/weapons/dagger_lv1.png" class="pixel-nav-icon" alt="Battle"></span>
+          <span class="nav-label">Battle</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="arsenal">
+          <span class="nav-icon"><img src="assets/icons/chest_wood.png" class="pixel-nav-icon" alt="Equip"></span>
+          <span class="nav-label">Equip</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="rank">
+          <span class="nav-icon"><img src="assets/icons/trophy.png" class="pixel-nav-icon" alt="Club"></span>
+          <span class="nav-label">Club</span>
+        </button>
+        <button class="nav-tab-btn" data-tab="shop">
+          <span class="nav-icon"><img src="assets/icons/gem.png" class="pixel-nav-icon" alt="Shop"></span>
+          <span class="nav-label">Shop</span>
+        </button>
+      </nav>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- VIEW 2: BACKPACK VALI INVENTORY (ẢNH 1 & 2) -->
+    <!-- ============================================== -->
+    <section id="view-backpack" class="game-view">
+      <!-- TOP WAVE & STATS BAR -->
+      <div class="backpack-top-bar">
+        <div class="wave-indicator">
+          <span>Wave <b id="backpack-wave-num">1</b></span>
+        </div>
+        <div class="bars-group">
+          <div class="dual-bar shield-bar">
+            <span class="bar-lbl"><img src="assets/defense/shield_lv1.png" class="pixel-mini-icon" alt="Shield"> <span id="bp-shield-text">100 / 100</span></span>
+            <div id="bp-shield-fill" class="bar-fill blue-fill" style="width: 100%;"></div>
+          </div>
+          <div class="dual-bar hp-bar">
+            <span class="bar-lbl"><img src="assets/icons/heart.png" class="pixel-mini-icon" alt="HP"> <span id="bp-hp-text">100 / 100</span></span>
+            <div id="bp-hp-fill" class="bar-fill red-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRID SHIFT BAR (DỜI VÙNG Ô 3x3 TRÁI / PHẢI / LÊN / XUỐNG TỰ DO - YÊU CẦU 5) -->
+      <div class="grid-shift-bar">
+        <span class="shift-hint backpack-guide-text">Dời vali hoặc kéo tự do:</span>
+        <div class="shift-btns-group">
+          <button id="btn-shift-left" class="btn-shift" type="button" title="Dời ô vali sang trái"><img src="assets/icons/arrow_left.png" class="pixel-mini-icon" alt=""> Trái</button>
+          <button id="btn-shift-up" class="btn-shift" type="button" title="Dời ô vali lên trên"><img src="assets/icons/arrow_up.png" class="pixel-mini-icon" alt=""> Lên</button>
+          <button id="btn-shift-down" class="btn-shift" type="button" title="Dời ô vali xuống dưới"><img src="assets/icons/arrow_down.png" class="pixel-mini-icon" alt=""> Xuống</button>
+          <button id="btn-shift-right" class="btn-shift" type="button" title="Dời ô vali sang phải"><img src="assets/icons/arrow_right.png" class="pixel-mini-icon" alt=""> Phải</button>
+        </div>
+      </div>
+
+      <!-- THE SUITCASE / VALI GRID CONTAINER (ẢNH 1) -->
+      <div class="suitcase-wrapper">
+        <div class="suitcase-frame">
+          <div class="suitcase-handle"></div>
+          <!-- 7x7 CONTAINER WITH SEPARATED CELLS & ITEMS LAYERS -->
+          <div id="backpack-grid-board" class="backpack-grid-board">
+            <div id="grid-cells-layer" class="grid-cells-layer">
+              <!-- 49 background cells -->
+            </div>
+            <div id="grid-items-layer" class="grid-items-layer">
+              <!-- Placed weapon cards overlay -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5-SLOT STASH BENCH (HÀNG DỰ BỊ / KHO CHỜ 5 Ô - YÊU CẦU 4) -->
+      <div class="stash-bench-wrapper">
+        <div class="stash-header">
+          <span class="stash-title">HÀNG DỰ BỊ (5 Ô LƯU TRỮ GHÉP SAO)</span>
+          <span id="stash-hint-text" class="stash-hint">Ô 1 Miễn phí - Chạm ô khóa để mở</span>
+        </div>
+        <div id="stash-slots-row" class="stash-slots-row">
+          <div id="stash-slot-0" class="stash-slot unlocked" data-stash="0"></div>
+          <div id="stash-slot-1" class="stash-slot locked" data-stash="1"></div>
+          <div id="stash-slot-2" class="stash-slot locked" data-stash="2"></div>
+          <div id="stash-slot-3" class="stash-slot locked" data-stash="3"></div>
+          <div id="stash-slot-4" class="stash-slot locked" data-stash="4"></div>
+        </div>
+      </div>
+
+      <!-- 3-ITEM SHOP / ROLL PANEL (ẢNH 1 & 2 ĐÁY) -->
+      <div class="backpack-shop-panel">
+        <div class="shop-header-row">
+          <div class="roll-slot-label">VŨ KHÍ / MẢNH ĐẤT (3 Ô SHOP)</div>
+          <span id="backpack-mode-indicator" class="mode-badge normal-mode">Chế Độ: Thường</span>
+        </div>
+
+        <div id="shop-triple-slots-row" class="shop-triple-slots-row">
+          <div id="shop-slot-0" class="shop-item-slot" data-slot="0"></div>
+          <div id="shop-slot-1" class="shop-item-slot" data-slot="1"></div>
+          <div id="shop-slot-2" class="shop-item-slot" data-slot="2"></div>
+        </div>
+
+        <!-- DRAG HERE TO SELL ZONE (ẢNH 2) -->
+        <div id="sell-drop-zone" class="sell-drop-zone">
+          <span class="sell-zone-icon"><img src="assets/icons/pixel_cash.png" class="pixel-mini-icon" style="width:20px;height:20px;"></span>
+          <span id="sell-zone-text" class="sell-zone-text">Kéo trang bị vào đây để BÁN</span>
+        </div>
+
+        <!-- BACKPACK ACTION BUTTONS (ĐÃ BỎ NÚT XOAY) -->
+        <div class="backpack-actions-row">
+          <button id="btn-refresh-shop" class="btn btn-refresh" type="button">
+            <div class="btn-text-group">
+              <span class="btn-main-title">Roll (3 Món)</span>
+              <span class="btn-sub-cost"><img src="assets/icons/pixel_cash.png" class="pixel-mini-icon" alt=""> <span id="refresh-cost">10</span>$</span>
+            </div>
+          </button>
+
+          <button id="btn-fight" class="btn btn-fight" type="button">
+            <img src="assets/icons/swords.png" class="pixel-mini-icon" alt="">
+            <span class="btn-fight-title">Xuất Trận</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- VIEW 3: BATTLEFIELD WAVE COMBAT (ẢNH 3 & 4) -->
+    <!-- ============================================== -->
+    <section id="view-battle" class="game-view">
+      <!-- TOP SCORE & PROGRESS (ẢNH 3) -->
+      <div class="battle-top-hud">
+        <div class="wave-level-bar">
+          <span class="wave-tag">Wave <span id="battle-wave-num">1</span></span>
+          <div class="progress-bar-bg">
+            <div id="battle-progress-fill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+          <span class="enemies-badge">Quái: <b id="battle-enemies-left">00</b></span>
+          
+          <!-- IN-WAVE EXP & LEVEL UP SYSTEM (ẢNH 3: Lv.58) -->
+          <div class="inwave-exp-group">
+            <span class="inwave-lv-badge">Lv.<b id="battle-inwave-lv">1</b></span>
+            <div class="exp-bar-bg">
+              <div id="battle-exp-fill" class="exp-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+        <div class="score-meters">
+          <div class="score-chip orange-chip">
+            <span>Score: <b id="current-score-text">0</b></span>
+          </div>
+          <div class="score-chip green-chip">
+            <span>Kỷ Lục: <b id="high-score-text">0</b></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESERT BATTLEFIELD CANVAS (ẢNH 3) -->
+      <div id="battle-arena-wrapper">
+        <!-- DYNAMIC BOSS HEALTH BAR OVERLAY (HIỆN KHI BOSS XUẤT HIỆN) -->
+        <div id="boss-raid-bar" class="boss-raid-bar hidden">
+          <div class="boss-raid-header">
+            <span class="boss-raid-icon"><img src="assets/icons/crown.png" class="pixel-mini-icon"></span>
+            <span class="boss-raid-title" id="boss-raid-name">TỔNG TƯ LỆNH BLACK GOLD</span>
+            <span class="boss-raid-hp-num" id="boss-raid-hp-text">100%</span>
+          </div>
+          <div class="boss-raid-track">
+            <div id="boss-raid-shield-fill" class="boss-raid-shield-fill" style="width: 0%;"></div>
+            <div id="boss-raid-fill" class="boss-raid-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+        <canvas id="battle-canvas"></canvas>
+      </div>
+
+      <!-- BATTLE FOOTER CONTROLS & MONITOR (ẢNH 3) -->
+      <div class="battle-footer-panel">
+        <div class="battle-hp-shield-row">
+          <button id="btn-buff-list" class="btn-view-buffs" type="button" title="Xem danh sách buff"><img src="assets/icons/buff_icon.png" class="pixel-mini-icon" alt=""> Buffs</button>
+          <div class="dual-bar shield-bar flex-1">
+            <span class="bar-lbl"><img src="assets/defense/shield_lv1.png" class="pixel-mini-icon" alt="Khiên"> <span id="battle-shield-text">100 / 100</span></span>
+            <div id="battle-shield-fill" class="bar-fill blue-fill" style="width: 100%;"></div>
+          </div>
+          <div class="dual-bar hp-bar flex-1">
+            <span class="bar-lbl"><img src="assets/icons/heart.png" class="pixel-mini-icon" alt="HP"> <span id="battle-hp-text">100 / 100</span></span>
+            <div id="battle-hp-fill" class="bar-fill red-fill" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- WEAPONS QUICK RACK (ẢNH 3 ĐÁY) -->
+        <div id="battle-quick-rack" class="battle-quick-rack">
+          <!-- Active weapons in backpack shown here -->
+        </div>
+
+        <!-- BOTTOM CONTROLS: ADJUST BACKPACK & SPEED X1/X3/X5 -->
+        <div class="battle-controls-row">
+          <button id="btn-adjust-backpack" class="btn btn-adjust-backpack" type="button">
+            <img src="assets/icons/backpack_icon.png" class="pixel-mini-icon" alt="">
+            <span>Sắp Xếp Vali</span>
+          </button>
+
+          <div class="speed-toggle-group">
+            <span class="speed-lbl">Tốc Độ</span>
+            <div class="speed-buttons">
+              <button class="btn-speed active" id="btn-speed-x1" data-speed="1" type="button">x1</button>
+              <button class="btn-speed locked" id="btn-speed-x3" data-speed="2" type="button">
+                <span>x3</span>
+                <span class="speed-ad-tag" id="tag-speed-x3"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""></span>
+              </button>
+              <button class="btn-speed locked" id="btn-speed-x5" data-speed="3" type="button">
+                <span>x5</span>
+                <span class="speed-ad-tag" id="tag-speed-x5"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- MODAL: LEVEL UP ROGUELIKE PERK CHOICES (ẢNH 4 & CƠ CHẾ NÂNG CẤP) -->
+    <!-- ============================================== -->
+    <div id="modal-levelup" class="modal-overlay hidden">
+      <div class="modal-box levelup-box">
+        <div class="levelup-header">
+          <div class="levelup-tag">LEVEL UP!</div>
+          <h2>NÂNG CẤP HỎA LỰC TRONG VÁN</h2>
+          <p>Chọn 1 cường hóa sức mạnh đặc biệt cho chiến dịch hiện tại</p>
+        </div>
+        <div id="levelup-choices-container" class="levelup-choices-container">
+          <!-- 3 randomized perk cards injected dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: BUFF LIST POPUP (ẢNH 4) -->
+    <!-- ============================================== -->
+    <div id="modal-buff-list" class="modal-overlay hidden">
+      <div class="modal-box buff-list-box">
+        <div class="modal-header-with-close">
+          <h2>Buff List (Hiệu Ứng Đang Kích Hoạt)</h2>
+          <button id="btn-close-buffs" class="btn-close-modal">✕</button>
+        </div>
+        <div id="buff-items-container" class="buff-items-container">
+          <!-- Synergies and buffs rendered dynamically (Ảnh 4) -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: VICTORY & REWARDS DROP (ẢNH 5) -->
+    <!-- ============================================== -->
+    <div id="modal-victory" class="modal-overlay hidden">
+      <div class="modal-box victory-box">
+        <div class="victory-header-icon">
+          <img src="assets/icons/crown.png" class="crown-icon">
+          <div class="victory-banner-title">VICTORY</div>
+        </div>
+
+        <div class="victory-stats-row">
+          <div class="v-stat-card yellow-card">
+            <span class="v-stat-label">Max Wave</span>
+            <b id="v-max-wave">242</b>
+          </div>
+          <div class="v-stat-card red-card">
+            <span class="v-stat-label">Current Wave</span>
+            <b id="v-cur-wave">242</b>
+          </div>
+        </div>
+
+        <div class="v-reward-title">Reward (Mảnh Nguyên Liệu)</div>
+        <div id="victory-rewards-grid" class="victory-rewards-grid">
+          <!-- Material items dropped with x16, x72, x70... (Ảnh 5) -->
+        </div>
+
+        <div class="victory-actions">
+          <button id="btn-victory-ad" class="btn btn-ad">
+            <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
+            <span>Xem QC: Nhân Đôi Nguyên Liệu (x2 Mảnh)!</span>
+          </button>
+          <button id="btn-victory-ok" class="btn btn-victory-ok">
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thường & Tiếp Tục
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: GEAR UNLOCK CELEBRATION (MỞ KHÓA TRANG BỊ MỚI) -->
+    <!-- ============================================== -->
+    <div id="modal-gear-unlock" class="modal-overlay hidden">
+      <div class="modal-box gear-unlock-box">
+        <div class="unlock-reward-glow"></div>
+        <div class="unlock-header">
+          <img src="assets/icons/trophy.png" class="unlock-trophy-img" alt="Cúp">
+          <h2 class="unlock-banner-title">🎉 MỞ KHÓA TRANG BỊ MỚI!</h2>
+          <span id="unlock-stage-tag" class="unlock-sub-badge">CHIẾN THẮNG MÀN 1 - TIỀN ĐỒN SA MẠC</span>
+        </div>
+
+        <div class="unlock-subtitle-desc">
+          Chúc mừng Bố Già! Bạn đã tiêu diệt Trùm Cột Mốc và giải mã thành công trang bị tối tân mới vào Kho Vũ Khí:
+        </div>
+
+        <div id="unlock-gears-list" class="unlock-gears-list">
+          <!-- Dynamically populated with new gears -->
+        </div>
+
+        <div class="unlock-actions">
+          <button id="btn-equip-unlocked-gear" class="btn btn-equip-unlocked">
+            <img src="assets/icons/swords.png" class="pixel-mini-icon">
+            <span>TRANG BỊ VÀO VALI NGAY</span>
+          </button>
+          <button id="btn-close-gear-unlock" class="btn btn-close-unlock">
+            <img src="assets/icons/star.png" class="pixel-mini-icon">
+            <span>XÁC NHẬN & TIẾP TỤC</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: DEFEAT & REWARDS BREAKDOWN (YÊU CẦU MỚI) -->
+    <!-- ============================================== -->
+    <div id="modal-defeat" class="modal-overlay hidden">
+      <div class="modal-box defeat-box">
+        <div class="defeat-header-icon">
+          <span class="skull-icon">💀</span>
+          <div class="defeat-banner-title">CHIẾN DỊCH THẤT BẠI</div>
+        </div>
+
+        <div class="defeat-stats-row">
+          <div class="v-stat-card yellow-card">
+            <span class="v-stat-label">Max Wave Kỷ Lục</span>
+            <b id="d-max-wave">0</b>
+          </div>
+          <div class="v-stat-card red-card">
+            <span class="v-stat-label">Wave Đạt Được</span>
+            <b id="d-cur-wave">0</b>
+          </div>
+        </div>
+
+        <div class="v-reward-title">Chiến Lợi Phẩm Thu Thập Được</div>
+        <div id="defeat-rewards-grid" class="victory-rewards-grid">
+          <!-- Populated dynamically with fragments -->
+        </div>
+
+        <div class="defeat-actions">
+          <button id="btn-defeat-ad" class="btn btn-ad">
+            <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
+            <span>Xem QC: Nhân Đôi Nguyên Liệu (x2 Mảnh)!</span>
+          </button>
+          <button id="btn-defeat-claim" class="btn btn-secondary">
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thường & Về Sảnh
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: REWARDED AD / REVIVE -->
+    <!-- ============================================== -->
+    <div id="modal-revive" class="modal-overlay hidden">
+      <div class="modal-box revive-box">
+        <div class="danger-icon"><img src="assets/icons/crown.png" style="width:48px;height:48px;image-rendering:pixelated;"></div>
+        <h2>CĂN CỨ BỊ NỔ TUNG!</h2>
+        <p>Xem 1 video ngắn để hồi sinh ngay 100% máu và bảo toàn toàn bộ ván đấu!</p>
+        <div class="revive-actions">
+          <button id="btn-watch-ad" class="btn btn-ad">
+            <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
+            <span>Xem Quảng Cáo Hồi Sinh (100% Máu)</span>
+          </button>
+          <button id="btn-give-up" class="btn btn-secondary">
+            Bỏ cuộc (Thu thập chiến lợi phẩm)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- SIMULATED REWARDED AD OVERLAY -->
+    <div id="ad-simulator" class="modal-overlay hidden">
+      <div class="ad-screen">
+        <div class="ad-top-bar">
+          <span class="ad-tag">Quảng cáo YouTube Playables</span>
+          <span id="ad-timer">Đóng sau 4s</span>
+        </div>
+        <div class="ad-content">
+          <div class="ad-logo"><img src="assets/icons/backpack_icon.png" style="width:48px;height:48px;image-rendering:pixelated;"></div>
+          <h3>DESERT OUTPOST: MERGE DEFENSE</h3>
+          <p>Nâng cấp trang bị - Quét sạch mọi đợt quái vật!</p>
+          <div class="ad-spinner"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    
+    <!-- ============================================== -->
+    <!-- MODAL: BATTLE PAUSE & SETTINGS MENU -->
+    <!-- ============================================== -->
+    <!-- ============================================== -->
+    <!-- MODAL: SAVE CODE (SAO CHÉP & NẠP TIẾN TRÌNH) -->
+    <!-- ============================================== -->
+    <div id="modal-save-code" class="modal-overlay hidden">
+      <div class="modal-box save-code-box">
+        <div class="save-code-header">
+          <div class="save-code-title-group">
+            <span class="save-code-icon"><img src="assets/icons/save_code.png" class="pixel-mini-icon" alt=""></span>
+            <h2>MÃ LƯU TIẾN TRÌNH (SAVE CODE)</h2>
+          </div>
+          <button id="btn-close-save-code" class="btn-close-modal" type="button">✕</button>
+        </div>
+        <p class="save-code-desc">
+          Lưu và chuyển đổi tiến trình chơi sang điện thoại hoặc máy tính khác khi chơi trên Web/GitHub Pages mà không cần server!
+        </p>
+
+        <!-- KHUNG XUẤT MÃ LƯU (EXPORT) -->
+        <div class="save-code-section">
+          <div class="save-section-label">MÃ TIẾN TRÌNH HIỆN TẠI CỦA BẠN:</div>
+          <textarea id="txt-export-save-code" class="save-code-textarea" readonly rows="2" placeholder="Đang tạo mã lưu..."></textarea>
+          <div class="save-code-btn-row">
+            <button id="btn-copy-save-code" class="btn btn-save-action btn-copy" type="button">
+              <img src="assets/icons/star.png" class="pixel-mini-icon" alt="">
+              <span>Sao Chép Mã Lưu</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="save-code-divider"><span>HOẶC NẠP TIẾN TRÌNH TỪ THIẾT BỊ KHÁC</span></div>
+
+        <!-- KHUNG NHẬP MÃ LƯU (IMPORT) -->
+        <div class="save-code-section">
+          <div class="save-section-label">DÁN MÃ TIẾN TRÌNH VÀO ĐÂY:</div>
+          <textarea id="txt-import-save-code" class="save-code-textarea" rows="2" placeholder="Dán mã DS_... của bạn vào đây để khôi phục tiến trình..."></textarea>
+          <div class="save-code-btn-row">
+            <button id="btn-apply-save-code" class="btn btn-save-action btn-import" type="button">
+              <img src="assets/icons/package_icon.png" class="pixel-mini-icon" alt="">
+              <span>Nạp Tiến Trình Lên Game</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-battle-pause" class="modal-overlay hidden">
+      <div class="modal-box pause-menu-box">
+        <div class="pause-header">
+          <span class="pause-header-icon"><img src="assets/icons/pause.png" class="pixel-mini-icon"></span>
+          <div class="pause-title-group">
+            <h2>CHIẾN DỊCH TẠM DỪNG</h2>
+            <span class="pause-sub">Cài Đặt Game & Báo Cáo Hỏa Lực Chiến Trường</span>
+          </div>
+          <button id="btn-close-pause-x" class="btn-close-modal">✕</button>
+        </div>
+
+        <!-- SETTINGS: AUDIO & EFFECTS -->
+        <div class="pause-section">
+          <div class="pause-sec-title">CÀI ĐẶT TRÒ CHƠI</div>
+          <div class="pause-setting-row">
+            <span class="p-setting-label">Âm Lượng (SFX)</span>
+            <div class="p-volume-control">
+              <span id="p-vol-icon"><img src="assets/icons/sound_on.png" class="pixel-mini-icon"></span>
+              <input type="range" id="slider-pause-volume" min="0" max="100" value="80" class="pause-slider">
+              <span id="pause-volume-val" class="p-val-badge">80%</span>
+            </div>
+          </div>
+          <div class="pause-setting-row">
+            <span class="p-setting-label">Hiệu Ứng Hạt Chiến Đấu (VFX)</span>
+            <button id="btn-toggle-vfx" class="btn-toggle-badge active">Tối Đa (HD)</button>
+          </div>
+        </div>
+
+        <!-- WEAPONS STATS BREAKDOWN -->
+        <div class="pause-section">
+          <div class="pause-sec-title">TRANG BỊ & CHỈ SỐ ĐANG CÓ (DAMAGE, CRIT, SPEED...)</div>
+          <div id="pause-weapons-summary" class="pause-stats-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ROGUELIKE PERKS BREAKDOWN -->
+        <div class="pause-section">
+          <div class="pause-sec-title">KỸ NĂNG & BUFF ĐÃ CHỌN (ROGUELIKE PERKS)</div>
+          <div id="pause-perks-summary" class="pause-stats-list">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="pause-actions-grid">
+          <button id="btn-pause-save" class="btn btn-pause-save" type="button">
+            <img src="assets/icons/star.png" class="pixel-mini-icon" alt=""> Lưu Tiến Độ
+          </button>
+          <button id="btn-pause-lobby" class="btn btn-pause-lobby" type="button">
+            Thoát Ra Lobby
+          </button>
+          <button id="btn-pause-resume" class="btn btn-pause-resume" type="button">
+            <img src="assets/icons/swords.png" class="pixel-mini-icon" alt=""> Tiếp Tục Chiến Đấu
+          </button>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- MODAL: MILESTONE BATTLE PASS REWARDS POPUP -->
+    <!-- ============================================== -->
+    <div id="modal-milestones" class="modal-overlay hidden">
+      <div class="modal-box milestone-modal-box">
+        <div class="milestone-modal-header">
+          <div class="milestone-modal-title-row">
+            <img src="assets/icons/trophy.png" class="m-trophy-big pixel-icon" alt="">
+            <div>
+              <h2>CỘT MỐC TIẾN ĐỘ CHIẾN TRƯỜNG</h2>
+              <p>Vượt Wave & Tiêu diệt Quái vật, Trùm Boss để tích lũy thành tích và mở khóa rương báu vĩnh viễn!</p>
+            </div>
+          </div>
+          <button id="btn-close-milestones" class="btn-close-modal">✕</button>
+        </div>
+
+        <div class="milestone-pts-summary-bar">
+          <span>Tiến Độ Vượt Màn: Wave Kỷ Lục <b id="modal-milestone-cur-wave" class="text-gold">1</b> | Quái Đã Diệt: <b id="modal-milestone-kills" class="text-gold">0</b></span>
+          <span class="milestone-season-reset">Tiến trình vĩnh viễn</span>
+        </div>
+
+        <!-- LIST OF 5 MILESTONE TIERS -->
+        <div id="milestone-tiers-list" class="milestone-tiers-list">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="game.js?v=20261110_full_compact_save"></script>
+
+    <!-- ============================================== -->
+    <!-- MODAL: CHEST OPENING & REWARDS SCREEN (YÊU CẦU 3) -->
+    <!-- ============================================== -->
+    <div id="modal-chest-reward" class="modal-overlay hidden">
+      <div class="modal-box chest-reward-box">
+        <div class="chest-reward-glow"></div>
+        <div class="chest-reward-header">
+          <img id="chest-reward-icon" src="assets/icons/chest_gold.png" class="chest-reward-big-img" alt="Hòm Thưởng">
+          <h2 id="chest-reward-title">MỞ RƯƠNG THÀNH CÔNG!</h2>
+          <span id="chest-reward-sub" class="chest-reward-sub-badge">HÒM BẠC TINH ANH</span>
+        </div>
+
+        <div class="chest-reward-content">
+          <div class="reward-loot-title">VẬT PHẨM & NGUYÊN LIỆU NHẬN ĐƯỢC:</div>
+          <div id="chest-reward-items" class="chest-reward-items-grid">
+            <!-- Dynamically populated loot cards -->
+          </div>
+        </div>
+
+        <button id="btn-claim-chest-reward" class="btn btn-claim-chest-reward">
+          <img src="assets/icons/star.png" class="pixel-mini-icon" alt="★">
+          <span>XÁC NHẬN NHẬN QUÀ</span>
+        </button>
+      </div>
+    </div>
+
+</body>
+</html>
