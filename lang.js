@@ -5,6 +5,8 @@
 
 const I18N = {
   vi: {
+    'toast.grid_fully_maxed': "🎉 Vali đã mở rộng tối đa (49/49 ô)! Bỏ roll ra ô đất mới.",
+    'toast.grid_already_maxed': "⚠️ Vali đã mở rộng tối đa! Hãy kéo vào ô đỏ để bán.",
     'bp.btn_resume_midwave': "Tiếp Tục",
     'toast.auto_sold_items': "🔄 Tự động bán {count} món cũ (+{cash} $) → Roll 3 món mới!",
     'toast.drag_weapon_first': "⚠️ Hãy kéo ít nhất 1 vũ khí vào vali trước khi Fight!",
@@ -629,6 +631,8 @@ const I18N = {
   },
 
   en: {
+    'toast.grid_fully_maxed': "🎉 Suitcase is fully expanded (49/49 cells)! Land tiles removed from shop rolls.",
+    'toast.grid_already_maxed': "⚠️ Suitcase is already fully expanded! Drag to red zone to sell.",
     'lb.tier_godfather': 'GOLDEN GODFATHER',
     'lb.tier_diamond': 'DIAMOND SYNDICATE',
     'lb.tier_gold': 'GOLD UNDERBOSS',

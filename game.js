@@ -2131,6 +2131,46 @@ class InRunState {
   }
 
 
+  isGridMaxed() {
+    if (!this.gridUnlocked || !Array.isArray(this.gridUnlocked)) return false;
+    const unlockedCount = this.gridUnlocked.filter(Boolean).length;
+    if (unlockedCount >= 49) return true;
+
+    // Check if any land tile shape can actually expand remaining locked cells
+    let canExpandAny = false;
+    for (const shape of LAND_TILE_SHAPES) {
+      const w = shape.w;
+      const h = shape.h;
+      for (let rootR = 0; rootR <= 7 - h; rootR++) {
+        for (let rootC = 0; rootC <= 7 - w; rootC++) {
+          let hasAdj = false;
+          let newCount = 0;
+          for (let dr = 0; dr < h; dr++) {
+            for (let dc = 0; dc < w; dc++) {
+              const r = rootR + dr;
+              const c = rootC + dc;
+              const idx = r * 7 + c;
+              if (!this.gridUnlocked[idx]) {
+                newCount++;
+              }
+              const nbs = [(r - 1) * 7 + c, (r + 1) * 7 + c, r * 7 + (c - 1), r * 7 + (c + 1)];
+              if (nbs.some(n => n >= 0 && n < 49 && this.gridUnlocked[n])) {
+                hasAdj = true;
+              }
+            }
+          }
+          if (hasAdj && newCount > 0) {
+            canExpandAny = true;
+            break;
+          }
+        }
+        if (canExpandAny) break;
+      }
+      if (canExpandAny) break;
+    }
+    return !canExpandAny;
+  }
+
   rollShop(deduct = true) {
     if (deduct) {
       if (this.runCash < this.refreshCost) return false;
@@ -2205,7 +2245,9 @@ class InRunState {
         }
       }
 
-      const isLand = Math.random() < 0.11; // 11% ra mảnh đất (tầm 3 lần roll xuất hiện 1 lần theo Yêu cầu 5)
+      // YÊU CẦU: Khi người chơi đã mở khóa tối đa ô vali -> BỎ HOÀN TOÀN khả năng roll ra ô đất
+      const gridMaxed = this.isGridMaxed();
+      const isLand = !gridMaxed && (Math.random() < 0.11);
       if (isLand) {
         const shape = LAND_TILE_SHAPES[Math.floor(Math.random() * LAND_TILE_SHAPES.length)];
         this.shopSlots[slotIdx] = {
@@ -5065,6 +5107,8 @@ class AppController {
         m = m.replace(/^✨ Hợp nhất (.+?) lên ★(\d+) tại Hàng Dự Bị!$/, '✨ Merged $1 to ★$2 in Stash!');
         m = m.replace(/^🔄 Đã hoán đổi vị trí Ô #(\d+) và Ô #(\d+)!$/, '🔄 Swapped Slot #$1 and Slot #$2!');
         m = m.replace(/^🗺️ Đã mở rộng thêm \+(\d+) ô vali!$/, '🗺️ Expanded suitcase grid by +$1 slots!');
+        m = m.replace(/^🎉 Vali đã mở rộng tối đa \(49\/49 ô\)! Bỏ roll ra ô đất mới\.$/, '🎉 Suitcase is fully expanded (49/49 cells)! Land tiles removed from shop rolls.');
+        m = m.replace(/^⚠️ Vali đã mở rộng tối đa! Hãy kéo vào ô đỏ để bán\.$/, '⚠️ Suitcase is already fully expanded! Drag to red zone to sell.');
         m = m.replace(/^✨ Hợp nhất (.+?) lên ★(\d+)!$/, '✨ Merged $1 to ★$2!');
         m = m.replace(/^\[Đã Bán\] (.+?) từ vali: \+(\d+) \$$/, '[Sold] $1 from suitcase: +$2 $');
         m = m.replace(/^\[Đã Bán\] (.+?): \+(\d+) \$$/, '[Sold] $1: +$2 $');
@@ -6626,6 +6670,14 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
 
     // A. LAND TILE PLACEMENT (CHO PHÉP GHÉP DỄ DÀNG, KHÔNG BỊ TỪ CHỐI KHI ĐÈ Ô ĐÃ MỞ - YÊU CẦU 5)
     if (dragObj.isLand) {
+      if (this.run.isGridMaxed()) {
+        const alreadyMaxMsg = typeof t === 'function'
+          ? t('toast.grid_already_maxed', '⚠️ Suitcase is already fully expanded! Drag to red zone to sell.')
+          : '⚠️ Suitcase is already fully expanded! Drag to red zone to sell.';
+        this.showToast(alreadyMaxMsg);
+        sfx.playTone(180, 'sawtooth', 0.12, 0.12);
+        return;
+      }
       let withinBounds = true;
       let hasAdj = false;
       let newlyUnlockedCount = 0;
@@ -6662,7 +6714,17 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
           this.run.shopSlots[sIdx] = null;
         }
         sfx.merge();
-        this.showToast(`🗺️ Đã mở rộng thêm +${newlyUnlockedCount} ô vali!`);
+        if (this.run.isGridMaxed()) {
+          const maxMsg = typeof t === 'function'
+            ? t('toast.grid_fully_maxed', '🎉 Suitcase is fully expanded (49/49 cells)! Land tiles removed from shop rolls.')
+            : '🎉 Suitcase is fully expanded (49/49 cells)! Land tiles removed from shop rolls.';
+          this.showToast(maxMsg);
+        } else {
+          const expandMsg = typeof t === 'function'
+            ? t('toast.expanded_grid', `🗺️ Expanded suitcase grid by +${newlyUnlockedCount} slots!`, { count: newlyUnlockedCount })
+            : `🗺️ Expanded suitcase grid by +${newlyUnlockedCount} slots!`;
+          this.showToast(expandMsg);
+        }
         this.renderBackpack();
       } else {
         this.showToast('⚠️ Mảnh đất phải nằm trọn trong bảng 7x7 và kết nối với ô đã mở!');
