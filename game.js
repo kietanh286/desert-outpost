@@ -443,14 +443,22 @@ if (typeof t === 'function') updateGearTypesI18n();
 
 
 const LAND_TILE_SHAPES = [
-  { name: 'Thanh Ngang 1x2', w: 2, h: 1 },
-  { name: 'Thanh Dọc 2x1', w: 1, h: 2 },
-  { name: 'Thanh Ngang 1x3', w: 3, h: 1 },
-  { name: 'Thanh Dọc 3x1', w: 1, h: 3 },
-  { name: 'Khối Vuông 2x2', w: 2, h: 2 },
-  { name: 'Thanh Dọc 4x1', w: 1, h: 4 },
-  { name: 'Thanh Ngang 1x4', w: 4, h: 1 }
+  { id: 'strip_h_1x2', name: 'Thanh Ngang 1x2', w: 2, h: 1 },
+  { id: 'strip_v_2x1', name: 'Thanh Dọc 2x1', w: 1, h: 2 },
+  { id: 'strip_h_1x3', name: 'Thanh Ngang 1x3', w: 3, h: 1 },
+  { id: 'strip_v_3x1', name: 'Thanh Dọc 3x1', w: 1, h: 3 },
+  { id: 'square_2x2',  name: 'Khối Vuông 2x2', w: 2, h: 2 },
+  { id: 'strip_v_4x1', name: 'Thanh Dọc 4x1', w: 1, h: 4 },
+  { id: 'strip_h_1x4', name: 'Thanh Ngang 1x4', w: 4, h: 1 }
 ];
+
+function getLandTileName(shape) {
+  if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Mảnh Đất') : 'Mảnh Đất';
+  if (shape.id && typeof t === 'function') {
+    return t('land.' + shape.id, shape.name || 'Mảnh Đất');
+  }
+  return shape.name || 'Mảnh Đất';
+}
 
 // ==========================================
 // PIXEL-ART ASSETS (HUGGING FACE DATASET & CRISP FALLBACK)
@@ -1408,6 +1416,15 @@ const ROGUELIKE_PERKS = [
 ];
 
 // ==========================================
+function getPerkI18n(perk) {
+  if (!perk) return { title: '', desc: '', rarityBadge: '', rMeta: PERK_RARITIES.common };
+  const rMeta = PERK_RARITIES[perk.rarity] || PERK_RARITIES.common;
+  const title = typeof t === 'function' ? t('perk.' + perk.id + '.title', perk.title) : perk.title;
+  const desc = typeof t === 'function' ? t('perk.' + perk.id + '.desc', perk.desc) : perk.desc;
+  const rarityBadge = typeof t === 'function' ? t('perk.rarity_' + perk.rarity, rMeta.badge) : rMeta.badge;
+  return { title, desc, rarityBadge, rMeta };
+}
+
 // ==========================================
 // METAGAME PERSISTENCE (LOBBY & ARSENAL)
 // CHUẨN ĐÓNG GÓI PHÁT HÀNH WEB & YOUTUBE PLAYABLES
@@ -2969,7 +2986,7 @@ class DesertBattleEngine {
       this.damageTexts.push({
         x: enemy.x + (Math.random() * 20 - 10),
         y: enemy.y - 14,
-        text: 'NÉ ĐÒN!',
+        text: typeof t === 'function' ? t('combat.dodged', 'NÉ ĐÒN!') : 'NÉ ĐÒN!',
         isCrit: false,
         isDodge: true,
         life: 0.7,
@@ -5149,34 +5166,39 @@ class AppController {
     const milestones = this.getStageMilestones();
     const claimed = this.meta.claimedMilestones || [];
 
-    milestones.forEach(t => {
+    milestones.forEach(mItem => {
       const card = document.createElement('div');
-      const isReached = (t.current || 0) >= t.target;
-      const isClaimed = claimed.includes(t.id);
+      const isReached = (mItem.current || 0) >= mItem.target;
+      const isClaimed = claimed.includes(mItem.id);
       
       card.className = `m-row-item ${isClaimed ? 'is-claimed' : (isReached ? 'is-ready' : 'is-locked')}`;
 
-      const pct = Math.min(100, Math.floor(((t.current || 0) / t.target) * 100));
+      const pct = Math.min(100, Math.floor(((mItem.current || 0) / mItem.target) * 100));
+
+      const claimedLabel = typeof t === 'function' ? t('milestone.claimed', 'ĐÃ NHẬN') : 'ĐÃ NHẬN';
+      const claimBtnLabel = typeof t === 'function' ? t('milestone.claim', 'NHẬN') : 'NHẬN';
+      const targetLabel = typeof t === 'function' ? t('milestone.target_label', `Mục tiêu: ${mItem.target}`, { target: mItem.target }) : `Mục tiêu: ${mItem.target}`;
+      const mTitle = typeof t === 'function' ? t('milestone.' + mItem.id + '.title', mItem.title) : mItem.title;
 
       let actionHtml = '';
       if (isClaimed) {
-        actionHtml = `<span class="m-btn-claimed">${typeof t === 'function' ? t('milestone.claimed', 'ĐÃ NHẬN') : 'ĐÃ NHẬN'}</span>`;
+        actionHtml = `<span class="m-btn-claimed">${claimedLabel}</span>`;
       } else if (isReached) {
-        actionHtml = `<button class="m-btn-claim-action" data-id="${t.id}">${typeof t === 'function' ? t('milestone.claim', 'NHẬN') : 'NHẬN'}</button>`;
+        actionHtml = `<button class="m-btn-claim-action" data-id="${mItem.id}">${claimBtnLabel}</button>`;
       } else {
-        actionHtml = `<span class="m-pill-progress">${t.current || 0}/${t.target}</span>`;
+        actionHtml = `<span class="m-pill-progress">${mItem.current || 0}/${mItem.target}</span>`;
       }
 
       card.innerHTML = `
         <div class="m-icon-box">
-          <img src="${t.icon}" class="m-pixel-img" alt="">
+          <img src="${mItem.icon}" class="m-pixel-img" alt="">
         </div>
         <div class="m-detail-box">
           <div class="m-detail-header">
-            <span class="m-detail-title">${t.title}</span>
-            <span class="m-detail-target">${typeof t === 'function' ? t('milestone.target_label', `Mục tiêu: ${t.target}`, { target: t.target }) : `Mục tiêu: ${t.target}`}</span>
+            <span class="m-detail-title">${mTitle}</span>
+            <span class="m-detail-target">${targetLabel}</span>
           </div>
-          <div class="m-detail-reward">${typeof t === 'function' ? t('milestone.reward_label', `Thưởng: ${t.reward}`, { reward: t.reward }) : `Thưởng: ${t.reward}`}</div>
+          <div class="m-detail-reward">${mItem.reward}</div>
           <div class="m-row-bar-track">
             <div class="m-row-bar-fill" style="width:${pct}%"></div>
           </div>
@@ -5740,7 +5762,7 @@ class AppController {
     }
 
     selected3.forEach(perk => {
-      const rMeta = PERK_RARITIES[perk.rarity] || PERK_RARITIES.common;
+      const { title: perkTitle, desc: perkDesc, rarityBadge: pBadge, rMeta } = getPerkI18n(perk);
       const card = document.createElement('div');
       card.className = `perk-choice-card rarity-${perk.rarity}`;
       const isUnique = (perk.rarity === 'rare' || perk.rarity === 'epic' || perk.rarity === 'legendary') || (perk.maxPicks === 1);
@@ -5750,15 +5772,15 @@ class AppController {
         </div>
         <div class="perk-card-content">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <h4 class="perk-card-title" style="color: ${rMeta.color}; margin:0;">${perk.title}</h4>
+            <h4 class="perk-card-title" style="color: ${rMeta.color}; margin:0;">${perkTitle}</h4>
             <div style="display:flex;align-items:center;gap:4px;">
               ${isUnique ? '<span style="background:rgba(255,255,255,0.08);color:#94a3b8;border:1px solid #475569;padding:1px 5px;border-radius:4px;font-size:9px;font-weight:900;">1/1</span>' : ''}
               <span class="perk-rarity-badge" style="background:${rMeta.color}22; color:${rMeta.color}; border:1px solid ${rMeta.borderColor};">
-                ${rMeta.badge}
+                ${pBadge}
               </span>
             </div>
           </div>
-          <p class="perk-card-desc" style="margin:4px 0 0;font-size:11px;color:#cbd5e1;">${perk.desc}</p>
+          <p class="perk-card-desc" style="margin:4px 0 0;font-size:11px;color:#cbd5e1;">${perkDesc}</p>
         </div>
       `;
 
@@ -5766,7 +5788,10 @@ class AppController {
         perk.apply(this.run);
         this.run.perks.push(perk);
         sfx.merge();
-        this.showToast(`✨ Đã chọn [${rMeta.badge}]: ${perk.title}!`);
+        const toastMsg = typeof t === 'function'
+          ? t('toast.perk_chosen', `✨ Đã chọn [${pBadge}]: ${perkTitle}!`, { rarity: pBadge, title: perkTitle })
+          : `✨ Đã chọn [${pBadge}]: ${perkTitle}!`;
+        this.showToast(toastMsg);
         this.modalLevelup.classList.add('hidden');
         this.battle.state.isPaused = false;
       };
@@ -5780,6 +5805,11 @@ class AppController {
   // --- 5-SLOT STASH BENCH (YÊU CẦU 3: Ô 1 Free, Ô 2 25$, Ô 3 15 Gems, Ô 4 1-QC, Ô 5 2-QC) ---
   renderStashBench() {
     if (!this.stashSlotsEls) return;
+    const hintEl = document.getElementById('stash-hint-text');
+    if (hintEl) {
+      hintEl.textContent = typeof t === 'function' ? t('bp.stash_hint_bar', 'Ô 1 Miễn phí - Chạm ô khóa để mở') : 'Ô 1 Miễn phí - Chạm ô khóa để mở';
+    }
+
     this.stashSlotsEls.forEach((slotEl, idx) => {
       if (!slotEl) return;
       slotEl.innerHTML = '';
@@ -5793,22 +5823,24 @@ class AppController {
 
         if (idx === 1) {
           lockTitle = '<img src="assets/icons/pixel_cash.png" class="pixel-mini-icon"> 25 $';
-          lockSub = 'Money ván';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_cash', 'Money ván') : 'Money ván';
         } else if (idx === 2) {
           lockTitle = '<img src="assets/icons/gem.png" class="pixel-mini-icon"> 15';
-          lockSub = 'Kim Cương';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_gems', 'Kim Cương') : 'Kim Cương';
         } else if (idx === 3) {
-          lockTitle = '📺 1 QC';
-          lockSub = 'Xem Video';
+          lockTitle = typeof t === 'function' ? t('bp.stash_ad_1', '📺 1 QC') : '📺 1 QC';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_ad', 'Xem Video') : 'Xem Video';
         } else if (idx === 4) {
           const watched = this.run.stashAdWatched[4] || 0;
-          lockTitle = '📺 2 QC';
-          lockSub = `(${watched}/2 QC)`;
+          lockTitle = typeof t === 'function' ? t('bp.stash_ad_2', '📺 2 QC') : '📺 2 QC';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_2ads', `(${watched}/2 QC)`, { cur: watched }) : `(${watched}/2 QC)`;
         }
+
+        const slotBadgeTitle = typeof t === 'function' ? t('bp.slot_num', `Ô #${idx + 1}`, { num: idx + 1 }) : `Ô #${idx + 1}`;
 
         slotEl.innerHTML = `
           <div class="stash-lock-chip">
-            <span>🔒 Ô #${idx + 1}</span>
+            <span>🔒 ${slotBadgeTitle}</span>
             <span class="stash-lock-price">${lockTitle}</span>
             <span style="font-size:7px;color:#94a3b8;">${lockSub}</span>
           </div>
@@ -5821,11 +5853,13 @@ class AppController {
               this.run.runCash -= 25;
               this.run.stashUnlocked[1] = true;
               sfx.coin();
-              this.showToast('[Mở Khóa] Hàng dự bị #2 bằng 25 $!');
+              const msg = typeof t === 'function' ? t('toast.stash_unlocked_cash', '[Mở Khóa] Hàng dự bị #2 bằng 25 $!', { num: 2, val: 25 }) : '[Mở Khóa] Hàng dự bị #2 bằng 25 $!';
+              this.showToast(msg);
               this.renderStashBench();
               this.updateBackpackUI();
             } else {
-              this.showToast('⚠️ Cần 25 $ trong ván để mở ô này!');
+              const msg = typeof t === 'function' ? t('toast.stash_need_cash', '⚠️ Cần 25 $ trong ván để mở ô này!', { val: 25 }) : '⚠️ Cần 25 $ trong ván để mở ô này!';
+              this.showToast(msg);
               sfx.playTone(180, 'sawtooth', 0.12, 0.12);
             }
           } else if (idx === 2) {
@@ -5835,11 +5869,13 @@ class AppController {
               this.meta.save();
               this.run.stashUnlocked[2] = true;
               sfx.coin();
-              this.showToast('[Mở Khóa] Hàng dự bị #3 bằng 15 Kim Cương!');
+              const msg = typeof t === 'function' ? t('toast.stash_unlocked_gems', '[Mở Khóa] Hàng dự bị #3 bằng 15 Kim Cương!', { num: 3, val: 15 }) : '[Mở Khóa] Hàng dự bị #3 bằng 15 Kim Cương!';
+              this.showToast(msg);
               this.renderStashBench();
               this.renderLobby();
             } else {
-              this.showToast('⚠️ Cần 15 Kim Cương Kim Cương để mở ô này!');
+              const msg = typeof t === 'function' ? t('toast.stash_need_gems', '⚠️ Cần 15 Kim Cương để mở ô này!', { val: 15 }) : '⚠️ Cần 15 Kim Cương để mở ô này!';
+              this.showToast(msg);
               sfx.playTone(180, 'sawtooth', 0.12, 0.12);
             }
           } else if (idx === 3) {
@@ -5857,7 +5893,8 @@ class AppController {
                 this.modalAd.classList.add('hidden');
                 this.run.stashUnlocked[3] = true;
                 sfx.victory();
-                this.showToast('📺 Đã xem QC - Mở khóa Hàng dự bị #4 thành công!');
+                const msg = typeof t === 'function' ? t('toast.stash_unlocked_ad1', '📺 Đã xem QC - Mở khóa Hàng dự bị #4 thành công!') : '📺 Đã xem QC - Mở khóa Hàng dự bị #4 thành công!';
+                this.showToast(msg);
                 this.renderStashBench();
               }
             }, 1000);
@@ -5878,10 +5915,12 @@ class AppController {
                 if (this.run.stashAdWatched[4] >= 2) {
                   this.run.stashUnlocked[4] = true;
                   sfx.victory();
-                  this.showToast('🎉 Đã xem đủ 2 QC - Mở khóa Hàng dự bị #5 thành công!');
+                  const msg = typeof t === 'function' ? t('toast.stash_unlocked_ad2', '🎉 Đã xem đủ 2 QC - Mở khóa Hàng dự bị #5 thành công!') : '🎉 Đã xem đủ 2 QC - Mở khóa Hàng dự bị #5 thành công!';
+                  this.showToast(msg);
                 } else {
                   sfx.coin();
-                  this.showToast('📺 Đã xem 1/2 QC! Hãy xem thêm 1 lượt nữa để mở Ô #5!');
+                  const msg = typeof t === 'function' ? t('toast.stash_ad_progress', '📺 Đã xem 1/2 QC! Hãy xem thêm 1 lượt nữa để mở Ô #5!', { cur: 1 }) : '📺 Đã xem 1/2 QC! Hãy xem thêm 1 lượt nữa để mở Ô #5!';
+                  this.showToast(msg);
                 }
                 this.renderStashBench();
               }
@@ -5894,7 +5933,8 @@ class AppController {
       slotEl.onclick = null;
       if (!item) {
         slotEl.className = 'stash-slot unlocked';
-        slotEl.innerHTML = `<span style="font-size:8px;color:#475569;font-weight:700;">#${idx + 1} Trống</span>`;
+        const emptyLabel = typeof t === 'function' ? t('bp.empty_stash_slot', `#${idx + 1} Trống`, { num: idx + 1 }) : `#${idx + 1} Trống`;
+        slotEl.innerHTML = `<span style="font-size:8px;color:#475569;font-weight:700;">${emptyLabel}</span>`;
         return;
       }
 
@@ -5918,10 +5958,10 @@ class AppController {
     if (this.backpackModeIndicator) {
       if (this.run.hardcoreMode) {
         this.backpackModeIndicator.className = 'mode-badge hardcore-mode';
-        this.backpackModeIndicator.textContent = '🔥 Hardcore';
+        this.backpackModeIndicator.textContent = typeof t === 'function' ? t('bp.mode_hardcore', '🔥 Hardcore') : '🔥 Hardcore';
       } else {
         this.backpackModeIndicator.className = 'mode-badge normal-mode';
-        this.backpackModeIndicator.textContent = '🛡️ Thường (Bán Vali)';
+        this.backpackModeIndicator.textContent = typeof t === 'function' ? t('bp.mode_normal', '🛡️ Thường (Bán Vali)') : '🛡️ Thường (Bán Vali)';
       }
     }
 
@@ -5994,19 +6034,20 @@ class AppController {
         slotEl.className = 'shop-item-slot slot-empty';
         slotEl.style.borderColor = '#28374d';
         slotEl.style.boxShadow = 'none';
-        slotEl.innerHTML = `<span class="empty-roll-hint">Trống / Đã Mua</span>`;
+        const emptyText = typeof t === 'function' ? t('bp.shop_empty_slot', 'Trống / Đã Mua') : 'Trống / Đã Mua';
+        slotEl.innerHTML = `<span class="empty-roll-hint">${emptyText}</span>`;
         return;
       }
 
       const tier = sItem.tier || 1;
       const tierColors = {
-        1: { bg: '#1e293b', border: '#64748b', text: '#cbd5e1', name: 'Cấp 1 ★' },
-        2: { bg: '#064e3b', border: '#10b981', text: '#6ee7b7', name: 'Cấp 2 ★★' },
-        3: { bg: '#1e3a8a', border: '#3b82f6', text: '#93c5fd', name: 'Cấp 3 ★★★' },
-        4: { bg: '#581c87', border: '#a855f7', text: '#d8b4fe', name: 'Cấp 4 ★★★★' },
-        5: { bg: '#7f1d1d', border: '#ef4444', text: '#fca5a5', name: 'Cấp 5 ★★★★★' },
-        6: { bg: '#164e63', border: '#06b6d4', text: '#67e8f9', name: 'Cấp 6 ★★★★★★' },
-        7: { bg: '#78350f', border: '#f59e0b', text: '#fde68a', name: 'Cấp 7 👑 Thần Thoại' }
+        1: { bg: '#1e293b', border: '#64748b', text: '#cbd5e1', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 1 ★', { tier: 1 }) : 'Cấp 1 ★' },
+        2: { bg: '#064e3b', border: '#10b981', text: '#6ee7b7', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 2 ★★', { tier: 2 }) : 'Cấp 2 ★★' },
+        3: { bg: '#1e3a8a', border: '#3b82f6', text: '#93c5fd', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 3 ★★★', { tier: 3 }) : 'Cấp 3 ★★★' },
+        4: { bg: '#581c87', border: '#a855f7', text: '#d8b4fe', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 4 ★★★★', { tier: 4 }) : 'Cấp 4 ★★★★' },
+        5: { bg: '#7f1d1d', border: '#ef4444', text: '#fca5a5', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 5 ★★★★★', { tier: 5 }) : 'Cấp 5 ★★★★★' },
+        6: { bg: '#164e63', border: '#06b6d4', text: '#67e8f9', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 6 ★★★★★★', { tier: 6 }) : 'Cấp 6 ★★★★★★' },
+        7: { bg: '#78350f', border: '#f59e0b', text: '#fde68a', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 7 👑 Thần Thoại', { tier: 7 }) : 'Cấp 7 👑 Thần Thoại' }
       };
       const tMeta = tierColors[Math.min(7, tier)] || tierColors[1];
 
@@ -6014,16 +6055,22 @@ class AppController {
       slotEl.style.borderColor = tMeta.border;
       slotEl.style.boxShadow = `0 0 10px ${tMeta.border}55`;
 
-      const gInfo = sItem.isLand ? { name: sItem.name } : GEAR_TYPES[sItem.type];
+      const itemName = sItem.isLand
+        ? getLandTileName(sItem)
+        : (typeof t === 'function' ? t('gear.' + sItem.type + '.name', (GEAR_TYPES[sItem.type]?.name || sItem.type)) : (GEAR_TYPES[sItem.type]?.name || sItem.type));
+
       const previewSvg = getGearSVG(sItem.isLand ? 'land' : sItem.type, tier, sItem.isLand);
       const sellVal = this.run.calculateSellPrice(sItem);
 
-      // YÊU CẦU 2: THỂ HIỆN RÕ CẤP ĐỘ (LEVEL / TIER) CỦA TRANG BỊ ROLL RA (KHÔNG ĐÈ CHỮ)
+      const landBadgeText = typeof t === 'function' ? t('gear.land.name', 'Mảnh Đất') : 'Mảnh Đất';
+      const expandText = typeof t === 'function' ? t('bp.expand_tag', 'Mở Rộng Ô') : 'Mở Rộng Ô';
+      const slotsUnit = typeof t === 'function' ? t('bp.slots_unit', 'ô') : 'ô';
+
       slotEl.innerHTML = `
         <div class="shop-card-top">
           <span class="shop-card-dots">#${idx + 1}</span>
           <div class="shop-tier-badge" style="background:${tMeta.bg}; border:1px solid ${tMeta.border}; color:${tMeta.text};">
-            ${sItem.isLand ? 'Mảnh Đất' : `Lv.${tier} ★`}
+            ${sItem.isLand ? landBadgeText : `Lv.${tier} ★`}
           </div>
         </div>
         <div class="shop-card-icon-wrap">
@@ -6032,11 +6079,11 @@ class AppController {
           </div>
         </div>
         <div class="shop-card-bottom">
-          <div class="shop-item-name">${gInfo.name}</div>
+          <div class="shop-item-name">${itemName}</div>
           <div class="shop-item-stats">
-            <span class="shop-tier-title" style="color:${tMeta.border}; font-weight:800;">${sItem.isLand ? 'Mở Rộng Ô' : tMeta.name}</span>
+            <span class="shop-tier-title" style="color:${tMeta.border}; font-weight:800;">${sItem.isLand ? expandText : tMeta.name}</span>
             <span class="shop-meta-sep">•</span>
-            <span>${sItem.w}x${sItem.h} ô</span>
+            <span>${sItem.w}x${sItem.h} ${slotsUnit}</span>
             <span class="shop-meta-sep">•</span>
             <span style="color:#fbbf24; font-weight:800;">+${sellVal}$</span>
           </div>
@@ -6163,15 +6210,16 @@ class AppController {
           if (insideSell) {
             if (source === 'backpack' && this.run.hardcoreMode) {
               this.sellZoneEl.classList.add('drag-reject');
-              document.getElementById('sell-zone-text').textContent = '🚫 Chế độ Hardcore: Không bán đồ vali!';
+              document.getElementById('sell-zone-text').textContent = typeof t === 'function' ? t('bp.sell_hardcore_warn', '🚫 Chế độ Hardcore: Không bán đồ vali!') : '🚫 Chế độ Hardcore: Không bán đồ vali!';
             } else {
               const sellVal = this.run.calculateSellPrice(dragObj.item);
               this.sellZoneEl.classList.add('drag-over');
-              document.getElementById('sell-zone-text').textContent = `Thả để BÁN ${dragObj.isLand ? 'Mảnh Đất' : (GEAR_TYPES[dragObj.item.type]?.name || '')}: +${sellVal} $ (Money ván)`;
+              const sellItemName = dragObj.isLand ? getLandTileName(dragObj.item) : (typeof t === 'function' ? t('gear.' + dragObj.item.type + '.name', GEAR_TYPES[dragObj.item.type]?.name || '') : (GEAR_TYPES[dragObj.item.type]?.name || ''));
+document.getElementById('sell-zone-text').textContent = typeof t === 'function' ? t('bp.sell_drop_confirm', `Thả để BÁN ${sellItemName}: +${sellVal} $ (Money ván)`, { name: sellItemName, val: sellVal }) : `Thả để BÁN ${sellItemName}: +${sellVal} $`;
             }
           } else {
             this.sellZoneEl.classList.remove('drag-over', 'drag-reject');
-            document.getElementById('sell-zone-text').textContent = 'Kéo trang bị vào đây để BÁN';
+            document.getElementById('sell-zone-text').textContent = typeof t === 'function' ? t('bp.sell_drag_hint', 'Kéo trang bị vào đây để BÁN') : 'Kéo trang bị vào đây để BÁN';
           }
         }
       };
@@ -6191,7 +6239,7 @@ class AppController {
 
         this.clearBackpackHighlights();
         this.sellZoneEl.classList.remove('drag-over', 'drag-reject');
-        document.getElementById('sell-zone-text').textContent = 'Kéo trang bị vào đây để BÁN';
+        document.getElementById('sell-zone-text').textContent = typeof t === 'function' ? t('bp.sell_drag_hint', 'Kéo trang bị vào đây để BÁN') : 'Kéo trang bị vào đây để BÁN';
 
         if (!isDragging) {
           // Tap / click selection
@@ -6895,7 +6943,8 @@ class AppController {
     if (weaponsContainer) {
       weaponsContainer.innerHTML = '';
       if (!this.run.backpackItems || this.run.backpackItems.length === 0) {
-        weaponsContainer.innerHTML = '<div style="color:#64748b; font-size:11px; text-align:center; padding:8px;">Vali đang trống, chưa có trang bị nào.</div>';
+        const emptyMsg = typeof t === 'function' ? t('pause.empty_backpack', 'Vali đang trống, chưa có trang bị nào.') : 'Vali đang trống, chưa có trang bị nào.';
+weaponsContainer.innerHTML = `<div style="color:#64748b; font-size:11px; text-align:center; padding:8px;">${emptyMsg}</div>`;
       } else {
         // Tính belt buff adjacency
         const getBeltBuff = (item) => {
@@ -6935,7 +6984,8 @@ class AppController {
             let rate = Math.max(0.22, cfg.rate / (1 + (tier - 1) * 0.15 + (lvl - 1) * 0.08));
             if (item.type === 'firearm') rate /= (this.run.perkMultipliers.firearmRate || 1);
             const dps = (dmg / rate).toFixed(0);
-            badges += `<span class="p-chip-dmg">STK: ${Math.round(dmg)}</span>`;
+            const atkLabel = typeof t === 'function' ? t('stat.atk', 'STK') : 'STK';
+badges += `<span class="p-chip-dmg">${atkLabel}: ${Math.round(dmg)}</span>`;
             badges += `<span class="p-chip-sub">DPS: ${dps}/s</span>`;
             if (critPct > 0) badges += `<span class="p-chip-sub" style="color:#f59e0b;">Crit: ${critPct}% (x2.5)</span>`;
             if (item.type === 'molotov') {
@@ -6943,7 +6993,8 @@ class AppController {
               badges += `<span class="p-chip-sub" style="color:#ef4444;">AoE: ${aoeR}px</span>`;
             }
             if (item.type === 'firearm' && this.run.perkMultipliers.firearmMultishot > 0) {
-              badges += `<span class="p-chip-sub" style="color:#a855f7;">+${this.run.perkMultipliers.firearmMultishot} viên</span>`;
+              const roundsUnit = typeof t === 'function' ? t('stat.rounds', 'viên') : 'viên';
+badges += `<span class="p-chip-sub" style="color:#a855f7;">+${this.run.perkMultipliers.firearmMultishot} ${roundsUnit}</span>`;
             }
           } else if (cfg.category === 'defense') {
             // Giáp: HP/Shield bonus + regen
@@ -6951,12 +7002,16 @@ class AppController {
             const reflPct = cfg.reflection ? Math.round((cfg.reflection + (tier - 1) * 0.15) * 100) : 0;
             if (item.type === 'vest') {
               const regenHp = (1.5 + (tier - 1) * 0.8 + (lvl - 1) * 0.5).toFixed(1);
-              badges += `<span class="p-chip-dmg" style="color:#10b981;background:rgba(16,185,129,0.15);">HP hồi: +${regenHp}/s</span>`;
-              if (reflPct > 0) badges += `<span class="p-chip-sub" style="color:#f59e0b;">Phản đòn: ${reflPct}%</span>`;
+              const hpRegenLabel = typeof t === 'function' ? t('stat.hp_regen', 'HP hồi') : 'HP hồi';
+badges += `<span class="p-chip-dmg" style="color:#10b981;background:rgba(16,185,129,0.15);">${hpRegenLabel}: +${regenHp}/s</span>`;
+              const reflLabel = typeof t === 'function' ? t('stat.reflection', 'Phản đòn') : 'Phản đòn';
+if (reflPct > 0) badges += `<span class="p-chip-sub" style="color:#f59e0b;">${reflLabel}: ${reflPct}%</span>`;
             } else if (item.type === 'shield') {
               const regenShield = (2.5 + (tier - 1) * 1.2 + (lvl - 1) * 0.8).toFixed(1);
-              badges += `<span class="p-chip-dmg" style="color:#38bdf8;background:rgba(56,189,248,0.15);">Khiên hồi: +${regenShield}/s</span>`;
-              if (shieldBonus > 0) badges += `<span class="p-chip-sub">+${shieldBonus} Khiên Tối Đa</span>`;
+              const shieldRegenLabel = typeof t === 'function' ? t('stat.shield_regen', 'Khiên hồi') : 'Khiên hồi';
+badges += `<span class="p-chip-dmg" style="color:#38bdf8;background:rgba(56,189,248,0.15);">${shieldRegenLabel}: +${regenShield}/s</span>`;
+              const maxShieldLabel = typeof t === 'function' ? t('stat.max_shield', 'Khiên Tối Đa') : 'Khiên Tối Đa';
+if (shieldBonus > 0) badges += `<span class="p-chip-sub">+${shieldBonus} ${maxShieldLabel}</span>`;
             }
           } else if (cfg.category === 'obstacle') {
             // Rào: % làm chậm thực tế
@@ -6968,12 +7023,15 @@ class AppController {
               compoundSlow *= (1 - bs);
             });
             const totalSlow = Math.round((1 - compoundSlow) * 100);
-            badges += `<span class="p-chip-dmg" style="color:#f59e0b;background:rgba(245,158,11,0.15);">Chậm: -${bSlow}%/cây</span>`;
-            if (barrierCount > 1) badges += `<span class="p-chip-sub" style="color:#fbbf24;">Tổng cộng dồn: -${totalSlow}%</span>`;
+            const slowLabel = typeof t === 'function' ? t('stat.slow', 'Chậm') : 'Chậm';
+badges += `<span class="p-chip-dmg" style="color:#f59e0b;background:rgba(245,158,11,0.15);">${slowLabel}: -${bSlow}%</span>`;
+            const totalStackLabel = typeof t === 'function' ? t('stat.total_stack', 'Tổng cộng dồn') : 'Tổng cộng dồn';
+if (barrierCount > 1) badges += `<span class="p-chip-sub" style="color:#fbbf24;">${totalStackLabel}: -${totalSlow}%</span>`;
           } else if (cfg.category === 'support') {
             // Belt: buff vũ khí kề
             const beltBonus = Math.round((0.12 + (this.run.perkMultipliers.beltBuffBonus || 0)) * 100);
-            badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,68,0.15);">+${beltBonus}% ATK vũ khí kề</span>`;
+            const adjAtkLabel = typeof t === 'function' ? t('stat.adjacent_atk', 'ATK vũ khí kề') : 'ATK vũ khí kề';
+badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,68,0.15);">+${beltBonus}% ${adjAtkLabel}</span>`;
           } else if (cfg.category === 'utility') {
             // Card: tự động rút tiền mỗi 1 giây
             const metaCardLvl = (this.run.meta && this.run.meta.weaponLevels['card']) || 1;
@@ -6984,16 +7042,22 @@ class AppController {
           }
 
           const catLabel = {
-            'weapon': '⚔️ Vũ Khí', 'defense': '🛡️ Giáp', 'obstacle': '🚧 Rào Chắn',
-            'support': '💪 Hỗ Trợ', 'utility': '💳 Tiện Ích'
+            'weapon': typeof t === 'function' ? t('cat.weapon', '⚔️ Vũ Khí') : '⚔️ Vũ Khí',
+            'defense': typeof t === 'function' ? t('cat.defense', '🛡️ Giáp') : '🛡️ Giáp',
+            'obstacle': typeof t === 'function' ? t('cat.obstacle', '🚧 Rào Chắn') : '🚧 Rào Chắn',
+            'support': typeof t === 'function' ? t('cat.support', '💪 Hỗ Trợ') : '💪 Hỗ Trợ',
+            'utility': typeof t === 'function' ? t('cat.utility', '💳 Tiện Ích') : '💳 Tiện Ích'
           }[cfg.category] || cfg.category;
+
+          const cardItemName = typeof t === 'function' ? t('gear.' + item.type + '.name', gInfo.name) : gInfo.name;
+          const baseLvlText = typeof t === 'function' ? t('pause.base_lvl', `Lv.${lvl} nền`, { lvl: lvl }) : `Lv.${lvl} nền`;
 
           card.innerHTML = `
             <div class="p-stat-main">
               <div class="p-stat-icon">${getGearSVG(item.type, tier, false)}</div>
               <div class="p-stat-info">
-                <span class="p-stat-name">${gInfo.name} ★${tier}</span>
-                <span class="p-stat-desc" style="color:#94a3b8;font-size:9px;">${catLabel} • Lv.${lvl} nền</span>
+                <span class="p-stat-name">${cardItemName} ★${tier}</span>
+                <span class="p-stat-desc" style="color:#94a3b8;font-size:9px;">${catLabel} • ${baseLvlText}</span>
               </div>
             </div>
             <div class="p-stat-badges" style="flex-wrap:wrap;gap:3px;">${badges}</div>
@@ -7011,7 +7075,7 @@ class AppController {
           summaryDiv.innerHTML = `
             <div style="display:flex;gap:6px;flex-wrap:wrap;font-size:9px;">
               <span style="background:#1e293b;color:#38bdf8;padding:2px 6px;border-radius:4px;border:1px solid #334155;">❤️ HP: ${this.run.hp.toFixed(0)}/${this.run.maxHp}</span>
-              <span style="background:#1e293b;color:#06b6d4;padding:2px 6px;border-radius:4px;border:1px solid #334155;">🛡️ Khiên: ${this.run.shield.toFixed(0)}/${this.run.maxShield}</span>
+              <span style="background:#1e293b;color:#06b6d4;padding:2px 6px;border-radius:4px;border:1px solid #334155;">🛡️ ${typeof t === 'function' ? t('stat.shield', 'Khiên') : 'Khiên'}: ${this.run.shield.toFixed(0)}/${this.run.maxShield}</span>
               <span style="background:#1e293b;color:#fbbf24;padding:2px 6px;border-radius:4px;border:1px solid #334155;">★ Lv: ${this.run.inWaveLevel}</span>
               ${critPct > 0 ? `<span style="background:#1e293b;color:#f59e0b;padding:2px 6px;border-radius:4px;border:1px solid #334155;">🎯 Crit: ${critPct}%</span>` : ''}
             </div>
@@ -7026,18 +7090,19 @@ class AppController {
       perksContainer.innerHTML = '';
       const activePerks = this.run.perks || this.run.activePerks || [];
       if (!activePerks || activePerks.length === 0) {
-        perksContainer.innerHTML = '<div style="color:#64748b; font-size:11px; text-align:center; padding:8px;">Chưa chọn buff nào trong chiến dịch này.</div>';
+        const noPerksText = typeof t === 'function' ? t('pause.no_perks', 'Chưa chọn buff nào trong chiến dịch này.') : 'Chưa chọn buff nào trong chiến dịch này.';
+        perksContainer.innerHTML = `<div style="color:#64748b; font-size:11px; text-align:center; padding:8px;">${noPerksText}</div>`;
       } else {
         activePerks.forEach(p => {
-          const rMeta = PERK_RARITIES[p.rarity] || PERK_RARITIES.common;
+          const { title: pTitle, desc: pDesc, rMeta } = getPerkI18n(p);
           const item = document.createElement('div');
           item.className = 'pause-stat-item';
           item.innerHTML = `
             <div class="p-stat-main">
               <div class="p-stat-icon" style="font-size:16px;">${p.icon || '★'}</div>
               <div class="p-stat-info">
-                <span class="p-stat-name" style="color:${rMeta.color};">${p.title}</span>
-                <span class="p-stat-desc" style="font-size:9px;color:#94a3b8;">${p.desc}</span>
+                <span class="p-stat-name" style="color:${rMeta.color};">${pTitle}</span>
+                <span class="p-stat-desc" style="font-size:9px;color:#94a3b8;">${pDesc}</span>
               </div>
             </div>
           `;
@@ -7607,7 +7672,7 @@ class AppController {
           sfx.playTone(380, 'sine', 0.05, 0.08);
           this.renderBackpack();
         } else {
-          this.showToast('⚠️ Không thể dời sang trái nữa (chạm mép)!');
+          this.showToast(typeof t === 'function' ? t('toast.shift_edge_left', '⚠️ Không thể dời sang trái nữa (chạm mép)!') : '⚠️ Không thể dời sang trái nữa (chạm mép)!');
         }
       };
     }
@@ -7617,7 +7682,7 @@ class AppController {
           sfx.playTone(380, 'sine', 0.05, 0.08);
           this.renderBackpack();
         } else {
-          this.showToast('⚠️ Không thể dời sang phải nữa (chạm mép)!');
+          this.showToast(typeof t === 'function' ? t('toast.shift_edge_right', '⚠️ Không thể dời sang phải nữa (chạm mép)!') : '⚠️ Không thể dời sang phải nữa (chạm mép)!');
         }
       };
     }
@@ -7627,7 +7692,7 @@ class AppController {
           sfx.playTone(380, 'sine', 0.05, 0.08);
           this.renderBackpack();
         } else {
-          this.showToast('⚠️ Không thể dời lên trên nữa (chạm mép)!');
+          this.showToast(typeof t === 'function' ? t('toast.shift_edge_up', '⚠️ Không thể dời lên trên nữa (chạm mép)!') : '⚠️ Không thể dời lên trên nữa (chạm mép)!');
         }
       };
     }
@@ -7637,7 +7702,7 @@ class AppController {
           sfx.playTone(380, 'sine', 0.05, 0.08);
           this.renderBackpack();
         } else {
-          this.showToast('⚠️ Không thể dời xuống dưới nữa (chạm mép)!');
+          this.showToast(typeof t === 'function' ? t('toast.shift_edge_down', '⚠️ Không thể dời xuống dưới nữa (chạm mép)!') : '⚠️ Không thể dời xuống dưới nữa (chạm mép)!');
         }
       };
     }
@@ -8069,6 +8134,14 @@ class AppController {
     const openPauseMenu = () => {
       sfx.init();
       this.battle.state.isPaused = true;
+      if (typeof applyLanguageToDOM === 'function') {
+        applyLanguageToDOM();
+      }
+      if (btnToggleVfx) {
+        btnToggleVfx.textContent = this.isLowVFX
+          ? (typeof t === 'function' ? t('modal.pause_vfx_low', '★ Tiết Kiệm (Mượt)') : '★ Tiết Kiệm (Mượt)')
+          : (typeof t === 'function' ? t('modal.pause_vfx_hd', 'Tối Đa (HD)') : 'Tối Đa (HD)');
+      }
       this.renderPauseMenu();
       if (this.modalPause) this.modalPause.classList.remove('hidden');
     };

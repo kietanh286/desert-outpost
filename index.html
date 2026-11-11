@@ -6,7 +6,7 @@
   <title>Desert Outpost: Merge Defense</title>
   <!-- YOUTUBE PLAYABLES SDK -->
   <script src="https://www.youtube.com/game_api/v1"></script>
-  <link rel="stylesheet" href="style.css?v=20261111_v5_final">
+  <link rel="stylesheet" href="style.css?v=20261111_v7_complete_i18n">
 </head>
 <body>
   <div id="game-container">
@@ -333,7 +333,7 @@
       <div class="stash-bench-wrapper">
         <div class="stash-header">
           <span class="stash-title" data-i18n="bp.stash_title">HÀNG DỰ BỊ (5 Ô LƯU TRỮ GHÉP SAO)</span>
-          <span id="stash-hint-text" class="stash-hint">Ô 1 Miễn phí - Chạm ô khóa để mở</span>
+          <span id="stash-hint-text" class="stash-hint" data-i18n="bp.stash_hint_bar">Ô 1 Miễn phí - Chạm ô khóa để mở</span>
         </div>
         <div id="stash-slots-row" class="stash-slots-row">
           <div id="stash-slot-0" class="stash-slot unlocked" data-stash="0"></div>
@@ -348,7 +348,7 @@
       <div class="backpack-shop-panel">
         <div class="shop-header-row">
           <div class="roll-slot-label" data-i18n="bp.shop_title">VŨ KHÍ / MẢNH ĐẤT (3 Ô SHOP)</div>
-          <span id="backpack-mode-indicator" class="mode-badge normal-mode">Chế Độ: Thường</span>
+          <span id="backpack-mode-indicator" class="mode-badge normal-mode" data-i18n="bp.mode_normal">🛡️ Thường (Bán Vali: BẬT)</span>
         </div>
 
         <div id="shop-triple-slots-row" class="shop-triple-slots-row">
@@ -451,11 +451,11 @@
         <div class="battle-controls-row">
           <button id="btn-adjust-backpack" class="btn btn-adjust-backpack" type="button">
             <img src="assets/icons/backpack_icon.png" class="pixel-mini-icon" alt="">
-            <span>Sắp Xếp Vali</span>
+            <span data-i18n="battle.btn_open_backpack">Sắp Xếp Vali</span>
           </button>
 
           <div class="speed-toggle-group">
-            <span class="speed-lbl">Tốc Độ</span>
+            <span class="speed-lbl" data-i18n="battle.speed_lbl">Tốc Độ</span>
             <div class="speed-buttons">
               <button class="btn-speed active" id="btn-speed-x1" data-speed="1" type="button">x1</button>
               <button class="btn-speed locked" id="btn-speed-x3" data-speed="2" type="button">
@@ -496,7 +496,7 @@
     <div id="modal-buff-list" class="modal-overlay hidden">
       <div class="modal-box buff-list-box">
         <div class="modal-header-with-close">
-          <h2>Buff List (Hiệu Ứng Đang Kích Hoạt)</h2>
+          <h2 data-i18n="modal.buff_list_title">Buff List (Hiệu Ứng Đang Kích Hoạt)</h2>
           <button id="btn-close-buffs" class="btn-close-modal">✕</button>
         </div>
         <div id="buff-items-container" class="buff-items-container">
@@ -519,16 +519,16 @@
 
         <div class="victory-stats-row">
           <div class="v-stat-card yellow-card">
-            <span class="v-stat-label">Max Wave</span>
+            <span class="v-stat-label" data-i18n="modal.victory_max_wave">Max Wave</span>
             <b id="v-max-wave">242</b>
           </div>
           <div class="v-stat-card red-card">
-            <span class="v-stat-label">Current Wave</span>
+            <span class="v-stat-label" data-i18n="modal.victory_cur_wave">Current Wave</span>
             <b id="v-cur-wave">242</b>
           </div>
         </div>
 
-        <div class="v-reward-title">Reward (Mảnh Nguyên Liệu)</div>
+        <div class="v-reward-title" data-i18n="modal.victory_rewards_title">Phần Thưởng (Mảnh Nguyên Liệu)</div>
         <div id="victory-rewards-grid" class="victory-rewards-grid">
           <!-- Material items dropped with x16, x72, x70... (Ảnh 5) -->
         </div>
@@ -536,10 +536,10 @@
         <div class="victory-actions">
           <button id="btn-victory-ad" class="btn btn-ad">
             <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
-            <span>Xem QC: Nhân Đôi Nguyên Liệu (x2 Mảnh)!</span>
+            <span data-i18n="modal.ad_double_reward">Xem QC: Nhân Đôi Nguyên Liệu (x2 Mảnh)!</span>
           </button>
           <button id="btn-victory-ok" class="btn btn-victory-ok">
-            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thường & Tiếp Tục
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> <span data-i18n="modal.claim_continue">Nhận Thường & Tiếp Tục</span>
           </button>
         </div>
       </div>
@@ -593,16 +593,16 @@
 
         <div class="defeat-stats-row">
           <div class="v-stat-card yellow-card">
-            <span class="v-stat-label">Max Wave Kỷ Lục</span>
+            <span class="v-stat-label" data-i18n="modal.defeat_max_wave">Max Wave Kỷ Lục</span>
             <b id="d-max-wave">0</b>
           </div>
           <div class="v-stat-card red-card">
-            <span class="v-stat-label">Wave Đạt Được</span>
+            <span class="v-stat-label" data-i18n="modal.defeat_cur_wave">Wave Đạt Được</span>
             <b id="d-cur-wave">0</b>
           </div>
         </div>
 
-        <div class="v-reward-title">Chiến Lợi Phẩm Thu Thập Được</div>
+        <div class="v-reward-title" data-i18n="modal.defeat_loot_title">Chiến Lợi Phẩm Thu Thập Được</div>
         <div id="defeat-rewards-grid" class="victory-rewards-grid">
           <!-- Populated dynamically with fragments -->
         </div>
@@ -613,7 +613,7 @@
             <span>Xem QC: Nhân Đôi Nguyên Liệu (x2 Mảnh)!</span>
           </button>
           <button id="btn-defeat-claim" class="btn btn-secondary">
-            <img src="assets/icons/star.png" class="pixel-mini-icon"> Nhận Thường & Về Sảnh
+            <img src="assets/icons/star.png" class="pixel-mini-icon"> <span data-i18n="modal.claim_lobby">Nhận Thường & Về Sảnh</span>
           </button>
         </div>
       </div>
@@ -632,7 +632,7 @@
         <div class="revive-actions">
           <button id="btn-watch-ad" class="btn btn-ad">
             <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
-            <span>Xem Quảng Cáo Hồi Sinh (100% Máu)</span>
+            <span data-i18n="modal.revive_ad_btn">Xem Quảng Cáo Hồi Sinh (100% Máu)</span>
           </button>
           <button id="btn-give-up" class="btn btn-secondary">
             Bỏ cuộc (Thu thập chiến lợi phẩm)
@@ -677,31 +677,31 @@
           <button id="btn-close-save-code" class="btn-close-modal" type="button">✕</button>
         </div>
         <p class="save-code-desc">
-          Lưu và chuyển đổi tiến trình chơi sang điện thoại hoặc máy tính khác khi chơi trên Web/GitHub Pages mà không cần server!
+          <span data-i18n="modal.save_desc">Lưu và chuyển đổi tiến trình chơi sang điện thoại hoặc máy tính khác khi chơi trên Web/GitHub Pages mà không cần server!</span>
         </p>
 
         <!-- KHUNG XUẤT MÃ LƯU (EXPORT) -->
         <div class="save-code-section">
-          <div class="save-section-label">MÃ TIẾN TRÌNH HIỆN TẠI CỦA BẠN:</div>
+          <div class="save-section-label" data-i18n="modal.save_export_label">MÃ TIẾN TRÌNH HIỆN TẠI CỦA BẠN:</div>
           <textarea id="txt-export-save-code" class="save-code-textarea" readonly rows="2" placeholder="Đang tạo mã lưu..."></textarea>
           <div class="save-code-btn-row">
             <button id="btn-copy-save-code" class="btn btn-save-action btn-copy" type="button">
               <img src="assets/icons/star.png" class="pixel-mini-icon" alt="">
-              <span>Sao Chép Mã Lưu</span>
+              <span data-i18n="modal.save_copy_btn">Sao Chép Mã Lưu</span>
             </button>
           </div>
         </div>
 
-        <div class="save-code-divider"><span>HOẶC NẠP TIẾN TRÌNH TỪ THIẾT BỊ KHÁC</span></div>
+        <div class="save-code-divider"><span data-i18n="modal.save_divider">HOẶC NẠP TIẾN TRÌNH TỪ THIẾT BỊ KHÁC</span></div>
 
         <!-- KHUNG NHẬP MÃ LƯU (IMPORT) -->
         <div class="save-code-section">
-          <div class="save-section-label">DÁN MÃ TIẾN TRÌNH VÀO ĐÂY:</div>
+          <div class="save-section-label" data-i18n="modal.save_import_label">DÁN MÃ TIẾN TRÌNH VÀO ĐÂY:</div>
           <textarea id="txt-import-save-code" class="save-code-textarea" rows="2" placeholder="Dán mã DS_... của bạn vào đây để khôi phục tiến trình..."></textarea>
           <div class="save-code-btn-row">
             <button id="btn-apply-save-code" class="btn btn-save-action btn-import" type="button">
               <img src="assets/icons/package_icon.png" class="pixel-mini-icon" alt="">
-              <span>Nạp Tiến Trình Lên Game</span>
+              <span data-i18n="modal.save_import_btn">Nạp Tiến Trình Lên Game</span>
             </button>
           </div>
         </div>
@@ -714,16 +714,16 @@
           <span class="pause-header-icon"><img src="assets/icons/pause.png" class="pixel-mini-icon"></span>
           <div class="pause-title-group">
             <h2 data-i18n="modal.pause_title">CHIẾN DỊCH TẠM DỪNG</h2>
-            <span class="pause-sub">Cài Đặt Game & Báo Cáo Hỏa Lực Chiến Trường</span>
+            <span class="pause-sub" data-i18n="modal.pause_sub">Cài Đặt Game & Báo Cáo Hỏa Lực Chiến Trường</span>
           </div>
           <button id="btn-close-pause-x" class="btn-close-modal">✕</button>
         </div>
 
         <!-- SETTINGS: AUDIO & EFFECTS -->
         <div class="pause-section">
-          <div class="pause-sec-title">CÀI ĐẶT TRÒ CHƠI</div>
+          <div class="pause-sec-title" data-i18n="modal.pause_sec_settings">CÀI ĐẶT TRÒ CHƠI</div>
           <div class="pause-setting-row">
-            <span class="p-setting-label">Âm Lượng (SFX)</span>
+            <span class="p-setting-label" data-i18n="modal.pause_volume">Âm Lượng (SFX)</span>
             <div class="p-volume-control">
               <span id="p-vol-icon"><img src="assets/icons/sound_on.png" class="pixel-mini-icon"></span>
               <input type="range" id="slider-pause-volume" min="0" max="100" value="80" class="pause-slider">
@@ -731,14 +731,14 @@
             </div>
           </div>
           <div class="pause-setting-row">
-            <span class="p-setting-label">Hiệu Ứng Hạt Chiến Đấu (VFX)</span>
-            <button id="btn-toggle-vfx" class="btn-toggle-badge active">Tối Đa (HD)</button>
+            <span class="p-setting-label" data-i18n="modal.pause_vfx">Hiệu Ứng Hạt Chiến Đấu (VFX)</span>
+            <button id="btn-toggle-vfx" class="btn-toggle-badge active" data-i18n="modal.pause_vfx_hd">Tối Đa (HD)</button>
           </div>
         </div>
 
         <!-- WEAPONS STATS BREAKDOWN -->
         <div class="pause-section">
-          <div class="pause-sec-title">TRANG BỊ & CHỈ SỐ ĐANG CÓ (DAMAGE, CRIT, SPEED...)</div>
+          <div class="pause-sec-title" data-i18n="modal.pause_sec_weapons">TRANG BỊ & CHỈ SỐ ĐANG CÓ (DAMAGE, CRIT, SPEED...)</div>
           <div id="pause-weapons-summary" class="pause-stats-list">
             <!-- Rendered dynamically -->
           </div>
@@ -746,7 +746,7 @@
 
         <!-- ROGUELIKE PERKS BREAKDOWN -->
         <div class="pause-section">
-          <div class="pause-sec-title">KỸ NĂNG & BUFF ĐÃ CHỌN (ROGUELIKE PERKS)</div>
+          <div class="pause-sec-title" data-i18n="modal.pause_sec_perks">KỸ NĂNG & BUFF ĐÃ CHỌN (ROGUELIKE PERKS)</div>
           <div id="pause-perks-summary" class="pause-stats-list">
             <!-- Rendered dynamically -->
           </div>
@@ -778,7 +778,7 @@
             <img src="assets/icons/trophy.png" class="m-trophy-big pixel-icon" alt="">
             <div>
               <h2 data-i18n="milestone.modal_title">CỘT MỐC TIẾN ĐỘ CHIẾN TRƯỜNG</h2>
-              <p>Vượt Wave & Tiêu diệt Quái vật, Trùm Boss để tích lũy thành tích và mở khóa rương báu vĩnh viễn!</p>
+              <p data-i18n="modal.milestone_sub">Vượt Wave & Tiêu diệt Quái vật, Trùm Boss để tích lũy thành tích và mở khóa rương báu vĩnh viễn!</p>
             </div>
           </div>
           <button id="btn-close-milestones" class="btn-close-modal">✕</button>
@@ -786,7 +786,7 @@
 
         <div class="milestone-pts-summary-bar">
           <span>Tiến Độ Vượt Màn: Wave Kỷ Lục <b id="modal-milestone-cur-wave" class="text-gold">1</b> | Quái Đã Diệt: <b id="modal-milestone-kills" class="text-gold">0</b></span>
-          <span class="milestone-season-reset">Tiến trình vĩnh viễn</span>
+          <span class="milestone-season-reset" data-i18n="modal.milestone_permanent">Tiến trình vĩnh viễn</span>
         </div>
 
         <!-- LIST OF 5 MILESTONE TIERS -->
@@ -798,8 +798,8 @@
 
   </div>
 
-  <script src="lang.js?v=20261111_v5_final"></script>
-  <script src="game.js?v=20261111_v5_final"></script>
+  <script src="lang.js?v=20261111_v7_complete_i18n"></script>
+  <script src="game.js?v=20261111_v7_complete_i18n"></script>
 
     <!-- ============================================== -->
     <!-- MODAL: CHEST OPENING & REWARDS SCREEN (YÊU CẦU 3) -->
@@ -814,7 +814,7 @@
         </div>
 
         <div class="chest-reward-content">
-          <div class="reward-loot-title">VẬT PHẨM & NGUYÊN LIỆU NHẬN ĐƯỢC:</div>
+          <div class="reward-loot-title" data-i18n="modal.chest_loot_title">VẬT PHẨM & NGUYÊN LIỆU NHẬN ĐƯỢC:</div>
           <div id="chest-reward-items" class="chest-reward-items-grid">
             <!-- Dynamically populated loot cards -->
           </div>
@@ -822,7 +822,7 @@
 
         <button id="btn-claim-chest-reward" class="btn btn-claim-chest-reward">
           <img src="assets/icons/star.png" class="pixel-mini-icon" alt="★">
-          <span>XÁC NHẬN NHẬN QUÀ</span>
+          <span data-i18n="modal.chest_claim_btn">XÁC NHẬN NHẬN QUÀ</span>
         </button>
       </div>
     </div>
@@ -882,7 +882,7 @@
         </div>
         <div class="tut-banner-btns">
           <button id="btn-gtut-action" class="btn btn-gtut-action hidden">Tiếp theo 👉</button>
-          <button id="btn-gtut-skip" class="btn-tut-skip-banner">Bỏ qua</button>
+          <button id="btn-gtut-skip" class="btn-tut-skip-banner" data-i18n="tut.btn_skip">Bỏ qua</button>
         </div>
       </div>
       <div id="tut-pointer-hand" class="tut-pointer-hand">👆</div>
