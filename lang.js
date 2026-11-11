@@ -5,6 +5,10 @@
 
 const I18N = {
   vi: {
+    'bp.btn_resume_midwave': "Tiếp Tục",
+    'toast.auto_sold_items': "🔄 Tự động bán {count} món cũ (+{cash} $) → Roll 3 món mới!",
+    'toast.drag_weapon_first': "⚠️ Hãy kéo ít nhất 1 vũ khí vào vali trước khi Fight!",
+    'toast.resume_battle_short': "▶️ Tiếp tục trận đấu!",
     'ad.tag': "Quảng cáo YouTube Playables",
     'ad.timer': "Đóng sau 4s",
     'ad.desc': "Nâng cấp trang bị - Quét sạch mọi đợt quái vật!",
@@ -625,6 +629,17 @@ const I18N = {
   },
 
   en: {
+    'lb.tier_godfather': 'GOLDEN GODFATHER',
+    'lb.tier_diamond': 'DIAMOND SYNDICATE',
+    'lb.tier_gold': 'GOLD UNDERBOSS',
+    'lb.tier_silver': 'SILVER CAPO',
+    'lb.tier_bronze': 'BRONZE ENFORCER',
+    'lb.stage_label': 'Stage',
+    'lb.player_you': 'You',
+    'bp.btn_resume_midwave': "Resume Battle",
+    'toast.auto_sold_items': "🔄 Auto-sold {count} old items (+{cash} $) → Rolled 3 new items!",
+    'toast.drag_weapon_first': "⚠️ Drag at least 1 weapon into suitcase before Fighting!",
+    'toast.resume_battle_short': "▶️ Resuming battle!",
     'ad.tag': "YouTube Playables Ad",
     'ad.timer': "Close in 4s",
     'ad.desc': "Upgrade your gear - Wipe out monster swarms!",
@@ -1234,9 +1249,18 @@ const I18N = {
 // Global language state
 let currentLang = 'en';
 try {
-  const saved = localStorage.getItem('desert_outpost_lang');
-  if (saved === 'en' || saved === 'vi') currentLang = saved;
-} catch(e) {}
+  // Versioned key ensures fresh session starts with 100% English
+  const saved = localStorage.getItem('desert_outpost_lang_v10');
+  if (saved === 'en' || saved === 'vi') {
+    currentLang = saved;
+  } else {
+    currentLang = 'en';
+    localStorage.setItem('desert_outpost_lang_v10', 'en');
+    localStorage.setItem('desert_outpost_lang', 'en');
+  }
+} catch (e) {
+  currentLang = 'en';
+}
 
 function t(key, fallback = '', vars = null) {
   const langDict = I18N[currentLang] || I18N['vi'];
@@ -1278,8 +1302,8 @@ function applyLanguageToDOM() {
   // Update language button display
   const langBtn = document.getElementById('btn-lang-toggle');
   if (langBtn) {
-    langBtn.innerHTML = currentLang === 'en' ? '🇬🇧' : '🇻🇳';
-    langBtn.title = currentLang === 'en' ? 'Switch to Tiếng Việt' : 'Switch to English';
+    langBtn.innerHTML = currentLang === 'en' ? '🇬🇧 EN' : '🇻🇳 VI';
+    langBtn.title = currentLang === 'en' ? 'Language: English (Click for Tiếng Việt)' : 'Ngôn ngữ: Tiếng Việt (Click for English)';
   }
 
   // Update elements with data-i18n

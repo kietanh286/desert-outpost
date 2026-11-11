@@ -111,7 +111,7 @@ const ADMIN_GEAR_CONFIG = {
   },
   dagger: {
     id: 'dagger',
-    name: 'Dao Găm Mafia',
+    name: 'Mafia Dagger',
     icon: 'assets/weapons/dagger_lv1.png',
     w: 1, h: 1,
     category: 'weapon',
@@ -121,14 +121,14 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Tấn công nhanh, tỉa từng mục tiêu gần nhất.',
+    desc: 'Fast close-range attacks targeting the nearest enemy.',
     sellPrice: 2,
     rollWeight: 15,
     color: '#38bdf8'
   },
   laser: {
     id: 'laser',
-    name: 'Pháo Laser',
+    name: 'Heavy Mega Laser',
     icon: 'assets/weapons/laser_lv1.png',
     w: 2, h: 2,
     category: 'weapon',
@@ -138,7 +138,7 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Bắn chùm tia Mega Laser cực lớn quét sạch quái.',
+    desc: 'Fires massive Mega Laser beams sweeping through enemies.',
     sellPrice: 4,
     rollWeight: 8,
     color: '#38bdf8'
@@ -162,7 +162,7 @@ const ADMIN_GEAR_CONFIG = {
   },
   belt: {
     id: 'belt',
-    name: 'Thắt Lưng Đạn',
+    name: 'Ammo Belt',
     icon: 'assets/support/belt_lv1.png',
     w: 2, h: 1,
     category: 'support',
@@ -173,14 +173,14 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isSupport: true,
-    desc: 'Tăng +12% Sát thương cho mọi súng tiếp giáp.',
+    desc: '+12% Damage to all adjacent guns.',
     sellPrice: 2,
     rollWeight: 10,
     color: '#ef4444'
   },
   vest: {
     id: 'vest',
-    name: 'Áo Giáp Chống Đạn',
+    name: 'Kevlar Vest',
     icon: 'assets/defense/vest_lv1.png',
     w: 2, h: 2,
     category: 'defense',
@@ -193,14 +193,14 @@ const ADMIN_GEAR_CONFIG = {
     regenHp: 2.0,
     cashPerWave: 0,
     isDefense: true,
-    desc: 'Tăng +60 Khiên căn cứ, tự hồi phục +3.5 Khiên & +2 HP/s, phản đòn 35% sát thương.',
+    desc: '+60 Base Shield, +3.5 Shield/s, +2 HP/s regen, 35% damage reflect.',
     sellPrice: 4,
     rollWeight: 7,
     color: '#3b82f6'
   },
   shield: {
     id: 'shield',
-    name: 'Khiên Bạo Động',
+    name: 'Riot Shield',
     icon: 'assets/defense/shield_lv1.png',
     w: 2, h: 3,
     category: 'defense',
@@ -213,14 +213,14 @@ const ADMIN_GEAR_CONFIG = {
     regenHp: 0,
     cashPerWave: 0,
     isDefense: true,
-    desc: 'Cung cấp +100 Khiên cực dày cho căn cứ, sạc lượng tử +7.0 Khiên/s.',
+    desc: '+100 Massive Base Shield, quantum recharge +7.0 Shield/s.',
     sellPrice: 5,
     rollWeight: 4,
     color: '#64748b'
   },
   barrier: {
     id: 'barrier',
-    name: 'Thanh Chắn Gai',
+    name: 'Spike Barrier',
     icon: 'assets/utility/barrier_lv1.png',
     w: 4, h: 1,
     category: 'obstacle',
@@ -231,14 +231,14 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isObstacle: true,
-    desc: 'Dựng chướng ngại vật cản và làm chậm quái trên sa mạc.',
+    desc: 'Deploys obstacles slowing and damaging desert enemies.',
     sellPrice: 3,
     rollWeight: 5,
     color: '#f59e0b'
   },
   molotov: {
     id: 'molotov',
-    name: 'Chai Xăng Cháy',
+    name: 'Classic Molotov',
     icon: 'assets/weapons/molotov_lv1.png',
     w: 1, h: 2,
     category: 'weapon',
@@ -248,7 +248,7 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Tạo vùng lửa cháy thiêu đốt theo thời gian.',
+    desc: 'Spills flame zones dealing burning damage over time.',
     sellPrice: 3,
     rollWeight: 8,
     color: '#dc2626'
@@ -273,7 +273,7 @@ const ADMIN_GEAR_CONFIG = {
   },
   flamethrower: {
     id: 'flamethrower',
-    name: 'Súng Phun Lửa',
+    name: 'Flamethrower',
     icon: 'assets/weapons/flamethrower_lv1.png',
     w: 2, h: 2,
     category: 'weapon',
@@ -283,14 +283,14 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Phun luồng lửa nón quét diện rộng thiêu đốt liên tục, gây hiệu ứng Cháy DoT dồn dập.',
+    desc: 'Shoots cone of continuous fire, stacking heavy burn DoT.',
     sellPrice: 5,
     rollWeight: 8,
     color: '#ea580c'
   },
   cryo_grenade: {
     id: 'cryo_grenade',
-    name: 'Lựu Đạn Băng',
+    name: 'Cryo Grenade',
     icon: 'assets/weapons/cryo_grenade_lv1.png',
     w: 1, h: 2,
     category: 'weapon',
@@ -300,14 +300,14 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Quăng lựu đạn băng đông cứng kẻ địch 1.5s và tăng +40% sát thương nhận vào.',
+    desc: 'Freezes enemies for 1.5s and amplifies damage taken by +40%.',
     sellPrice: 4,
     rollWeight: 9,
     color: '#06b6d4'
   },
   landmine: {
     id: 'landmine',
-    name: 'Mìn Tự Động',
+    name: 'Auto Landmine',
     icon: 'assets/defense/landmine_lv1.png',
     w: 1, h: 1,
     category: 'defense',
@@ -318,14 +318,14 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isDefense: true,
-    desc: 'Cài bẫy mìn nổ hủy diệt khi quái vật chạm phải.',
+    desc: 'Deploys proximity mines that detonate on contact.',
     sellPrice: 3,
     rollWeight: 10,
     color: '#ef4444'
   },
   drone: {
     id: 'drone',
-    name: 'Drone Tự Hành',
+    name: 'Assault Drone',
     icon: 'assets/support/drone_lv1.png',
     w: 2, h: 1,
     category: 'support',
@@ -336,14 +336,14 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isSupport: true,
-    desc: 'Drone bay quanh căn cứ bắn tỉa hỗ trợ & tăng +15% Tỷ Lệ Chí Mạng cho vũ khí lân cận.',
+    desc: 'Patrols around base providing sniper support & +15% Crit Rate.',
     sellPrice: 5,
     rollWeight: 8,
     color: '#3b82f6'
   },
   scope: {
     id: 'scope',
-    name: 'Ống Ngắm Chuẩn Xác',
+    name: 'Precision Scope',
     icon: 'assets/support/scope_lv1.png',
     w: 1, h: 1,
     category: 'support',
@@ -354,14 +354,14 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isSupport: true,
-    desc: 'Ống ngắm tăng +30% Sát Thương Chí Mạng & +20% Tầm bắn cho Súng và Cung kề cạnh.',
+    desc: '+30% Crit Damage and +20% Range to adjacent guns & bows.',
     sellPrice: 3,
     rollWeight: 9,
     color: '#8b5cf6'
   },
   tesla: {
     id: 'tesla',
-    name: 'Tháp Sấm Sét Tesla',
+    name: 'Tesla Tower',
     icon: 'assets/weapons/tesla_lv1.png',
     w: 2, h: 2,
     category: 'weapon',
@@ -371,14 +371,14 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Phóng ra các tia sét lan qua 4-8 quái vật, làm tê liệt choáng 0.4s.',
+    desc: 'Discharges chained lightning across 4-8 enemies, stunning 0.4s.',
     sellPrice: 6,
     rollWeight: 7,
     color: '#a855f7'
   },
   mortar: {
     id: 'mortar',
-    name: 'Súng Cối Hạng Nặng',
+    name: 'Siege Mortar',
     icon: 'assets/weapons/mortar_lv1.png',
     w: 3, h: 2,
     category: 'weapon',
@@ -388,14 +388,14 @@ const ADMIN_GEAR_CONFIG = {
     shieldBonus: 0,
     reflection: 0,
     cashPerWave: 0,
-    desc: 'Bắn đạn pháo cối tầm xa nổ cực mạnh bán kính 70px.',
+    desc: 'Lobs explosive long-range artillery shells (70px AoE).',
     sellPrice: 7,
     rollWeight: 6,
     color: '#f59e0b'
   },
   speed_loader: {
     id: 'speed_loader',
-    name: 'Băng Đạn Nhanh',
+    name: 'Quick Loader',
     icon: 'assets/support/speed_loader_lv1.png',
     w: 1, h: 2,
     category: 'support',
@@ -406,7 +406,7 @@ const ADMIN_GEAR_CONFIG = {
     reflection: 0,
     cashPerWave: 0,
     isSupport: true,
-    desc: 'Giảm -25% thời gian hồi chiêu (tăng tốc độ xả đạn) cho mọi vũ khí liền kề.',
+    desc: '-25% Cooldown (faster fire rate) for all adjacent weapons.',
     sellPrice: 4,
     rollWeight: 9,
     color: '#eab308'
@@ -454,7 +454,7 @@ const LAND_TILE_SHAPES = [
 
 function getLandTileName(shape) {
   if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Expansion Tile') : 'Expansion Tile';
-  const isVi = (typeof currentLang !== 'undefined' ? currentLang : 'vi') === 'vi';
+  const isVi = (typeof currentLang !== 'undefined' ? currentLang : 'en') === 'vi';
   const found = LAND_TILE_SHAPES.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
   if (found) {
     return isVi
@@ -753,28 +753,28 @@ const STAGE_BOSS_MAX_HP = {
 // MAPPING MỞ KHÓA TRANG BỊ MỚI THEO CHIẾN CÔNG MỖI MÀN
 const STAGE_GEAR_UNLOCKS = {
   1: [
-    { id: 'bow', name: 'Nỏ Tác Chiến', category: 'weapon', desc: 'Bắn mũi tên nỏ công nghệ cao xuyên thấu và gây bạo kích cực lớn.' },
-    { id: 'barrier', name: 'Thanh Chắn Gai', category: 'obstacle', desc: 'Dựng chướng ngại vật cản và làm chậm quái sa mạc.' }
+    { id: 'bow', name: 'Tactical Crossbow', category: 'weapon', desc: 'Fires high-tech piercing bolts with massive critical hits.' },
+    { id: 'barrier', name: 'Spike Barrier', category: 'obstacle', desc: 'Deploys road hazards that obstruct and slow down desert beasts.' }
   ],
   2: [
-    { id: 'vest', name: 'Áo Giáp Chống Đạn', category: 'defense', desc: 'Tăng Khiên căn cứ, tự hồi phục HP và phản đòn quái vật.' },
-    { id: 'shield', name: 'Khiên Bạo Động', category: 'defense', desc: 'Cung cấp giáp hộ thuẫn cực dày, chặn đứng hỏa lực tầm xa.' }
+    { id: 'vest', name: 'Kevlar Vest', category: 'defense', desc: 'Boosts Base Shield, passive HP regeneration and reflects damage.' },
+    { id: 'shield', name: 'Riot Shield', category: 'defense', desc: 'Provides heavy aegis barrier, stopping ranged enemy firepower.' }
   ],
   3: [
-    { id: 'laser', name: 'Pháo Laser', category: 'weapon', desc: 'Bắn chùm tia Mega Laser cực lớn quét sạch cả đàn quái.' },
-    { id: 'belt', name: 'Thắt Lưng Đạn', category: 'support', desc: 'Tăng +12% Sát thương và cường hóa hỏa lực cho mọi súng tiếp giáp.' }
+    { id: 'laser', name: 'Heavy Mega Laser', category: 'weapon', desc: 'Fires massive laser beams sweeping through enemy hordes.' },
+    { id: 'belt', name: 'Ammo Belt', category: 'support', desc: '+12% Damage and firepower boost to all adjacent guns.' }
   ],
   4: [
-    { id: 'flamethrower', name: 'Súng Phun Lửa', category: 'weapon', desc: 'Phun lửa thiêu đốt diện rộng cực nhanh.' },
-    { id: 'cryo_grenade', name: 'Lựu Đạn Băng', category: 'weapon', desc: 'Đông cứng kẻ địch và khuếch đại sát thương nhận vào.' },
-    { id: 'tesla', name: 'Tháp Sét Tesla', category: 'weapon', desc: 'Phóng tia sét lan truyền giật hàng loạt quái vật.' },
-    { id: 'mortar', name: 'Pháo Cối Tầm Xa', category: 'weapon', desc: 'Nã pháo diện rộng cày nát đội hình quái từ xa.' }
+    { id: 'flamethrower', name: 'Flamethrower', category: 'weapon', desc: 'Spews continuous cone of flames burning area targets.' },
+    { id: 'cryo_grenade', name: 'Cryo Grenade', category: 'weapon', desc: 'Freezes enemies and amplifies damage taken.' },
+    { id: 'tesla', name: 'Tesla Tower', category: 'weapon', desc: 'Arcs lightning across multiple targets, inflicting stun.' },
+    { id: 'mortar', name: 'Siege Mortar', category: 'weapon', desc: 'Long-range artillery bombardment shattering monster ranks.' }
   ],
   5: [
-    { id: 'landmine', name: 'Mìn Sa Mạc', category: 'defense', desc: 'Cài mìn nổ hủy diệt khi quái vật giẫm phải.' },
-    { id: 'drone', name: 'Drone Trinh Sát', category: 'support', desc: 'Drone bay tuần tra tự động xả đạn bảo vệ căn cứ.' },
-    { id: 'scope', name: 'Kính Ngắm Laser', category: 'support', desc: 'Tăng mạnh tầm bắn và tỉ lệ bạo kích cực đại.' },
-    { id: 'speed_loader', name: 'Băng Đạn Kép', category: 'support', desc: 'Rút ngắn thời gian nạp và tăng tốc độ bắn vũ khí.' }
+    { id: 'landmine', name: 'Desert Mine', category: 'defense', desc: 'Plants destructive proximity mines when stepped on.' },
+    { id: 'drone', name: 'Scout Drone', category: 'support', desc: 'Autonomous combat drone patrolling and covering the outpost.' },
+    { id: 'scope', name: 'Laser Scope', category: 'support', desc: 'Massively boosts range and critical strike chance.' },
+    { id: 'speed_loader', name: 'Twin Mag', category: 'support', desc: 'Accelerates reload speed and fire rate for adjacent guns.' }
   ]
 };
 
@@ -783,14 +783,14 @@ const BOSS_LIST = [
     id: 'chizuru',
     stage: 1,
     name: 'CAPO CHIZURU YAMAMOTO',
-    areaName: 'TIỀN ĐỒN SA MẠC',
+    areaName: 'DESERT OUTPOST',
     level: 10,
     totalWaves: 10,
     unlockWave: 5,
     bossWave: 10,
     maxHp: 70000,
     diamondReward: 5,
-    trait: 'Phóng chùm tia Mega Laser thiêu đốt & Triệu hồi bọ cạp bọc thép càn quét căn cứ!',
+    trait: 'Fires scorching Mega Lasers & Summons armored scorpions to assault the outpost!',
     maxWave: 10,
     maxScore: '500.000',
     svgFn: getBossChizuruSVG
@@ -806,7 +806,7 @@ const BOSS_LIST = [
     bossWave: 15,
     maxHp: 90000,
     diamondReward: 10,
-    trait: 'Khiên lượng tử phản xạ đạn & Nã pháo chùm tên lửa hủy diệt diện rộng!',
+    trait: 'Quantum deflection shield & Launches massive cluster missile barrages!',
     maxWave: 15,
     maxScore: '985.400',
     svgFn: getBossMechSVG
@@ -814,15 +814,15 @@ const BOSS_LIST = [
   {
     id: 'golden_scorpion',
     stage: 3,
-    name: 'ĐỘC HẠT HOÀNG KIM SA MẠC',
-    areaName: 'ỐC ĐẢO ĐỘC HOÀNG KIM',
+    name: 'GOLDEN TOXIC EMPEROR SCORPION',
+    areaName: 'GOLDEN VENOM OASIS',
     level: 45,
     totalWaves: 20,
     unlockWave: 15,
     bossWave: 20,
     maxHp: 120000,
     diamondReward: 18,
-    trait: 'Phun nọc độc sa mạc làm tê liệt rào chắn & Càng thép nghiền nát căn cứ!',
+    trait: 'Spews paralyzing venom disabling barriers & Crushes outpost with steel pincers!',
     maxWave: 20,
     maxScore: '1.450.000',
     svgFn: getBossScorpionSVG
@@ -831,14 +831,14 @@ const BOSS_LIST = [
     id: 'cyber_dragon',
     stage: 4,
     name: 'RỒNG MÁY CYBER SHENRON',
-    areaName: 'PHÁO ĐÀI BAY KHÔNG GIAN',
+    areaName: 'ORBITAL DREADNOUGHT',
     level: 70,
     totalWaves: 25,
     unlockWave: 20,
     bossWave: 25,
     maxHp: 150000,
     diamondReward: 30,
-    trait: 'Hơi thở Plasma hủy diệt toàn màn hình & Phân thân bóng ma né tránh đòn!',
+    trait: 'Full-screen Plasma Breath & Phantom mirage evasion!',
     maxWave: 25,
     maxScore: '2.100.000',
     svgFn: getBossDragonSVG
@@ -847,14 +847,14 @@ const BOSS_LIST = [
     id: 'don_corleone',
     stage: 5,
     name: 'DON CORLEONE DESERT OUTPOST',
-    areaName: 'ĐẦU NÃO TỐI CAO MAFIA',
+    areaName: 'SUPREME MAFIA HQ',
     level: 100,
     totalWaves: 30,
     unlockWave: 25,
     bossWave: 30,
     maxHp: 200000,
     diamondReward: 50,
-    trait: 'Bố Già Tối Thượng: Triệu hồi hộ vệ Capo, Mưa bom nguyên tử & Khiên Hắc Kim bất hoại!',
+    trait: 'Supreme Godfather: Summons Capo guards, Atomic airstrike & Obsidian shield!',
     maxWave: 30,
     maxScore: '3.000.000',
     svgFn: getBossOverlordSVG
@@ -5049,13 +5049,75 @@ class AppController {
       document.body.appendChild(toast);
     }
     let translatedMsg = msg;
-    const isEn = (typeof currentLang !== 'undefined' ? currentLang : 'vi') === 'en';
+    const isEn = (typeof currentLang !== 'undefined' ? currentLang : 'en') === 'en';
     if (isEn && typeof msg === 'string') {
       if (typeof TOAST_TRANSLATION_FALLBACKS === 'object' && TOAST_TRANSLATION_FALLBACKS[msg]) {
         translatedMsg = TOAST_TRANSLATION_FALLBACKS[msg];
-      } else if (typeof t === 'function') {
-        const tryT = t(msg);
-        if (tryT && tryT !== msg) translatedMsg = tryT;
+      } else {
+        // Universal dynamic regex translation for all dynamic messages
+        let m = msg;
+        m = m.replace(/^🔄 Tự động bán (\d+) món cũ \(\+(\d+) \$\) → Roll 3 món mới!$/, '🔄 Auto-sold $1 old items (+$2 $) → Rolled 3 new items!');
+        m = m.replace(/^👉 Đã chọn (.+?): Chạm ô trong vali hoặc kéo thả để trang bị!$/, '👉 Selected $1: Tap cell in suitcase or drag to equip!');
+        m = m.replace(/^▶️? Tiếp tục trận đấu!?$/, '▶️ Resuming battle!');
+        m = m.replace(/^Tiếp tục chiến đấu Wave (\d+)!$/, 'Resuming battle Wave $1!');
+        m = m.replace(/^🎁 Đã nhận thưởng \[(.+?)\]!$/, '🎁 Claimed milestone [$1]!');
+        m = m.replace(/^📥 Đã cất (.+?) vào Hàng Dự Bị #(\d+)$/, '📥 Stored $1 into Stash Slot #$2');
+        m = m.replace(/^✨ Hợp nhất (.+?) lên ★(\d+) tại Hàng Dự Bị!$/, '✨ Merged $1 to ★$2 in Stash!');
+        m = m.replace(/^🔄 Đã hoán đổi vị trí Ô #(\d+) và Ô #(\d+)!$/, '🔄 Swapped Slot #$1 and Slot #$2!');
+        m = m.replace(/^🗺️ Đã mở rộng thêm \+(\d+) ô vali!$/, '🗺️ Expanded suitcase grid by +$1 slots!');
+        m = m.replace(/^✨ Hợp nhất (.+?) lên ★(\d+)!$/, '✨ Merged $1 to ★$2!');
+        m = m.replace(/^\[Đã Bán\] (.+?) từ vali: \+(\d+) \$$/, '[Sold] $1 from suitcase: +$2 $');
+        m = m.replace(/^\[Đã Bán\] (.+?): \+(\d+) \$$/, '[Sold] $1: +$2 $');
+        m = m.replace(/^CHIẾN CÔNG BOSS WAVE (\d+)! Nhận: \+(\d+) \$ \(Gồm \+(\d+) \$ Thưởng Lũy Tiến Boss\)$/, 'BOSS DEFEATED WAVE $1! +$2 $ (Includes +$3 $ Boss Bonus)');
+        m = m.replace(/^Hoàn thành Wave (\d+)! Thưởng: \+(\d+) \$ \(Money\)$/, 'Wave $1 Clear! Reward: +$2 $ (Cash)');
+        m = m.replace(/^🔓 Đã giải mã bí mật nội tại của (.+?)!$/, '🔓 Decoded passives for $1!');
+        m = m.replace(/^🎉 Đã nhận \+(\d+) \$ và toàn bộ Mảnh Nguyên Liệu!$/, '🎉 Claimed +$1 $ and all Material Fragments!');
+        m = m.replace(/^🎁 Đã thu hoạch \+(\d+) \$ và các Mảnh Nguyên Liệu chiến dịch!$/, '🎁 Harvested +$1 $ and run fragments!');
+        m = m.replace(/^Quảng cáo đang hồi chiêu! Vui lòng chờ (.+?) nữa\.$/, 'Ad is on cooldown! Please wait $1.');
+        m = m.replace(/^⚠️ Cần (\d+) \$ để Roll 3 trang bị!$/, '⚠️ Need $1 $ to Roll 3 items!');
+        m = m.replace(/^⚠️ Không thể lưu dữ liệu: (.+)$/, '⚠️ Failed to save data: $1');
+        m = m.replace(/^⚠️ Hãy kéo ít nhất 1 vũ khí vào vali trước khi Fight!$/, '⚠️ Drag at least 1 weapon into suitcase before Fighting!');
+        m = m.replace(/^⏸️ Đã tạm dừng trận đấu! Hãy sắp xếp lại vali rồi bấm Tiếp Tục!$/, '⏸️ Match paused! Reorganize suitcase and tap Resume!');
+        m = m.replace(/^💾 Đã lưu tiến độ ván đấu vào bộ nhớ máy!$/, '💾 Match progress saved to local storage!');
+        m = m.replace(/^🚪 Đã trở về Lobby chính$/, '🚪 Returned to Main Lobby');
+        m = m.replace(/^💖 Đã hồi sinh 100% Sinh lực & Khiên! Tiếp tục chiến đấu!$/, '💖 Revived 100% HP & Shield! Continue fighting!');
+        m = m.replace(/^🎉 ĐẠT WAVE 10: ĐÃ MỞ KHÓA \[(.+?)\] & \[(.+?)\]!$/, '🎉 REACHED WAVE 10: UNLOCKED [$1] & [$2]!');
+        m = m.replace(/^🎉 PHÁ ĐẢO MÀN 1: ĐÃ MỞ KHÓA \[(.+?)\] & \[(.+?)\]!$/, '🎉 STAGE 1 CLEARED: UNLOCKED [$1] & [$2]!');
+        m = m.replace(/^🎉 CHIẾN CÔNG 2 BOSS: ĐÃ MỞ KHÓA \[(.+?)\] & \[(.+?)\]!$/, '🎉 2 BOSS DEFEATED: UNLOCKED [$1] & [$2]!');
+        m = m.replace(/^✅ Đã thêm trang bị mới vào Bộ Trang Bị & Hàng Chờ!$/, '✅ Added new gear to Loadout & Stash!');
+        m = m.replace(/^💾 Đã lưu dữ liệu! Bạn có thể sao chép Mã Lưu để dùng trên thiết bị khác\.$/, '💾 Data saved! You can copy Save Code to play on another device.');
+        m = m.replace(/^📋 ĐÃ SAO CHÉP MÃ LƯU VÀO CLIPBOARD! Hãy dán vào ghi chú hoặc gửi sang máy khác\.$/, '📋 COPIED SAVE CODE TO CLIPBOARD! Paste into notes or transfer to another device.');
+        m = m.replace(/^⚠️ Hãy bôi đen và nhấn Ctrl\+C để sao chép mã!$/, '⚠️ Highlight and press Ctrl+C to copy code!');
+        m = m.replace(/^⚠️ Vui lòng dán mã tiến trình vào ô trước khi nạp!$/, '⚠️ Please paste save code into box before importing!');
+        m = m.replace(/^Đã chọn Chế độ Hardcore: Khóa bán trang bị từ vali!$/, 'Hardcore Mode: Selling gear from suitcase is disabled!');
+        m = m.replace(/^Đã chọn Chế độ Thường: Cho phép bán trang bị trong vali!$/, 'Normal Mode: Selling gear from suitcase is allowed!');
+        m = m.replace(/^⚠️ Không thể dời sang trái nữa \(chạm mép\)!$/, '⚠️ Cannot shift left (grid boundary)!');
+        m = m.replace(/^⚠️ Không thể dời sang phải nữa \(chạm mép\)!$/, '⚠️ Cannot shift right (grid boundary)!');
+        m = m.replace(/^⚠️ Không thể dời lên trên nữa \(chạm mép\)!$/, '⚠️ Cannot shift up (grid boundary)!');
+        m = m.replace(/^⚠️ Không thể dời xuống dưới nữa \(chạm mép\)!$/, '⚠️ Cannot shift down (grid boundary)!');
+        m = m.replace(/^⚠️ Không đủ năng lượng! Hãy nạp thêm hoặc đợi hồi phục\.$/, '⚠️ Not enough energy! Refill or wait for recharge.');
+        m = m.replace(/^⚠️ Hãy chọn ít nhất 1 trang bị vào Bộ Trang Bị trước khi ra trận!$/, '⚠️ Equip at least 1 weapon in Loadout before battle!');
+        m = m.replace(/^🎁 Đã nhận Thưởng Tuần: \+50 Kim Cương & \+1\.000 Vàng!$/, '🎁 Claimed Weekly Reward: +50 Diamonds & +1,000 Gold!');
+        m = m.replace(/^ℹ️ Bạn đã nhận thưởng tuần này rồi! Vui lòng quay lại tuần sau\.$/, 'ℹ️ You already claimed this week reward! Return next week.');
+        m = m.replace(/^\[Quảng Cáo\] Nhận \+10 Năng Lượng! Hồi chiêu 5 phút bắt đầu\.$/, '[Ad] +10 Energy received! 5m cooldown started.');
+        m = m.replace(/^\[Quảng Cáo\] Nhận \+10 Kim Cương! Hồi chiêu 5 phút bắt đầu\.$/, '[Ad] +10 Diamonds received! 5m cooldown started.');
+        m = m.replace(/^\[Tốc Độ\] Đã kích hoạt Tốc độ x3 cho cả ván chơi!$/, '[Speed] 3x Speed activated for this match!');
+        m = m.replace(/^⚠️ Bạn phải mở khóa Tốc độ x3 trước khi mở x5!$/, '⚠️ Unlock 3x Speed before enabling 5x!');
+        m = m.replace(/^🔥 Đã mở khóa Siêu Tốc x5 cho cả ván chơi!$/, '🔥 5x Super Speed unlocked for this match!');
+        m = m.replace(/^Đã chuyển sang chế độ đồ họa Tiết Kiệm$/, 'Switched to Battery Saver Graphics Mode');
+        m = m.replace(/^Đã kích hoạt hiệu ứng đồ họa Tối Đa HD$/, 'Activated Ultra HD Combat VFX');
+        m = m.replace(/^⚠️ Ô dự bị này đang bị khóa!$/, '⚠️ This stash slot is locked!');
+        m = m.replace(/^⚠️ Mảnh đất chỉ có thể ghép vào vali, không thể lưu ở hàng chờ!$/, '⚠️ Land tiles can only be placed on suitcase grid!');
+        m = m.replace(/^⚠️ Ô dự bị này đã có trang bị khác loại! Hãy chọn ô trống\.$/, '⚠️ Slot has different item type! Choose empty slot.');
+        m = m.replace(/^⚠️ Mảnh đất phải nằm trọn trong bảng 7x7 và kết nối với ô đã mở!$/, '⚠️ Land tile must fit in 7x7 grid and connect to open cells!');
+        m = m.replace(/^⚠️ Vùng này chưa mở khóa ô hoặc nằm ngoài vali!$/, '⚠️ Locked cell or outside suitcase grid!');
+        m = m.replace(/^⚠️ Không thể hoán đổi: Vướng trang bị khác hoặc lệch kích thước ô!$/, '⚠️ Cannot swap: Mismatched size or blocked!');
+        m = m.replace(/^⚠️ Vị trí này đã có trang bị! Hãy kéo vào ô trống hoặc ghép cùng loại\.$/, '⚠️ Cell occupied! Drag to empty cell or merge matching gear.');
+        m = m.replace(/^⚠️ Vị trí này vướng nhiều trang bị khác, không thể đặt!$/, '⚠️ Blocked by multiple items, cannot place!');
+        m = m.replace(/^🚫 Chế độ Hardcore: Không thể bán trang bị trong vali!$/, '🚫 Hardcore Mode: Cannot sell gear inside suitcase!');
+        m = m.replace(/^\[Mở Khóa\] Hàng dự bị #(\d+) bằng (\d+) \$!$/, '[Unlocked] Stash Slot #$1 for $2 $!');
+        m = m.replace(/^⚠️ Cần (\d+) \$ trong ván để mở ô này!$/, '⚠️ Need $1 $ in this match to unlock slot!');
+        translatedMsg = m;
       }
     }
     toast.textContent = translatedMsg;
@@ -5862,7 +5924,7 @@ class AppController {
     if (!this.stashSlotsEls) return;
     const hintEl = document.getElementById('stash-hint-text');
     if (hintEl) {
-      hintEl.textContent = typeof t === 'function' ? t('bp.stash_hint_bar', 'Ô 1 Miễn phí - Chạm ô khóa để mở') : 'Ô 1 Miễn phí - Chạm ô khóa để mở';
+      hintEl.textContent = typeof t === 'function' ? t('bp.stash_hint_bar', 'Slot 1 Free - Tap locked slot to unlock') : 'Slot 1 Free - Tap locked slot to unlock';
     }
 
     this.stashSlotsEls.forEach((slotEl, idx) => {
@@ -5878,20 +5940,20 @@ class AppController {
 
         if (idx === 1) {
           lockTitle = '<img src="assets/icons/pixel_cash.png" class="pixel-mini-icon"> 25 $';
-          lockSub = typeof t === 'function' ? t('bp.stash_sub_cash', 'Money ván') : 'Money ván';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_cash', 'Match Cash') : 'Match Cash';
         } else if (idx === 2) {
           lockTitle = '<img src="assets/icons/gem.png" class="pixel-mini-icon"> 15';
-          lockSub = typeof t === 'function' ? t('bp.stash_sub_gems', 'Kim Cương') : 'Kim Cương';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_gems', 'Diamonds') : 'Diamonds';
         } else if (idx === 3) {
-          lockTitle = typeof t === 'function' ? t('bp.stash_ad_1', '📺 1 QC') : '📺 1 QC';
-          lockSub = typeof t === 'function' ? t('bp.stash_sub_ad', 'Xem Video') : 'Xem Video';
+          lockTitle = typeof t === 'function' ? t('bp.stash_ad_1', '📺 1 Ad') : '📺 1 Ad';
+          lockSub = typeof t === 'function' ? t('bp.stash_sub_ad', 'Watch Video') : 'Watch Video';
         } else if (idx === 4) {
           const watched = this.run.stashAdWatched[4] || 0;
-          lockTitle = typeof t === 'function' ? t('bp.stash_ad_2', '📺 2 QC') : '📺 2 QC';
+          lockTitle = typeof t === 'function' ? t('bp.stash_ad_2', '📺 2 Ads') : '📺 2 Ads';
           lockSub = typeof t === 'function' ? t('bp.stash_sub_2ads', `(${watched}/2 QC)`, { cur: watched }) : `(${watched}/2 QC)`;
         }
 
-        const slotBadgeTitle = typeof t === 'function' ? t('bp.slot_num', `Ô #${idx + 1}`, { num: idx + 1 }) : `Ô #${idx + 1}`;
+        const slotBadgeTitle = typeof t === 'function' ? t('bp.slot_num', `Slot #${idx + 1}`, { num: idx + 1 }) : `Slot #${idx + 1}`;
 
         slotEl.innerHTML = `
           <div class="stash-lock-chip">
@@ -6018,7 +6080,7 @@ class AppController {
         this.backpackModeIndicator.textContent = typeof t === 'function' ? t('bp.mode_hardcore', '🔥 Hardcore') : '🔥 Hardcore';
       } else {
         this.backpackModeIndicator.className = 'mode-badge normal-mode';
-        this.backpackModeIndicator.textContent = typeof t === 'function' ? t('bp.mode_normal', '🛡️ Thường (Bán Vali)') : '🛡️ Thường (Bán Vali)';
+        this.backpackModeIndicator.textContent = typeof t === 'function' ? t('bp.mode_normal', '🛡️ Normal (Vali Sell: ON)') : '🛡️ Normal (Vali Sell: ON)';
       }
     }
 
@@ -6305,7 +6367,10 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
             document.querySelectorAll('.shop-item-slot').forEach(s => s.classList.remove('is-selected'));
             element.classList.add('is-selected');
             const gName = dragObj.isLand ? dragObj.item.name : (GEAR_TYPES[dragObj.item.type]?.name || '');
-            this.showToast(`👉 Đã chọn ${gName}: Chạm ô trong vali hoặc kéo thả để trang bị!`);
+            const selMsg = typeof t === 'function'
+        ? t('toast.gear_selected_hint', `👉 Selected ${gName}: Tap cell in suitcase or drag to equip!`, { name: gName })
+        : `👉 Selected ${gName}: Tap cell in suitcase or drag to equip!`;
+      this.showToast(selMsg);
           } else {
             if (!dragObj.isLand && GEAR_TYPES[dragObj.item.type]) {
               const g = GEAR_TYPES[dragObj.item.type];
@@ -6894,7 +6959,7 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
     // YÊU CẦU 1: Cập nhật nhãn nút Fight nếu đang tạm dừng giữa ván
     const fightBtnTitle = document.querySelector('.btn-fight-title');
     if (fightBtnTitle) {
-      fightBtnTitle.textContent = this.isAdjustingMidWave ? 'Tiếp Tục (Resume)' : 'Fight';
+      fightBtnTitle.textContent = this.isAdjustingMidWave ? (typeof t === 'function' ? t('bp.btn_resume_midwave', 'Resume Battle') : 'Resume Battle') : (typeof t === 'function' ? t('bp.btn_fight', 'Fight') : 'Fight');
     }
   }
 
@@ -8095,14 +8160,23 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     document.getElementById('btn-refresh-shop').onclick = () => {
       sfx.init();
       if (!this.run.rollShop(true)) {
-        this.showToast(`⚠️ Cần ${this.run.refreshCost} $ để Roll 3 trang bị!`);
+        const rCost = this.run.refreshCost;
+        const rMsg = typeof t === 'function'
+          ? t('toast.need_cash_roll', `⚠️ Need ${rCost} $ to Roll 3 items!`, { val: rCost })
+          : `⚠️ Need ${rCost} $ to Roll 3 items!`;
+        this.showToast(rMsg);
       } else {
         sfx.coin();
         if (this.gtutActive && this.gtutStep === 2) {
           setTimeout(() => this.setGameplayTutorialStep(3), 250);
         }
         if (this.run._lastAutoSoldInfo) {
-          this.showToast(`🔄 Tự động bán ${this.run._lastAutoSoldInfo.count} món cũ (+${this.run._lastAutoSoldInfo.cash} $) → Roll 3 món mới!`);
+          const asCount = this.run._lastAutoSoldInfo.count;
+        const asCash = this.run._lastAutoSoldInfo.cash;
+        const asMsg = typeof t === 'function'
+          ? t('toast.auto_sold_items', `🔄 Auto-sold ${asCount} old items (+${asCash} $) → Rolled 3 new items!`, { count: asCount, cash: asCash })
+          : `🔄 Auto-sold ${asCount} old items (+${asCash} $) → Rolled 3 new items!`;
+        this.showToast(asMsg);
         }
         this.renderShopSlots();
         this.updateBackpackUI();
@@ -8113,7 +8187,10 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     document.getElementById('btn-fight').onclick = () => {
       sfx.init();
       if (this.run.backpackItems.length === 0) {
-        this.showToast('⚠️ Hãy kéo ít nhất 1 vũ khí vào vali trước khi Fight!');
+        const fkMsg = typeof t === 'function'
+          ? t('toast.drag_weapon_first', '⚠️ Drag at least 1 weapon into suitcase before Fighting!')
+          : '⚠️ Drag at least 1 weapon into suitcase before Fighting!';
+        this.showToast(fkMsg);
         return;
       }
       this.showView('battle');
@@ -8209,7 +8286,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     const closePauseMenu = () => {
       if (this.modalPause) this.modalPause.classList.add('hidden');
       this.battle.state.isPaused = false;
-      this.showToast(typeof t === 'function' ? t('toast.resume_battle', '▶️ Tiếp tục trận đấu!') : '▶️ Tiếp tục trận đấu!');
+      this.showToast(typeof t === 'function' ? t('toast.resume_battle', '▶️ Resuming battle!') : '▶️ Resuming battle!');
     };
 
     if (btnBattlePause) btnBattlePause.onclick = openPauseMenu;
@@ -8480,53 +8557,53 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     let targetEl = null;
 
     if (step === 1) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step1_tag', 'BƯỚC 1: XUẤT TRẬN') : 'BƯỚC 1: XUẤT TRẬN';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step1_text', '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!') : '👉 Bấm [XUẤT TRẬN CHIẾN DỊCH] để vào vali và tiền đồn!';
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step1_tag', 'STEP 1: DEPLOY') : 'STEP 1: DEPLOY';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step1_text', '👉 Tap [DEPLOY TO BATTLE] to enter backpack & outpost!') : '👉 Tap [DEPLOY TO BATTLE] to enter backpack & outpost!';
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Next 👉') : 'Next 👉';
       }
       targetEl = document.getElementById('btn-enter-run');
     } else if (step === 2) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step2_tag', 'BƯỚC 2: ROLL VŨ KHÍ') : 'BƯỚC 2: ROLL VŨ KHÍ';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step2_text', '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!') : '🎲 Bấm [Roll (3 Món)] để mua trang bị ngẫu nhiên!';
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step2_tag', 'STEP 2: ROLL WEAPONS') : 'STEP 2: ROLL WEAPONS';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step2_text', '🎲 Tap [Roll (3 Items)] to buy random equipment!') : '🎲 Tap [Roll (3 Items)] to buy random equipment!';
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Next 👉') : 'Next 👉';
       }
       targetEl = document.getElementById('btn-refresh-shop');
     } else if (step === 3) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step3_tag', 'BƯỚC 3: XẾP VÀO VALI') : 'BƯỚC 3: XẾP VÀO VALI';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step3_text', '🖐️ Chạm & Kéo vũ khí từ Cửa Hàng thả vào ô sáng trong Vali!') : '🖐️ Chạm & Kéo vũ khí từ Cửa Hàng thả vào ô sáng trong Vali!';
-      // ALWAYS provide 'Tiếp theo 👉' so user is never blocked!
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step3_tag', 'STEP 3: PACK SUITCASE') : 'STEP 3: PACK SUITCASE';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step3_text', '🖐️ Drag weapon from shop and drop into illuminated cell in suitcase!') : '🖐️ Drag weapon from shop and drop into illuminated cell in suitcase!';
+      // ALWAYS provide 'Next 👉' so user is never blocked!
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Next 👉') : 'Next 👉';
       }
       targetEl = document.getElementById('shop-slot-0') || document.getElementById('shop-triple-slots-row');
     } else if (step === 4) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step4_tag', 'BƯỚC 4: GHÉP & BÁN') : 'BƯỚC 4: GHÉP & BÁN';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step4_text', '⭐ Kéo 2 món CÙNG LOẠI & CÙNG SAO đè lên nhau để GHÉP! Hoặc kéo ô đỏ để BÁN (2$).') : '⭐ Kéo 2 món CÙNG LOẠI & CÙNG SAO đè lên nhau để GHÉP! Hoặc kéo ô đỏ để BÁN (2$).';
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step4_tag', 'STEP 4: MERGE & SELL') : 'STEP 4: MERGE & SELL';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step4_text', '⭐ Drag 2 items of SAME TYPE & TIER onto each other to MERGE! Or drag to red zone to SELL (2$).') : '⭐ Drag 2 items of SAME TYPE & TIER onto each other to MERGE! Or drag to red zone to SELL (2$).';
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Tiếp theo 👉') : 'Tiếp theo 👉';
+        btnAction.textContent = typeof t === 'function' ? t('gtut.next', 'Next 👉') : 'Next 👉';
       }
       targetEl = document.getElementById('sell-drop-zone') || document.getElementById('backpack-grid-board');
     } else if (step === 5) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step5_tag', 'BƯỚC 5: VÀO TRẬN') : 'BƯỚC 5: VÀO TRẬN';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step5_text', '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!') : '⚔️ Đội hình sẵn sàng! Bấm [Xuất Trận] để bảo vệ tiền đồn!';
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step5_tag', 'STEP 5: ENTER BATTLE') : 'STEP 5: ENTER BATTLE';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step5_text', '⚔️ Loadout ready! Tap [Fight] to defend outpost!') : '⚔️ Loadout ready! Tap [Fight] to defend outpost!';
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('bp.btn_fight', 'Vào Trận 👉') : 'Vào Trận 👉';
+        btnAction.textContent = typeof t === 'function' ? t('bp.btn_fight', 'Fight 👉') : 'Fight 👉';
       }
       targetEl = document.getElementById('btn-fight');
     } else if (step === 6) {
-      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step6_tag', 'BƯỚC 6: CHIẾN ĐẤU') : 'BƯỚC 6: CHIẾN ĐẤU';
-      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step6_text', '🔥 Vũ khí TỰ ĐỘNG BẮN! Tiêu diệt quái vật và hạ gục Boss Sa Mạc!') : '🔥 Vũ khí TỰ ĐỘNG BẮN! Tiêu diệt quái vật và hạ gục Boss Sa Mạc!';
+      if (stepTag) stepTag.textContent = typeof t === 'function' ? t('gtut.step6_tag', 'STEP 6: SURVIVE & WIN') : 'STEP 6: SURVIVE & WIN';
+      if (stepText) stepText.textContent = typeof t === 'function' ? t('gtut.step6_text', '🔥 Weapons FIRE AUTOMATICALLY! Slay monsters and defeat Desert Boss!') : '🔥 Weapons FIRE AUTOMATICALLY! Slay monsters and defeat Desert Boss!';
       if (hand) hand.classList.add('hidden');
       if (btnAction) {
         btnAction.classList.remove('hidden');
-        btnAction.textContent = typeof t === 'function' ? t('gtut.done', 'Hoàn tất 🎉') : 'Hoàn tất 🎉';
+        btnAction.textContent = typeof t === 'function' ? t('gtut.done', 'Done 🎉') : 'Done 🎉';
       }
       setTimeout(() => {
         if (this.gtutActive && this.gtutStep === 6) {

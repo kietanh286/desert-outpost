@@ -6,7 +6,7 @@
   <title>Desert Outpost: Merge Defense</title>
   <!-- YOUTUBE PLAYABLES SDK -->
   <script src="https://www.youtube.com/game_api/v1"></script>
-  <link rel="stylesheet" href="style.css?v=20261111_v9_pure_english_master">
+  <link rel="stylesheet" href="style.css?v=20261111_v11_pure_english_flawless">
 </head>
 <body>
   <div id="game-container">
@@ -26,7 +26,7 @@
         <span id="player-energy" class="hud-text">30/30</span>
       </div>
       <div class="hud-tools">
-        <button id="btn-lang-toggle" class="hud-mini-btn" title="Switch Language">🇻🇳</button>
+        <button id="btn-lang-toggle" class="hud-mini-btn" title="Language: English (Click to toggle)">🇬🇧 EN</button>
         <button id="btn-tutorial-open" class="hud-mini-btn" title="Tutorial">❓</button>
         <button id="btn-save-code" class="btn-pkg-reset" title="Cloud Save Code">
           <img src="assets/icons/save_code.png" class="pixel-mini-icon" alt="">
@@ -160,7 +160,7 @@
         <div class="club-player-card">
           <div class="cpc-badge-col">
             <span id="club-player-badge-icon" class="cpc-icon"><img src="assets/icons/crown.png" class="pixel-mini-icon" alt=""></span>
-            <span id="club-player-badge-title" class="cpc-tier-name">BỐ GIÀ HOÀNG KIM</span>
+            <span id="club-player-badge-title" class="cpc-tier-name" data-i18n="lb.tier_godfather">GOLDEN GODFATHER</span>
           </div>
           <div class="cpc-stats-col">
             <div class="cpc-stat-item">
@@ -417,7 +417,7 @@
         <div id="boss-raid-bar" class="boss-raid-bar hidden">
           <div class="boss-raid-header">
             <span class="boss-raid-icon"><img src="assets/icons/crown.png" class="pixel-mini-icon"></span>
-            <span class="boss-raid-title" id="boss-raid-name">TỔNG TƯ LỆNH BLACK GOLD</span>
+            <span class="boss-raid-title" id="boss-raid-name">COMMANDER BLACK GOLD</span>
             <span class="boss-raid-hp-num" id="boss-raid-hp-text">100%</span>
           </div>
           <div class="boss-raid-track">
@@ -557,7 +557,7 @@
         <div class="unlock-reward-glow"></div>
         <div class="unlock-header">
           <img src="assets/icons/trophy.png" class="unlock-trophy-img" alt="Trophy">
-          <h2 class="unlock-banner-title">🎉 MỞ KHÓA TRANG BỊ MỚI!</h2>
+          <h2 class="unlock-banner-title">🎉 NEW GEAR UNLOCKED!</h2>
           <span id="unlock-stage-tag" class="unlock-sub-badge">STAGE 1 CLEAR - DESERT OUTPOST</span>
         </div>
 
@@ -572,11 +572,11 @@
         <div class="unlock-actions">
           <button id="btn-equip-unlocked-gear" class="btn btn-equip-unlocked">
             <img src="assets/icons/swords.png" class="pixel-mini-icon">
-            <span>TRANG BỊ VÀO VALI NGAY</span>
+            <span>EQUIP TO SUITCASE NOW</span>
           </button>
           <button id="btn-close-gear-unlock" class="btn btn-close-unlock">
             <img src="assets/icons/star.png" class="pixel-mini-icon">
-            <span>XÁC NHẬN & TIẾP TỤC</span>
+            <span>CONFIRM & CONTINUE</span>
           </button>
         </div>
       </div>
@@ -798,8 +798,8 @@
 
   </div>
 
-  <script src="lang.js?v=20261111_v9_pure_english_master"></script>
-  <script src="game.js?v=20261111_v9_pure_english_master"></script>
+  <script src="lang.js?v=20261111_v11_pure_english_flawless"></script>
+  <script src="game.js?v=20261111_v11_pure_english_flawless"></script>
 
     <!-- ============================================== -->
     <!-- MODAL: CHEST OPENING & REWARDS SCREEN (YÊU CẦU 3) -->
@@ -810,7 +810,7 @@
         <div class="chest-reward-header">
           <img id="chest-reward-icon" src="assets/icons/chest_gold.png" class="chest-reward-big-img" alt="Reward Chest">
           <h2 id="chest-reward-title" data-i18n="shop.chest_opened_title">CHEST OPENED SUCCESSFULLY!</h2>
-          <span id="chest-reward-sub" class="chest-reward-sub-badge">HÒM BẠC TINH ANH</span>
+          <span id="chest-reward-sub" class="chest-reward-sub-badge">ELITE SILVER CHEST</span>
         </div>
 
         <div class="chest-reward-content">
@@ -875,7 +875,7 @@
     <div id="gameplay-tutorial-overlay" class="gameplay-tutorial-overlay hidden">
       <div id="tut-guide-banner" class="tut-guide-banner">
         <div class="tut-guide-content">
-          <span id="gtut-step-tag" class="tut-guide-step-tag">BƯỚC 1</span>
+          <span id="gtut-step-tag" class="tut-guide-step-tag">STEP 1</span>
           <span id="gtut-step-text" class="tut-guide-text">👉 Tap [DEPLOY TO BATTLE] to enter backpack & outpost!</span>
         </div>
         <div class="tut-banner-btns">
