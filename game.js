@@ -1761,24 +1761,32 @@ class MetagameState {
   }
 
   toggleLoadoutGear(typeId) {
-    if (!this.isGearUnlocked(typeId)) return { success: false, msg: 'Trang bị này chưa mở khóa! Hãy mở hòm gacha để sở hữu.' };
+    const gName = GEAR_TYPES[typeId]?.name || typeId;
+    if (!this.isGearUnlocked(typeId)) {
+      const msg = typeof t === 'function' ? t('toast.not_unlocked', 'Trang bị này chưa mở khóa! Hãy mở hòm gacha để sở hữu.') : 'Trang bị này chưa mở khóa! Hãy mở hòm gacha để sở hữu.';
+      return { success: false, msg };
+    }
     
     const idx = this.equippedLoadout.indexOf(typeId);
     if (idx !== -1) {
       if (this.equippedLoadout.length <= 1) {
-        return { success: false, msg: 'Cần giữ lại ít nhất 1 trang bị để mang vào trận!' };
+        const msg = typeof t === 'function' ? t('toast.keep_at_least_one', 'Cần giữ lại ít nhất 1 trang bị để mang vào trận!') : 'Cần giữ lại ít nhất 1 trang bị để mang vào trận!';
+        return { success: false, msg };
       }
       this.equippedLoadout.splice(idx, 1);
       this.save();
-      return { success: true, action: 'removed', msg: `Đã tháo ${GEAR_TYPES[typeId]?.name || typeId} khỏi Bộ Trang Bị.` };
+      const msg = typeof t === 'function' ? t('toast.unequipped_gear', `Đã tháo ${gName} khỏi Bộ Trang Bị.`, { name: gName }) : `Đã tháo ${gName} khỏi Bộ Trang Bị.`;
+      return { success: true, action: 'removed', msg };
     } else {
       const maxSlots = this.getMaxLoadoutSlots();
       if (this.equippedLoadout.length >= maxSlots) {
-        return { success: false, msg: `Bộ trang bị đã đầy (Tối đa ${maxSlots} món)! Hãy bấm vào một món đang mang để tháo ra trước.` };
+        const msg = typeof t === 'function' ? t('toast.loadout_full', `Bộ trang bị đã đầy (Tối đa ${maxSlots} món)! Hãy tháo bớt một món trước.`, { max: maxSlots }) : `Bộ trang bị đã đầy (Tối đa ${maxSlots} món)! Hãy tháo bớt một món trước.`;
+        return { success: false, msg };
       }
       this.equippedLoadout.push(typeId);
       this.save();
-      return { success: true, action: 'added', msg: `Đã trang bị ${GEAR_TYPES[typeId]?.name || typeId} vào Bộ Trang Bị ra trận!` };
+      const msg = typeof t === 'function' ? t('toast.equipped_gear', `Đã trang bị ${gName} vào Bộ Trang Bị ra trận!`, { name: gName }) : `Đã trang bị ${gName} vào Bộ Trang Bị ra trận!`;
+      return { success: true, action: 'added', msg };
     }
   }
 
@@ -4521,6 +4529,9 @@ class AppController {
       updateGearTypesI18n();
     }
     this.renderLobby();
+    this.renderLobbyArsenal();
+    this.renderBattleTabLoadout();
+    this.renderMilestoneProgress();
     this.renderBackpack();
     this.renderRankTab();
     if (this.renderTutorialStep && !document.getElementById('modal-tutorial')?.classList.contains('hidden')) {
@@ -4921,7 +4932,7 @@ class AppController {
     const completedCount = milestones.filter(m => (m.current || 0) >= m.target).length;
     const hasUnclaimed = milestones.some(m => (m.current || 0) >= m.target && !claimed.includes(m.id));
 
-    if (ptsTextEl) ptsTextEl.textContent = `${completedCount} / ${milestones.length} Mốc`;
+    if (ptsTextEl) ptsTextEl.textContent = `${completedCount} / ${milestones.length} ${typeof t === 'function' ? t('lobby.milestones_unit', 'Mốc') : 'Mốc'}`;
     if (fillEl) fillEl.style.width = `${Math.min(100, (completedCount / milestones.length) * 100)}%`;
 
     if (badgeEl) {
@@ -4958,9 +4969,9 @@ class AppController {
 
       let actionHtml = '';
       if (isClaimed) {
-        actionHtml = '<span class="m-btn-claimed">ĐÃ NHẬN</span>';
+        actionHtml = `<span class="m-btn-claimed">${typeof t === 'function' ? t('milestone.claimed', 'ĐÃ NHẬN') : 'ĐÃ NHẬN'}</span>`;
       } else if (isReached) {
-        actionHtml = `<button class="m-btn-claim-action" data-id="${t.id}">NHẬN</button>`;
+        actionHtml = `<button class="m-btn-claim-action" data-id="${t.id}">${typeof t === 'function' ? t('milestone.claim', 'NHẬN') : 'NHẬN'}</button>`;
       } else {
         actionHtml = `<span class="m-pill-progress">${t.current || 0}/${t.target}</span>`;
       }
@@ -4972,9 +4983,9 @@ class AppController {
         <div class="m-detail-box">
           <div class="m-detail-header">
             <span class="m-detail-title">${t.title}</span>
-            <span class="m-detail-target">Mục tiêu: ${t.target}</span>
+            <span class="m-detail-target">${typeof t === 'function' ? t('milestone.target_label', `Mục tiêu: ${t.target}`, { target: t.target }) : `Mục tiêu: ${t.target}`}</span>
           </div>
-          <div class="m-detail-reward">Thưởng: <b class="m-reward-val">${t.reward}</b></div>
+          <div class="m-detail-reward">${typeof t === 'function' ? t('milestone.reward_label', `Thưởng: ${t.reward}`, { reward: t.reward }) : `Thưởng: ${t.reward}`}</div>
           <div class="m-row-bar-track">
             <div class="m-row-bar-fill" style="width:${pct}%"></div>
           </div>
@@ -5007,28 +5018,53 @@ class AppController {
   // --- CLUB LEADERBOARD & BẢNG XẾP HẠNG MAFIA ---
   renderRankTab() {
     const score = this.meta.highScore || 0;
+
+    // 1. DYNAMIC LEADERBOARD SORTING - Places player at exact rank based on high score
+    const baseCompetitors = [
+      { name: 'Don Vito Corleone', clan: 'The Syndicate', wave: 242, score: 2850000, isPlayer: false },
+      { name: 'Yamamoto Chizuru', clan: 'Tokyo Neon', wave: 218, score: 2120000, isPlayer: false },
+      { name: 'Mech GM-X Titan', clan: 'Cyber Core', wave: 195, score: 1680000, isPlayer: false },
+      { name: 'Tony Montana', clan: 'Scarface Cartel', wave: 140, score: 950000, isPlayer: false },
+      { name: 'Heisenberg', clan: 'Blue Crystal', wave: 115, score: 820000, isPlayer: false },
+      { name: 'Tommy Shelby', clan: 'Peaky Blinders', wave: 95, score: 680000, isPlayer: false },
+      { name: 'John Wick', clan: 'Continental Hotel', wave: 80, score: 540000, isPlayer: false },
+      { name: 'Michael Corleone', clan: 'Five Families', wave: 65, score: 420000, isPlayer: false },
+      { name: 'Frank Costello', clan: 'Wall Street Mob', wave: 45, score: 310000, isPlayer: false }
+    ];
+
+    const playerEntry = {
+      name: `⭐ ${typeof t === 'function' ? t('lb.player_you', 'Bạn') : 'Bạn'} (Capo Black Gold)`,
+      clan: 'Black Gold Citadel',
+      wave: this.meta.maxWave || 1,
+      score: score,
+      isPlayer: true
+    };
+
+    const allCompetitors = [...baseCompetitors, playerEntry];
+    allCompetitors.sort((a, b) => b.score - a.score);
+
+    allCompetitors.forEach((c, idx) => {
+      c.rank = idx + 1;
+    });
+
+    const playerRank = allCompetitors.find(c => c.isPlayer)?.rank || 1;
+    const rankPos = `Top ${playerRank}`;
+
     let badgeIcon = '🥉';
-    let badgeTitle = 'BẬC ĐỒNG MAFIA';
-    let rankPos = 'Top 10';
+    let badgeTitle = typeof t === 'function' ? t('lb.tier_bronze', 'BẬC ĐỒNG MAFIA') : 'BẬC ĐỒNG MAFIA';
 
     if (score >= 2000000) {
       badgeIcon = '👑';
       badgeTitle = typeof t === 'function' ? t('lb.tier_godfather', 'BỐ GIÀ HOÀNG KIM') : 'BỐ GIÀ HOÀNG KIM';
-      rankPos = 'Top 1';
     } else if (score >= 1500000) {
-      badgeIcon = 'KC';
+      badgeIcon = '💎';
       badgeTitle = typeof t === 'function' ? t('lb.tier_diamond', 'BẬC KIM CƯƠNG') : 'BẬC KIM CƯƠNG';
-      rankPos = 'Top 3';
     } else if (score >= 1000000) {
       badgeIcon = '🥇';
       badgeTitle = typeof t === 'function' ? t('lb.tier_gold', 'BẬC VÀNG MAFIA') : 'BẬC VÀNG MAFIA';
-      rankPos = 'Top 4';
     } else if (score >= 500000) {
       badgeIcon = '🥈';
       badgeTitle = typeof t === 'function' ? t('lb.tier_silver', 'BẬC BẠC MAFIA') : 'BẬC BẠC MAFIA';
-      rankPos = 'Top 7';
-    } else {
-      badgeTitle = typeof t === 'function' ? t('lb.tier_bronze', 'BẬC ĐỒNG MAFIA') : 'BẬC ĐỒNG MAFIA';
     }
 
     const iconEl = document.getElementById('club-player-badge-icon');
@@ -5058,20 +5094,7 @@ class AppController {
     if (!lbList) return;
     lbList.innerHTML = '';
 
-    const competitors = [
-      { rank: 1, name: 'Don Vito Corleone', clan: 'The Syndicate', wave: 242, score: 2850000, isPlayer: false },
-      { rank: 2, name: 'Yamamoto Chizuru', clan: 'Tokyo Neon', wave: 218, score: 2120000, isPlayer: false },
-      { rank: 3, name: 'Mech GM-X Titan', clan: 'Cyber Core', wave: 195, score: 1680000, isPlayer: false },
-      { rank: 4, name: `⭐ ${typeof t === 'function' ? t('lb.player_you', 'Bạn') : 'Bạn'} (Capo Black Gold)`, clan: 'Black Gold Citadel', wave: this.meta.maxWave, score: score, isPlayer: true },
-      { rank: 5, name: 'Tony Montana', clan: 'Scarface Cartel', wave: 140, score: 950000, isPlayer: false },
-      { rank: 6, name: 'Heisenberg', clan: 'Blue Crystal', wave: 115, score: 820000, isPlayer: false },
-      { rank: 7, name: 'Tommy Shelby', clan: 'Peaky Blinders', wave: 95, score: 680000, isPlayer: false },
-      { rank: 8, name: 'John Wick', clan: 'Continental Hotel', wave: 80, score: 540000, isPlayer: false },
-      { rank: 9, name: 'Michael Corleone', clan: 'Five Families', wave: 65, score: 420000, isPlayer: false },
-      { rank: 10, name: 'Frank Costello', clan: 'Wall Street Mob', wave: 45, score: 310000, isPlayer: false }
-    ];
-
-    competitors.forEach(c => {
+    allCompetitors.forEach(c => {
       const row = document.createElement('div');
       row.className = `lb-item-row ${c.isPlayer ? 'is-player-row' : ''}`;
       row.innerHTML = `
@@ -7485,7 +7508,7 @@ class AppController {
       if (iconEl) iconEl.src = chestIcon || 'assets/icons/chest_gold.png';
       
       const titleEl = document.getElementById('chest-reward-title');
-      if (titleEl) titleEl.textContent = 'MỞ RƯƠNG THÀNH CÔNG!';
+      if (titleEl) titleEl.textContent = typeof t === 'function' ? t('shop.chest_opened_title', 'MỞ RƯƠNG THÀNH CÔNG!') : 'MỞ RƯƠNG THÀNH CÔNG!';
       
       const subEl = document.getElementById('chest-reward-sub');
       if (subEl) subEl.textContent = chestName.toUpperCase();
@@ -7501,11 +7524,12 @@ class AppController {
           if (item.type === 'cash') amountClass += ' gold-amount';
           if (item.type === 'gem') amountClass += ' gem-amount';
 
+          const newBadge = item.isNew ? `<span style="color:#22c55e;font-size:10px;">${typeof t === 'function' ? t('shop.new_badge', '★ MỚI') : '★ MỚI'}</span>` : '';
           card.innerHTML = `
             <img src="${item.icon}" class="loot-item-icon" alt="${item.name}">
             <div class="loot-item-info">
-              <div class="loot-item-name">${item.name} ${item.isNew ? '<span style="color:#22c55e;font-size:10px;">★ MỚI</span>' : ''}</div>
-              <div class="loot-item-sub">${item.sub || 'Nguyên liệu nâng cấp'}</div>
+              <div class="loot-item-name">${item.name} ${newBadge}</div>
+              <div class="loot-item-sub">${item.sub || (typeof t === 'function' ? t('shop.upgrade_material', 'Nguyên liệu nâng cấp') : 'Nguyên liệu nâng cấp')}</div>
             </div>
             <div class="${amountClass}">${item.amount}</div>
           `;
@@ -7526,13 +7550,16 @@ class AppController {
       }
     };
 
-    const openChest = (chestName, costType, costVal, minS, maxS, bonusWeapon = null, chestIcon = 'assets/icons/chest_wood.png') => {
+    const openChest = (chestKey, chestNameDefault, costType, costVal, minS, maxS, bonusWeapon = null, chestIcon = 'assets/icons/chest_wood.png') => {
+      const chestName = typeof t === 'function' ? t(chestKey, chestNameDefault) : chestNameDefault;
       if (costType === 'cash' && this.meta.cash < costVal) {
-        this.showToast(`Không đủ Vàng (Cần ${costVal} Vàng)!`);
+        const msg = typeof t === 'function' ? t('shop.need_gold_toast', `Không đủ Vàng (Cần ${costVal} Vàng)!`, { cost: costVal }) : `Không đủ Vàng (Cần ${costVal} Vàng)!`;
+        this.showToast(msg);
         return;
       }
       if (costType === 'gem' && this.meta.gems < costVal) {
-        this.showToast(`Không đủ Kim Cương (Cần ${costVal} Kim Cương)!`);
+        const msg = typeof t === 'function' ? t('shop.need_gems_toast', `Không đủ Kim Cương (Cần ${costVal} Kim Cương)!`, { cost: costVal }) : `Không đủ Kim Cương (Cần ${costVal} Kim Cương)!`;
+        this.showToast(msg);
         return;
       }
 
@@ -7591,15 +7618,15 @@ class AppController {
     };
 
     document.getElementById('btn-buy-wood-chest')?.addEventListener('click', () => {
-      openChest('Hòm Gỗ Tiếp Tế', 'cash', 500, 10, 25, null, 'assets/icons/chest_wood.png');
+      openChest('shop.wood_chest_name', 'Hòm Gỗ Tiếp Tế', 'cash', 500, 10, 25, null, 'assets/icons/chest_wood.png');
     });
 
     document.getElementById('btn-buy-silver-coin')?.addEventListener('click', () => {
-      openChest('Hòm Bạc Tinh Anh', 'cash', 1500, 35, 75, null, 'assets/icons/chest_silver.png');
+      openChest('shop.silver_chest_name', 'Hòm Bạc Tinh Anh', 'cash', 1500, 35, 75, null, 'assets/icons/chest_silver.png');
     });
 
     document.getElementById('btn-buy-silver-gem')?.addEventListener('click', () => {
-      openChest('Hòm Bạc Tinh Anh', 'gem', 25, 35, 75, null, 'assets/icons/chest_silver.png');
+      openChest('shop.silver_chest_name', 'Hòm Bạc Tinh Anh', 'gem', 25, 35, 75, null, 'assets/icons/chest_silver.png');
     });
 
     document.getElementById('btn-buy-gold-chest')?.addEventListener('click', () => {

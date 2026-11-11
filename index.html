@@ -30,7 +30,7 @@
         <button id="btn-tutorial-open" class="hud-mini-btn" title="Hướng Dẫn Tân Thủ / Tutorial">❓</button>
         <button id="btn-save-code" class="btn-pkg-reset" title="Sao Chép hoặc Nạp mã lưu tiến trình (Cloud Save Code)">
           <img src="assets/icons/save_code.png" class="pixel-mini-icon" alt="">
-          <span>Mã Lưu</span>
+          <span data-i18n="hud.save_code_btn">Mã Lưu</span>
         </button>
         <button id="btn-battle-pause" class="btn-battle-pause-top hidden" title="Tạm Dừng Trận Đấu">
           <img src="assets/icons/pause.png" class="pixel-btn-icon" alt="Pause">
@@ -479,8 +479,8 @@
       <div class="modal-box levelup-box">
         <div class="levelup-header">
           <div class="levelup-tag">LEVEL UP!</div>
-          <h2>NÂNG CẤP HỎA LỰC TRONG VÁN</h2>
-          <p>Chọn 1 cường hóa sức mạnh đặc biệt cho chiến dịch hiện tại</p>
+          <h2 data-i18n="modal.levelup_title">NÂNG CẤP HỎA LỰC TRONG VÁN</h2>
+          <p data-i18n="modal.levelup_sub">Chọn 1 cường hóa sức mạnh đặc biệt cho chiến dịch hiện tại</p>
         </div>
         <div id="levelup-choices-container" class="levelup-choices-container">
           <!-- 3 randomized perk cards injected dynamically -->
@@ -514,7 +514,7 @@
       <div class="modal-box victory-box">
         <div class="victory-header-icon">
           <img src="assets/icons/crown.png" class="crown-icon">
-          <div class="victory-banner-title">VICTORY</div>
+          <div class="victory-banner-title" data-i18n="modal.victory_title">VICTORY</div>
         </div>
 
         <div class="victory-stats-row">
@@ -588,7 +588,7 @@
       <div class="modal-box defeat-box">
         <div class="defeat-header-icon">
           <span class="skull-icon">💀</span>
-          <div class="defeat-banner-title">CHIẾN DỊCH THẤT BẠI</div>
+          <div class="defeat-banner-title" data-i18n="modal.defeat_title">CHIẾN DỊCH THẤT BẠI</div>
         </div>
 
         <div class="defeat-stats-row">
@@ -627,8 +627,8 @@
     <div id="modal-revive" class="modal-overlay hidden">
       <div class="modal-box revive-box">
         <div class="danger-icon"><img src="assets/icons/crown.png" style="width:48px;height:48px;image-rendering:pixelated;"></div>
-        <h2>CĂN CỨ BỊ NỔ TUNG!</h2>
-        <p>Xem 1 video ngắn để hồi sinh ngay 100% máu và bảo toàn toàn bộ ván đấu!</p>
+        <h2 data-i18n="modal.revive_title">CĂN CỨ BỊ NỔ TUNG!</h2>
+        <p data-i18n="modal.revive_sub">Xem 1 video ngắn để hồi sinh ngay 100% máu và bảo toàn toàn bộ ván đấu!</p>
         <div class="revive-actions">
           <button id="btn-watch-ad" class="btn btn-ad">
             <span class="ad-badge"><img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> AD</span>
@@ -672,7 +672,7 @@
         <div class="save-code-header">
           <div class="save-code-title-group">
             <span class="save-code-icon"><img src="assets/icons/save_code.png" class="pixel-mini-icon" alt=""></span>
-            <h2>MÃ LƯU TIẾN TRÌNH (SAVE CODE)</h2>
+            <h2 data-i18n="modal.save_title">MÃ LƯU TIẾN TRÌNH (SAVE CODE)</h2>
           </div>
           <button id="btn-close-save-code" class="btn-close-modal" type="button">✕</button>
         </div>
@@ -713,7 +713,7 @@
         <div class="pause-header">
           <span class="pause-header-icon"><img src="assets/icons/pause.png" class="pixel-mini-icon"></span>
           <div class="pause-title-group">
-            <h2>CHIẾN DỊCH TẠM DỪNG</h2>
+            <h2 data-i18n="modal.pause_title">CHIẾN DỊCH TẠM DỪNG</h2>
             <span class="pause-sub">Cài Đặt Game & Báo Cáo Hỏa Lực Chiến Trường</span>
           </div>
           <button id="btn-close-pause-x" class="btn-close-modal">✕</button>
@@ -777,7 +777,7 @@
           <div class="milestone-modal-title-row">
             <img src="assets/icons/trophy.png" class="m-trophy-big pixel-icon" alt="">
             <div>
-              <h2>CỘT MỐC TIẾN ĐỘ CHIẾN TRƯỜNG</h2>
+              <h2 data-i18n="milestone.modal_title">CỘT MỐC TIẾN ĐỘ CHIẾN TRƯỜNG</h2>
               <p>Vượt Wave & Tiêu diệt Quái vật, Trùm Boss để tích lũy thành tích và mở khóa rương báu vĩnh viễn!</p>
             </div>
           </div>
@@ -809,7 +809,7 @@
         <div class="chest-reward-glow"></div>
         <div class="chest-reward-header">
           <img id="chest-reward-icon" src="assets/icons/chest_gold.png" class="chest-reward-big-img" alt="Hòm Thưởng">
-          <h2 id="chest-reward-title">MỞ RƯƠNG THÀNH CÔNG!</h2>
+          <h2 id="chest-reward-title" data-i18n="shop.chest_opened_title">MỞ RƯƠNG THÀNH CÔNG!</h2>
           <span id="chest-reward-sub" class="chest-reward-sub-badge">HÒM BẠC TINH ANH</span>
         </div>
 
