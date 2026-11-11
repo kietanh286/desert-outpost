@@ -5,6 +5,25 @@
 
 const I18N = {
   vi: {
+    'ad.close_timer': "Đóng sau {s}s",
+    'shop.ad_wait_timer': "Chờ {m}:{s}",
+    'shop.chest_energy_ad_btn': "Xem QC (+10 ⚡)",
+    'shop.chest_gem_ad_btn': "Xem QC (+10 💎)",
+    'modal.revive_ad_btn': "Xem QC Hồi Sinh (100% Máu)",
+    'modal.revive_give_up': "Bỏ Cuộc (Thu Thập Chiến Lợi Phẩm)",
+    'modal.save_title': "MÃ LƯU TIẾN TRÌNH (SAVE CODE)",
+    'modal.save_desc': "Lưu và chuyển đổi tiến trình chơi sang điện thoại hoặc máy tính khi chơi trên Web/GitHub Pages!",
+    'modal.save_export_label': "MÃ TIẾN TRÌNH HIỆN TẠI CỦA BẠN:",
+    'modal.save_export_placeholder': "Đang tạo mã lưu...",
+    'modal.save_copy_btn': "Sao Chép Mã Lưu",
+    'modal.save_divider': "HOẶC NẠP TIẾN TRÌNH TỪ THIẾT BỊ KHÁC",
+    'modal.save_import_label': "DÁN MÃ TIẾN TRÌNH VÀO ĐÂY:",
+    'modal.save_import_placeholder': "Dán mã DS_... của bạn vào đây để khôi phục tiến trình...",
+    'modal.save_import_btn': "Nạp Mã Vào Game",
+    'modal.pause_save': "Lưu Tiến Độ",
+    'modal.pause_lobby': "Thoát Ra Lobby",
+    'modal.pause_resume': "Tiếp Tục Chiến Đấu",
+
     'toast.grid_fully_maxed': "🎉 Vali đã mở rộng tối đa (49/49 ô)! Bỏ roll ra ô đất mới.",
     'toast.grid_already_maxed': "⚠️ Vali đã mở rộng tối đa! Hãy kéo vào ô đỏ để bán.",
     'bp.btn_resume_midwave': "Tiếp Tục",
@@ -103,8 +122,16 @@ const I18N = {
     'milestone.b2.desc': "Hạ gục 2 boss trong các chiến dịch",
     'milestone.w13.title': "Cận Kề Chiến Thắng (Wave 13)",
     'milestone.w13.desc': "Vượt qua đợt quái cuồng nộ Wave 13",
-    'milestone.w15.title': "Phá Đảo Wave 15 (Chinh Phục Màn)",
-    'milestone.w15.desc': "Vượt toàn bộ 15 Wave & tiêu diệt Boss tối thượng!",
+    'milestone.w15.title': "Phá Đảo Màn 1 (Wave 15)",
+    'milestone.w15.desc': "Vượt toàn bộ 15 Wave & tiêu diệt Boss Chizuru tối thượng!",
+    'milestone.w20.title': "Phá Đảo Màn 2 (Wave 20)",
+    'milestone.w20.desc': "Chinh phục toàn bộ 20 Wave & hạ gục Chúa Tể Cơ Giới Mech GM-X!",
+    'milestone.w25.title': "Phá Đảo Màn 3 (Wave 25)",
+    'milestone.w25.desc': "Vượt 25 Wave bão cát & tiêu diệt Bọ Cạp Hoàng Kim!",
+    'milestone.w30.title': "Phá Đảo Màn 4 (Wave 30)",
+    'milestone.w30.desc': "Vượt 30 Wave không gian & hạ gục Rồng Máy Cyber Shenron!",
+    'milestone.w35.title': "Bố Già Tối Thượng (Wave 35)",
+    'milestone.w35.desc': "Đỉnh cao chiến dịch: Đánh bại Bố Già Don Corleone tại Wave 35!",
     'milestone.k50.title': "Tiêu Diệt 50 Quái Vật",
     'milestone.k50.desc': "Tích lũy 50 quái vật bị hạ gục",
     'milestone.k150.title': "Tiêu Diệt 150 Quái Vật",
@@ -656,6 +683,27 @@ const I18N = {
   },
 
   en: {
+    'ad.close_timer': "Close in {s}s",
+    'shop.ad_wait_timer': "Wait {m}:{s}",
+    'shop.chest_energy_ad_btn': "Watch Ad (+10 ⚡)",
+    'shop.chest_gem_ad_btn': "Watch Ad (+10 💎)",
+    'modal.revive_title': "OUTPOST DESTROYED!",
+    'modal.revive_sub': "Watch a short ad to revive with 100% HP and save your match progress!",
+    'modal.revive_ad_btn': "Watch Ad to Revive (100% HP)",
+    'modal.revive_give_up': "Give Up (Collect Loot)",
+    'modal.save_title': "GAME SAVE CODE",
+    'modal.save_desc': "Save and transfer game progress across mobile and desktop when playing on Web/GitHub Pages!",
+    'modal.save_export_label': "YOUR CURRENT SAVE CODE:",
+    'modal.save_export_placeholder': "Generating save code...",
+    'modal.save_copy_btn': "Copy Save Code",
+    'modal.save_divider': "OR IMPORT PROGRESS FROM ANOTHER DEVICE",
+    'modal.save_import_label': "PASTE SAVE CODE HERE:",
+    'modal.save_import_placeholder': "Paste your DS_... code here to restore progress...",
+    'modal.save_import_btn': "Import Save to Game",
+    'modal.pause_save': "Save Progress",
+    'modal.pause_lobby': "Quit to Lobby",
+    'modal.pause_resume': "Resume Battle",
+
     'toast.grid_fully_maxed': "🎉 Suitcase is fully expanded (49/49 cells)! Land tiles removed from shop rolls.",
     'toast.grid_already_maxed': "⚠️ Suitcase is already fully expanded! Drag to red zone to sell.",
     'lb.tier_godfather': 'GOLDEN GODFATHER',
@@ -761,8 +809,16 @@ const I18N = {
     'milestone.b2.desc': "Defeat 2 stage bosses across runs",
     'milestone.w13.title': "Near Victory (Wave 13)",
     'milestone.w13.desc': "Clear frenzied monster wave 13",
-    'milestone.w15.title': "Stage Clear (Wave 15)",
-    'milestone.w15.desc': "Conquer all 15 waves & slay the supreme boss!",
+    'milestone.w15.title': "Stage 1 Clear (Wave 15)",
+    'milestone.w15.desc': "Conquer all 15 waves & defeat Capo Chizuru Yamamoto!",
+    'milestone.w20.title': "Stage 2 Clear (Wave 20)",
+    'milestone.w20.desc': "Conquer all 20 waves & defeat Mech Titan GM-X!",
+    'milestone.w25.title': "Stage 3 Clear (Wave 25)",
+    'milestone.w25.desc': "Conquer all 25 waves & defeat the Golden Toxic Scorpion!",
+    'milestone.w30.title': "Stage 4 Clear (Wave 30)",
+    'milestone.w30.desc': "Conquer all 30 waves & defeat Cyber Dragon Shenron!",
+    'milestone.w35.title': "Supreme Godfather (Wave 35)",
+    'milestone.w35.desc': "Conquer all 35 waves & dethrone Don Corleone!",
     'milestone.k50.title': "Defeat 50 Monsters",
     'milestone.k50.desc': "Accumulate 50 eliminated monsters",
     'milestone.k150.title': "Defeat 150 Monsters",
@@ -1316,9 +1372,25 @@ try {
   currentLang = 'en';
 }
 
+function getCurrentLanguage() {
+  if (typeof window !== 'undefined' && window.currentLang) return window.currentLang;
+  if (typeof currentLang !== 'undefined') return currentLang;
+  return 'en';
+}
+
 function t(key, fallback = '', vars = null) {
-  const langDict = I18N[currentLang] || I18N['vi'];
-  let str = (langDict && langDict[key] !== undefined) ? langDict[key] : ((I18N['vi'] && I18N['vi'][key] !== undefined) ? I18N['vi'][key] : (fallback || key));
+  if (typeof fallback === 'object' && fallback !== null) {
+    vars = fallback;
+    fallback = '';
+  }
+  const lang = getCurrentLanguage();
+  const langDict = I18N[lang] || I18N['en'] || I18N['vi'];
+  let str = (langDict && langDict[key] !== undefined)
+    ? langDict[key]
+    : ((I18N['en'] && I18N['en'][key] !== undefined)
+      ? I18N['en'][key]
+      : ((I18N['vi'] && I18N['vi'][key] !== undefined) ? I18N['vi'][key] : (fallback || key)));
+
   if (vars && typeof vars === 'object') {
     Object.keys(vars).forEach(k => {
       str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
@@ -1328,10 +1400,14 @@ function t(key, fallback = '', vars = null) {
 }
 
 function setLanguage(lang) {
-  if (lang !== 'vi' && lang !== 'en') lang = 'vi';
+  if (lang !== 'vi' && lang !== 'en') lang = 'en';
   currentLang = lang;
+  if (typeof window !== 'undefined') {
+    window.currentLang = lang;
+  }
   try {
     localStorage.setItem('desert_outpost_lang', lang);
+    localStorage.setItem('desert_outpost_lang_v10', lang);
   } catch(e) {}
   
   // Update DOM elements with data-i18n
@@ -1405,6 +1481,7 @@ if (typeof document !== 'undefined') {
 
 if (typeof window !== 'undefined') {
   window.t = t;
+  window.getCurrentLanguage = getCurrentLanguage;
   window.setLanguage = setLanguage;
   window.toggleLanguage = toggleLanguage;
   window.applyLanguageToDOM = applyLanguageToDOM;

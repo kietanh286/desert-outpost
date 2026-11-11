@@ -454,8 +454,8 @@ const LAND_TILE_SHAPES = [
 
 function getLandTileName(shape) {
   if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Expansion Tile') : 'Expansion Tile';
-  const isVi = (typeof currentLang !== 'undefined' ? currentLang : 'en') === 'vi';
-  const found = LAND_TILE_SHAPES.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
+  const isVi = (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : (typeof currentLang !== 'undefined' ? currentLang : 'en')) === 'vi';
+  const found = LAND_SHAPES.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
   if (found) {
     return isVi
       ? (typeof t === 'function' ? t('land.' + found.id, found.nameVi) : found.nameVi)
@@ -784,15 +784,15 @@ const BOSS_LIST = [
     stage: 1,
     name: 'CAPO CHIZURU YAMAMOTO',
     areaName: 'DESERT OUTPOST',
-    level: 10,
-    totalWaves: 10,
+    level: 15,
+    totalWaves: 15,
     unlockWave: 5,
-    bossWave: 10,
-    maxHp: 70000,
-    diamondReward: 5,
+    bossWave: 15,
+    maxHp: 75000,
+    diamondReward: 10,
     trait: 'Fires scorching Mega Lasers & Summons armored scorpions to assault the outpost!',
-    maxWave: 10,
-    maxScore: '500.000',
+    maxWave: 15,
+    maxScore: '750.000',
     svgFn: getBossChizuruSVG
   },
   {
@@ -800,15 +800,15 @@ const BOSS_LIST = [
     stage: 2,
     name: 'CHÚA TỂ CƠ GIỚI MECH GM-X',
     areaName: 'THÀNH PHỐ NGẦM MECH',
-    level: 25,
-    totalWaves: 15,
+    level: 30,
+    totalWaves: 20,
     unlockWave: 10,
-    bossWave: 15,
-    maxHp: 90000,
-    diamondReward: 10,
+    bossWave: 20,
+    maxHp: 110000,
+    diamondReward: 20,
     trait: 'Quantum deflection shield & Launches massive cluster missile barrages!',
-    maxWave: 15,
-    maxScore: '985.400',
+    maxWave: 20,
+    maxScore: '1.250.000',
     svgFn: getBossMechSVG
   },
   {
@@ -816,15 +816,15 @@ const BOSS_LIST = [
     stage: 3,
     name: 'GOLDEN TOXIC EMPEROR SCORPION',
     areaName: 'GOLDEN VENOM OASIS',
-    level: 45,
-    totalWaves: 20,
+    level: 50,
+    totalWaves: 25,
     unlockWave: 15,
-    bossWave: 20,
-    maxHp: 120000,
-    diamondReward: 18,
+    bossWave: 25,
+    maxHp: 160000,
+    diamondReward: 35,
     trait: 'Spews paralyzing venom disabling barriers & Crushes outpost with steel pincers!',
-    maxWave: 20,
-    maxScore: '1.450.000',
+    maxWave: 25,
+    maxScore: '1.850.000',
     svgFn: getBossScorpionSVG
   },
   {
@@ -832,15 +832,15 @@ const BOSS_LIST = [
     stage: 4,
     name: 'RỒNG MÁY CYBER SHENRON',
     areaName: 'ORBITAL DREADNOUGHT',
-    level: 70,
-    totalWaves: 25,
+    level: 75,
+    totalWaves: 30,
     unlockWave: 20,
-    bossWave: 25,
-    maxHp: 150000,
-    diamondReward: 30,
+    bossWave: 30,
+    maxHp: 220000,
+    diamondReward: 50,
     trait: 'Full-screen Plasma Breath & Phantom mirage evasion!',
-    maxWave: 25,
-    maxScore: '2.100.000',
+    maxWave: 30,
+    maxScore: '2.600.000',
     svgFn: getBossDragonSVG
   },
   {
@@ -849,14 +849,14 @@ const BOSS_LIST = [
     name: 'DON CORLEONE DESERT OUTPOST',
     areaName: 'SUPREME MAFIA HQ',
     level: 100,
-    totalWaves: 30,
+    totalWaves: 35,
     unlockWave: 25,
-    bossWave: 30,
-    maxHp: 200000,
-    diamondReward: 50,
+    bossWave: 35,
+    maxHp: 300000,
+    diamondReward: 100,
     trait: 'Supreme Godfather: Summons Capo guards, Atomic airstrike & Obsidian shield!',
-    maxWave: 30,
-    maxScore: '3.000.000',
+    maxWave: 35,
+    maxScore: '3.800.000',
     svgFn: getBossOverlordSVG
   }
 ];
@@ -2874,7 +2874,7 @@ class DesertBattleEngine {
         buffSpeedAura = 1.60; // +60% tốc độ chạy quái nhỏ
         buffHealAura = 80; // +80 HP/giây cho quái nhỏ
         buffDodgeAura = 0.20; // +20% né cho quái nhỏ
-        bossTitle = `🤖 SIÊU TRÙM ROBOT DESERT OUTPOST (WAVE ${wave}) - SONG BUFF MÁU & NÉ`;
+        bossTitle = `👑 ${stageConfig.name} (FINAL BOSS WAVE ${wave})`;
       }
 
       // Kích hoạt Boss Raid Bar trên đỉnh màn hình
@@ -5526,13 +5526,17 @@ class AppController {
   getStageMilestones() {
     return [
       { id: 'w3', title: 'Tập Sự Sống Sót (Wave 3)', desc: 'Vượt qua 3 Wave khởi đầu trận đấu', target: 3, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+300 Vàng & +15 Mảnh Phi Tiêu', claimFn: () => { this.meta.cash += 300; this.meta.materials.dagger = (this.meta.materials.dagger || 0) + 15; } },
-      { id: 'w5', title: 'Vượt Qua Wave 5', desc: 'Chinh phục đợt quái tân thủ Wave 5', target: 5, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+500 Vàng & +20 Mảnh Súng Lục', claimFn: () => { this.meta.cash += 500; this.meta.materials.firearm = (this.meta.materials.firearm || 0) + 20; } },
+      { id: 'w5', title: 'Vượt Qua Wave 5 (Tiểu Trùm)', desc: 'Chinh phục đợt quái & tiểu trùm Wave 5', target: 5, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+500 Vàng & +20 Mảnh Súng Lục', claimFn: () => { this.meta.cash += 500; this.meta.materials.firearm = (this.meta.materials.firearm || 0) + 20; } },
       { id: 'b1', title: 'Hạ Gục Boss Đầu Tiên (Wave 5)', desc: 'Tiêu diệt Trùm Boss tại Wave 5', target: 1, current: this.meta.bossKills, icon: 'assets/icons/gem.png', reward: '+20 Kim Cương & +20 Mảnh Áo Giáp', claimFn: () => { this.meta.gems += 20; this.meta.materials.vest = (this.meta.materials.vest || 0) + 20; } },
       { id: 'w8', title: 'Chiến Binh Kiên Cường (Wave 8)', desc: 'Trụ vững qua 8 Wave chiến trận khốc liệt', target: 8, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+800 Vàng & +25 Mảnh Khiên', claimFn: () => { this.meta.cash += 800; this.meta.materials.shield = (this.meta.materials.shield || 0) + 25; } },
-      { id: 'w10', title: 'Vượt Qua Wave 10', desc: 'Sống sót qua đợt tấn công quái tinh anh', target: 10, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.000 Vàng & +30 Mảnh Bom Xăng', claimFn: () => { this.meta.cash += 1000; this.meta.materials.molotov = (this.meta.materials.molotov || 0) + 30; } },
+      { id: 'w10', title: 'Vượt Qua Wave 10 (Ảo Ảnh)', desc: 'Sống sót qua đợt tấn công tiểu trùm ảo ảnh Wave 10', target: 10, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.000 Vàng & +30 Mảnh Bom Xăng', claimFn: () => { this.meta.cash += 1000; this.meta.materials.molotov = (this.meta.materials.molotov || 0) + 30; } },
       { id: 'b2', title: 'Tiêu Diệt 2 Trùm Boss', desc: 'Hạ gục 2 boss trong các chiến dịch', target: 2, current: this.meta.bossKills, icon: 'assets/weapons/bow_lv1.png', reward: '+35 Kim Cương & +30 Mảnh Cung Nỏ', claimFn: () => { this.meta.gems += 35; this.meta.materials.bow = (this.meta.materials.bow || 0) + 30; } },
       { id: 'w13', title: 'Cận Kề Chiến Thắng (Wave 13)', desc: 'Vượt qua đợt quái cuồng nộ Wave 13', target: 13, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.200 Vàng & +35 Mảnh Pháo Laser', claimFn: () => { this.meta.cash += 1200; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } },
-      { id: 'w15', title: 'Phá Đảo Wave 15 (Chinh Phục Màn)', desc: 'Vượt toàn bộ 15 Wave & tiêu diệt Boss tối thượng!', target: 15, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: 'Hòm Hoàng Kim Bố Già (+120 Mảnh) & +2.000 Vàng & +50 💎', claimFn: () => { this.meta.cash += 2000; this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 60; this.meta.materials.laser = (this.meta.materials.laser || 0) + 60; } },
+      { id: 'w15', title: 'Phá Đảo Màn 1 (Wave 15)', desc: 'Vượt toàn bộ 15 Wave & tiêu diệt Boss Chizuru tối thượng!', target: 15, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: 'Hòm Hoàng Kim Bố Già (+120 Mảnh) & +2.000 Vàng & +50 💎', claimFn: () => { this.meta.cash += 2000; this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 60; this.meta.materials.laser = (this.meta.materials.laser || 0) + 60; } },
+      { id: 'w20', title: 'Phá Đảo Màn 2 (Wave 20)', desc: 'Chinh phục toàn bộ 20 Wave & hạ gục Chúa Tể Cơ Giới Mech GM-X!', target: 20, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+3.500 Vàng & +80 Kim Cương', claimFn: () => { this.meta.cash += 3500; this.meta.gems += 80; } },
+      { id: 'w25', title: 'Phá Đảo Màn 3 (Wave 25)', desc: 'Vượt 25 Wave bão cát & tiêu diệt Bọ Cạp Hoàng Kim!', target: 25, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+5.000 Vàng & +120 Kim Cương', claimFn: () => { this.meta.cash += 5000; this.meta.gems += 120; } },
+      { id: 'w30', title: 'Phá Đảo Màn 4 (Wave 30)', desc: 'Vượt 30 Wave không gian & hạ gục Rồng Máy Cyber Shenron!', target: 30, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+8.000 Vàng & +200 Kim Cương', claimFn: () => { this.meta.cash += 8000; this.meta.gems += 200; } },
+      { id: 'w35', title: 'Bố Già Tối Thượng (Wave 35)', desc: 'Đỉnh cao chiến dịch: Đánh bại Bố Già Don Corleone tại Wave 35!', target: 35, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+15.000 Vàng & +500 Kim Cương', claimFn: () => { this.meta.cash += 15000; this.meta.gems += 500; } },
       { id: 'k50', title: 'Tiêu Diệt 50 Quái Vật', desc: 'Tích lũy 50 quái vật bị hạ gục', target: 50, current: this.meta.monsterKills, icon: 'assets/icons/chest_wood.png', reward: '+300 Vàng & +15 Mảnh Rào Chắn', claimFn: () => { this.meta.cash += 300; this.meta.materials.barrier = (this.meta.materials.barrier || 0) + 15; } },
       { id: 'k150', title: 'Tiêu Diệt 150 Quái Vật', desc: 'Tích lũy 150 quái vật bị hạ gục', target: 150, current: this.meta.monsterKills, icon: 'assets/icons/chest_silver.png', reward: '+600 Vàng & +25 Mảnh Thắt Lưng', claimFn: () => { this.meta.cash += 600; this.meta.materials.belt = (this.meta.materials.belt || 0) + 25; } },
       { id: 'k300', title: 'Tiêu Diệt 300 Quái Vật', desc: 'Tích lũy 300 quái vật bị hạ gục', target: 300, current: this.meta.monsterKills, icon: 'assets/icons/chest_gold.png', reward: '+50 Kim Cương & Hòm Bạc Tinh Anh', claimFn: () => { this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 35; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } }
@@ -6294,11 +6298,11 @@ class AppController {
             this.modalAd.classList.remove('hidden');
             let timer = 4;
             const timerEl = document.getElementById('ad-timer');
-            timerEl.textContent = `Đóng sau ${timer}s`;
+            timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
             const iv = setInterval(() => {
               timer--;
               if (timer > 0) {
-                timerEl.textContent = `Đóng sau ${timer}s`;
+                timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
               } else {
                 clearInterval(iv);
                 this.modalAd.classList.add('hidden');
@@ -6315,11 +6319,11 @@ class AppController {
             this.modalAd.classList.remove('hidden');
             let timer = 4;
             const timerEl = document.getElementById('ad-timer');
-            timerEl.textContent = `Đóng sau ${timer}s`;
+            timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
             const iv = setInterval(() => {
               timer--;
               if (timer > 0) {
-                timerEl.textContent = `Đóng sau ${timer}s`;
+                timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
               } else {
                 clearInterval(iv);
                 this.modalAd.classList.add('hidden');
@@ -8026,12 +8030,12 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
             this.modalAd.classList.remove('hidden');
     let timer = 4;
     const timerEl = document.getElementById('ad-timer');
-    if (timerEl) timerEl.textContent = `Đóng sau ${timer}s`;
+    if (timerEl) timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
 
     const iv = setInterval(() => {
       timer--;
       if (timer > 0) {
-        if (timerEl) timerEl.textContent = `Đóng sau ${timer}s`;
+        if (timerEl) timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
       } else {
         clearInterval(iv);
         if (this.modalAd) this.modalAd.classList.add('hidden');
@@ -8056,7 +8060,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     const btnApplySaveCode = document.getElementById('btn-apply-save-code');
 
     const openSaveCodeModal = () => {
-      sfx.playTone(400, 'sine', 0.05, 0.08);
+      sfx.playTone(400, "sine", 0.05, 0.08);
+      if (typeof applyLanguageToDOM === "function") applyLanguageToDOM();
       if (txtExportSave) {
         txtExportSave.value = this.meta.generateSaveCode();
       }
@@ -8077,7 +8082,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       btnPauseSaveProgress.onclick = () => {
         this.meta.save();
         openSaveCodeModal();
-        this.showToast('💾 Đã lưu dữ liệu! Bạn có thể sao chép Mã Lưu để dùng trên thiết bị khác.');
+        this.showToast(typeof t === "function" ? t("toast.save_ready", "💾 Progress saved! You can copy your Save Code for other devices.") : "💾 Progress saved! You can copy your Save Code for other devices.");
       };
     }
 
@@ -8424,11 +8429,15 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
           const s = String(totalSec % 60).padStart(2, '0');
           btnEnergy.disabled = true;
           btnEnergy.classList.add('ad-btn-disabled');
-          btnEnergy.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""> Chờ ${m}:${s} (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)`;
+          const isEn = (typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en") === "en";
+          const waitLabel = isEn ? "Wait" : "Chờ";
+          btnEnergy.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""> ${waitLabel} ${m}:${s} (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)`;
         } else {
           btnEnergy.disabled = false;
           btnEnergy.classList.remove('ad-btn-disabled');
-          btnEnergy.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> Xem QC (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)`;
+          const isEn = (typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en") === "en";
+          const watchLabel = isEn ? "Watch Ad" : "Xem QC";
+          btnEnergy.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> ${watchLabel} (+10 <img src="assets/icons/energy.png" class="pixel-mini-icon">)`;
         }
       }
 
@@ -8444,11 +8453,15 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
           const s = String(totalSec % 60).padStart(2, '0');
           btnGems.disabled = true;
           btnGems.classList.add('ad-btn-disabled');
-          btnGems.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""> Chờ ${m}:${s} (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)`;
+          const isEn = (typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en") === "en";
+          const waitLabel = isEn ? "Wait" : "Chờ";
+          btnGems.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon" alt=""> ${waitLabel} ${m}:${s} (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)`;
         } else {
           btnGems.disabled = false;
           btnGems.classList.remove('ad-btn-disabled');
-          btnGems.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> Xem QC (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)`;
+          const isEn = (typeof getCurrentLanguage === "function" ? getCurrentLanguage() : "en") === "en";
+          const watchLabel = isEn ? "Watch Ad" : "Xem QC";
+          btnGems.innerHTML = `<img src="assets/icons/ad_tv.png" class="pixel-mini-icon"> ${watchLabel} (+10 <img src="assets/icons/gem.png" class="pixel-mini-icon">)`;
         }
       }
     };
@@ -8748,11 +8761,11 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
             this.modalAd.classList.remove('hidden');
         let timer = 4;
         const timerEl = document.getElementById('ad-timer');
-        timerEl.textContent = `Đóng sau ${timer}s`;
+        timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
         const iv = setInterval(() => {
           timer--;
           if (timer > 0) {
-            timerEl.textContent = `Đóng sau ${timer}s`;
+            timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
           } else {
             clearInterval(iv);
             this.modalAd.classList.add('hidden');
@@ -8778,11 +8791,11 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
             this.modalAd.classList.remove('hidden');
         let timer = 4;
         const timerEl = document.getElementById('ad-timer');
-        timerEl.textContent = `Đóng sau ${timer}s`;
+        timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
         const iv = setInterval(() => {
           timer--;
           if (timer > 0) {
-            timerEl.textContent = `Đóng sau ${timer}s`;
+            timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
           } else {
             clearInterval(iv);
             this.modalAd.classList.add('hidden');
@@ -8813,11 +8826,11 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
             this.modalAd.classList.remove('hidden');
       let timer = 4;
       const timerEl = document.getElementById('ad-timer');
-      timerEl.textContent = `Đóng sau ${timer}s`;
+      timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
       const iv = setInterval(() => {
         timer--;
         if (timer > 0) {
-          timerEl.textContent = `Đóng sau ${timer}s`;
+          timerEl.textContent = typeof t === "function" ? t("ad.close_timer", `Close in ${timer}s`, { s: timer }) : `Close in ${timer}s`;
         } else {
           clearInterval(iv);
           this.modalAd.classList.add('hidden');
