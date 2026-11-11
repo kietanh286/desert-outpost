@@ -443,21 +443,25 @@ if (typeof t === 'function') updateGearTypesI18n();
 
 
 const LAND_TILE_SHAPES = [
-  { id: 'strip_h_1x2', name: 'Thanh Ngang 1x2', w: 2, h: 1 },
-  { id: 'strip_v_2x1', name: 'Thanh Dọc 2x1', w: 1, h: 2 },
-  { id: 'strip_h_1x3', name: 'Thanh Ngang 1x3', w: 3, h: 1 },
-  { id: 'strip_v_3x1', name: 'Thanh Dọc 3x1', w: 1, h: 3 },
-  { id: 'square_2x2',  name: 'Khối Vuông 2x2', w: 2, h: 2 },
-  { id: 'strip_v_4x1', name: 'Thanh Dọc 4x1', w: 1, h: 4 },
-  { id: 'strip_h_1x4', name: 'Thanh Ngang 1x4', w: 4, h: 1 }
+  { id: 'strip_h_1x2', name: 'Horizontal Strip 1x2', nameVi: 'Thanh Ngang 1x2', w: 2, h: 1 },
+  { id: 'strip_v_2x1', name: 'Vertical Strip 2x1', nameVi: 'Thanh Dọc 2x1', w: 1, h: 2 },
+  { id: 'strip_h_1x3', name: 'Horizontal Strip 1x3', nameVi: 'Thanh Ngang 1x3', w: 3, h: 1 },
+  { id: 'strip_v_3x1', name: 'Vertical Strip 3x1', nameVi: 'Thanh Dọc 3x1', w: 1, h: 3 },
+  { id: 'square_2x2',  name: 'Square 2x2', nameVi: 'Khối Vuông 2x2', w: 2, h: 2 },
+  { id: 'strip_v_4x1', name: 'Vertical Strip 4x1', nameVi: 'Thanh Dọc 4x1', w: 1, h: 4 },
+  { id: 'strip_h_1x4', name: 'Horizontal Strip 1x4', nameVi: 'Thanh Ngang 1x4', w: 4, h: 1 }
 ];
 
 function getLandTileName(shape) {
-  if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Mảnh Đất') : 'Mảnh Đất';
-  if (shape.id && typeof t === 'function') {
-    return t('land.' + shape.id, shape.name || 'Mảnh Đất');
+  if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Expansion Tile') : 'Expansion Tile';
+  const isVi = (typeof currentLang !== 'undefined' ? currentLang : 'vi') === 'vi';
+  const found = LAND_TILE_SHAPES.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
+  if (found) {
+    return isVi
+      ? (typeof t === 'function' ? t('land.' + found.id, found.nameVi) : found.nameVi)
+      : (typeof t === 'function' ? t('land.' + found.id, found.name) : found.name);
   }
-  return shape.name || 'Mảnh Đất';
+  return isVi ? 'Mảnh Đất' : 'Expansion Tile';
 }
 
 // ==========================================
@@ -2207,6 +2211,7 @@ class InRunState {
         this.shopSlots[slotIdx] = {
           isLand: true,
           uid: 'land_' + Math.random().toString(36).substr(2, 9),
+          id: shape.id,
           name: shape.name,
           w: shape.w,
           h: shape.h,
@@ -5199,6 +5204,7 @@ class AppController {
   }
 
     openMilestonesModal() {
+    if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
     const modal = document.getElementById('modal-milestones');
     if (!modal) return;
     modal.classList.remove('hidden');
@@ -5929,6 +5935,7 @@ class AppController {
             }
           } else if (idx === 3) {
             // Xem 1 lượt quảng cáo
+            if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
             this.modalAd.classList.remove('hidden');
             let timer = 4;
             const timerEl = document.getElementById('ad-timer');
@@ -5949,6 +5956,7 @@ class AppController {
             }, 1000);
           } else if (idx === 4) {
             // Xem 2 lượt quảng cáo
+            if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
             this.modalAd.classList.remove('hidden');
             let timer = 4;
             const timerEl = document.getElementById('ad-timer');
@@ -7598,7 +7606,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       this.battle.state.isPaused = true;
     }
 
-    if (this.modalAd) this.modalAd.classList.remove('hidden');
+    if (this.modalAd) if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
+            this.modalAd.classList.remove('hidden');
     let timer = 4;
     const timerEl = document.getElementById('ad-timer');
     if (timerEl) timerEl.textContent = `Đóng sau ${timer}s`;
@@ -8306,7 +8315,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     if (btnVictoryAd) {
       btnVictoryAd.onclick = () => {
         this.modalVictory.classList.add('hidden');
-        this.modalAd.classList.remove('hidden');
+        if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
+            this.modalAd.classList.remove('hidden');
         let timer = 4;
         const timerEl = document.getElementById('ad-timer');
         timerEl.textContent = `Đóng sau ${timer}s`;
@@ -8335,7 +8345,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     if (btnDefeatAd) {
       btnDefeatAd.onclick = () => {
         this.modalDefeat.classList.add('hidden');
-        this.modalAd.classList.remove('hidden');
+        if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
+            this.modalAd.classList.remove('hidden');
         let timer = 4;
         const timerEl = document.getElementById('ad-timer');
         timerEl.textContent = `Đóng sau ${timer}s`;
@@ -8369,7 +8380,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     // Watch Ad to Revive
     document.getElementById('btn-watch-ad').onclick = () => {
       this.modalRevive.classList.add('hidden');
-      this.modalAd.classList.remove('hidden');
+      if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
+            this.modalAd.classList.remove('hidden');
       let timer = 4;
       const timerEl = document.getElementById('ad-timer');
       timerEl.textContent = `Đóng sau ${timer}s`;

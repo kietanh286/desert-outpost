@@ -5,6 +5,14 @@
 
 const I18N = {
   vi: {
+    'ad.tag': "Quảng cáo YouTube Playables",
+    'ad.timer': "Đóng sau 4s",
+    'ad.desc': "Nâng cấp trang bị - Quét sạch mọi đợt quái vật!",
+    'shop.chest_energy_ad_btn': "Xem QC (+10 ⚡)",
+    'shop.chest_gem_ad_btn': "Xem QC (+10 💎)",
+    'modal.save_import_placeholder': "Dán mã DS_... của bạn vào đây để khôi phục tiến trình...",
+    'modal.save_export_placeholder': "Đang tạo mã lưu...",
+
     'toast.resume_wave': "Tiếp tục chiến đấu Wave {wave}!",
     'toast.milestone_claimed': "🎁 Đã nhận thưởng [{title}]!",
     'toast.gear_selected_hint': "👉 Đã chọn {name}: Chạm ô trong vali hoặc kéo thả để trang bị!",
@@ -617,6 +625,14 @@ const I18N = {
   },
 
   en: {
+    'ad.tag': "YouTube Playables Ad",
+    'ad.timer': "Close in 4s",
+    'ad.desc': "Upgrade your gear - Wipe out monster swarms!",
+    'shop.chest_energy_ad_btn': "Watch Ad (+10 ⚡)",
+    'shop.chest_gem_ad_btn': "Watch Ad (+10 💎)",
+    'modal.save_import_placeholder': "Paste your DS_... code here to restore progress...",
+    'modal.save_export_placeholder': "Generating save code...",
+
     'toast.resume_wave': "Resuming battle Wave {wave}!",
     'toast.milestone_claimed': "🎁 Claimed milestone [{title}]!",
     'toast.gear_selected_hint': "👉 Selected {name}: Tap cell or drag to equip!",
@@ -1216,7 +1232,7 @@ const I18N = {
 };
 
 // Global language state
-let currentLang = 'vi';
+let currentLang = 'en';
 try {
   const saved = localStorage.getItem('desert_outpost_lang');
   if (saved === 'en' || saved === 'vi') currentLang = saved;
@@ -1250,25 +1266,30 @@ function setLanguage(lang) {
 }
 
 function toggleLanguage() {
-  const nextLang = currentLang === 'vi' ? 'en' : 'vi';
+  const nextLang = currentLang === 'en' ? 'vi' : 'en';
   setLanguage(nextLang);
   return nextLang;
 }
 
 function applyLanguageToDOM() {
   if (typeof document === 'undefined') return;
+  document.documentElement.lang = currentLang;
+
   // Update language button display
   const langBtn = document.getElementById('btn-lang-toggle');
   if (langBtn) {
-    langBtn.innerHTML = currentLang === 'vi' ? '🇻🇳' : '🇬🇧';
-    langBtn.title = currentLang === 'vi' ? 'Chuyển sang English' : 'Switch to Tiếng Việt';
+    langBtn.innerHTML = currentLang === 'en' ? '🇬🇧' : '🇻🇳';
+    langBtn.title = currentLang === 'en' ? 'Switch to Tiếng Việt' : 'Switch to English';
   }
 
   // Update elements with data-i18n
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.getAttribute('data-i18n');
     if (key) {
-      el.textContent = t(key, el.textContent);
+      const translated = t(key);
+      if (translated && translated !== key) {
+        el.textContent = translated;
+      }
     }
   });
 
@@ -1276,7 +1297,10 @@ function applyLanguageToDOM() {
   document.querySelectorAll('[data-i18n-title]').forEach(el => {
     const key = el.getAttribute('data-i18n-title');
     if (key) {
-      el.title = t(key, el.title);
+      const translated = t(key);
+      if (translated && translated !== key) {
+        el.title = translated;
+      }
     }
   });
 
@@ -1284,11 +1308,22 @@ function applyLanguageToDOM() {
   document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const key = el.getAttribute('data-i18n-placeholder');
     if (key) {
-      el.placeholder = t(key, el.placeholder);
+      const translated = t(key);
+      if (translated && translated !== key) {
+        el.placeholder = translated;
+      }
     }
   });
 }
 
+// Auto-run applyLanguageToDOM immediately and on DOMContentLoaded
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => applyLanguageToDOM());
+  } else {
+    applyLanguageToDOM();
+  }
+}
 
 if (typeof window !== 'undefined') {
   window.t = t;
