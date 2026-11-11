@@ -5074,6 +5074,9 @@ class AppController {
     this.renderMilestoneProgress();
     this.renderBackpack();
     this.renderRankTab();
+    if (this.modalPause && !this.modalPause.classList.contains('hidden')) {
+      this.renderPauseMenu();
+    }
     if (this.renderTutorialStep && !document.getElementById('modal-tutorial')?.classList.contains('hidden')) {
       this.renderTutorialStep();
     }
