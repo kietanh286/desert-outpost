@@ -4605,3 +4605,127 @@ html::-webkit-scrollbar,
   50% { box-shadow: 0 0 0 6px rgba(251, 191, 36, 0.2), 0 0 20px rgba(251, 191, 36, 0.8); }
   100% { box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.8), 0 0 8px rgba(251, 191, 36, 0.5); }
 }
+
+
+/* ========================================================
+   HIDDEN ADJACENCY SYNERGIES & SUITCASE SPARKLING EFFECTS
+   ======================================================== */
+.bp-item-card.has-synergy {
+  box-shadow: 0 0 0 2px #38bdf8, 0 0 14px rgba(56, 189, 248, 0.65), 0 0 24px rgba(251, 191, 36, 0.45) !important;
+  border-color: #38bdf8 !important;
+  animation: synergyPulseGlow 1.8s infinite ease-in-out alternate;
+  position: relative;
+}
+
+.bp-item-card.has-synergy::after {
+  content: "✨";
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  font-size: 13px;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px #fbbf24);
+  animation: synergySparkleRotate 3.2s infinite linear;
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes synergyPulseGlow {
+  0% {
+    box-shadow: 0 0 0 1.5px #38bdf8, 0 0 8px rgba(56, 189, 248, 0.5), 0 0 15px rgba(251, 191, 36, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 2.5px #fde047, 0 0 16px rgba(253, 224, 71, 0.75), 0 0 28px rgba(56, 189, 248, 0.55);
+  }
+  100% {
+    box-shadow: 0 0 0 1.5px #38bdf8, 0 0 8px rgba(56, 189, 248, 0.5), 0 0 15px rgba(251, 191, 36, 0.3);
+  }
+}
+
+@keyframes synergySparkleRotate {
+  0% { transform: scale(0.9) rotate(0deg); opacity: 0.8; }
+  50% { transform: scale(1.18) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0.9) rotate(360deg); opacity: 0.8; }
+}
+
+/* PAUSE MENU SYNERGY CARDS */
+.pause-synergy-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-left: 3px solid #38bdf8;
+  border-radius: 8px;
+  padding: 8px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.pause-synergy-item:hover {
+  border-color: #fde047;
+  border-left-color: #fde047;
+  transform: translateY(-1px);
+}
+
+.pause-synergy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pause-synergy-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.3px;
+}
+
+.pause-synergy-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid #10b981;
+  color: #6ee7b7;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.pause-synergy-desc {
+  font-size: 10.5px;
+  color: #cbd5e1;
+  line-height: 1.35;
+}
+
+.pause-synergy-targets {
+  font-size: 9.5px;
+  color: #94a3b8;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.pause-synergy-target-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #fde047;
+}
+
+.pause-synergies-empty-hint {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.4;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  border-radius: 8px;
+  text-align: left;
+}

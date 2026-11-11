@@ -1944,6 +1944,16 @@ class MetagameState {
 // IN-RUN STATE
 // ==========================================
 
+
+function areItemsAdjacent(a, b) {
+  if (!a || !b) return false;
+  const w1 = a.w || 1, h1 = a.h || 1;
+  const w2 = b.w || 1, h2 = b.h || 1;
+  const rowDist = Math.max(0, Math.max(a.r - (b.r + h2 - 1), b.r - (a.r + h1 - 1)));
+  const colDist = Math.max(0, Math.max(a.c - (b.c + w2 - 1), b.c - (a.c + w1 - 1)));
+  return rowDist <= 1 && colDist <= 1;
+}
+
 class InRunState {
   constructor(meta) {
     this.meta = meta;
@@ -2131,6 +2141,236 @@ class InRunState {
   }
 
 
+  
+  getBackpackSynergies() {
+    const items = this.backpackItems || [];
+    const activeSynergies = [];
+    const activeItemUids = new Set();
+    const synergyStats = {
+      ammoChainWeapons: new Map(),
+      deadlyFocusWeapons: new Map(),
+      hyperReloadWeapons: new Map(),
+      droneLinkWeapons: new Map(),
+      aegisFortress: false,
+      infernoFirestorm: false,
+      superconductor: false,
+      perimeterTrap: false
+    };
+
+    const isWeapon = (it) => {
+      const cfg = ADMIN_GEAR_CONFIG[it.type];
+      return cfg && cfg.category === 'weapon';
+    };
+
+    // 1. Ammo Chain (Belt + Weapon)
+    const belts = items.filter(it => it.type === 'belt');
+    const weapons = items.filter(isWeapon);
+    let ammoChainPairs = [];
+    belts.forEach(belt => {
+      weapons.forEach(w => {
+        if (areItemsAdjacent(belt, w)) {
+          ammoChainPairs.push({ belt, weapon: w });
+          activeItemUids.add(belt.uid);
+          activeItemUids.add(w.uid);
+          const cur = synergyStats.ammoChainWeapons.get(w.uid) || 0;
+          synergyStats.ammoChainWeapons.set(w.uid, cur + 1);
+        }
+      });
+    });
+    if (ammoChainPairs.length > 0) {
+      const weaponNames = [...new Set(ammoChainPairs.map(p => typeof t === 'function' ? t('gear.' + p.weapon.type + '.name', GEAR_TYPES[p.weapon.type]?.name || p.weapon.type) : (GEAR_TYPES[p.weapon.type]?.name || p.weapon.type)))];
+      activeSynergies.push({
+        id: 'ammo_chain',
+        icon: '💥',
+        nameKey: 'synergy.ammo_chain.name',
+        descKey: 'synergy.ammo_chain.desc',
+        count: ammoChainPairs.length,
+        targets: weaponNames
+      });
+    }
+
+    // 2. Deadly Focus (Scope + Bow / Guns / Laser)
+    const scopes = items.filter(it => it.type === 'scope');
+    const rangedGears = items.filter(it => it.type === 'bow' || it.type === 'firearm' || it.type === 'laser');
+    let scopePairs = [];
+    scopes.forEach(scope => {
+      rangedGears.forEach(w => {
+        if (areItemsAdjacent(scope, w)) {
+          scopePairs.push({ scope, weapon: w });
+          activeItemUids.add(scope.uid);
+          activeItemUids.add(w.uid);
+          const cur = synergyStats.deadlyFocusWeapons.get(w.uid) || 0;
+          synergyStats.deadlyFocusWeapons.set(w.uid, cur + 1);
+        }
+      });
+    });
+    if (scopePairs.length > 0) {
+      const targetNames = [...new Set(scopePairs.map(p => typeof t === 'function' ? t('gear.' + p.weapon.type + '.name', GEAR_TYPES[p.weapon.type]?.name || p.weapon.type) : (GEAR_TYPES[p.weapon.type]?.name || p.weapon.type)))];
+      activeSynergies.push({
+        id: 'deadly_focus',
+        icon: '🎯',
+        nameKey: 'synergy.deadly_focus.name',
+        descKey: 'synergy.deadly_focus.desc',
+        count: scopePairs.length,
+        targets: targetNames
+      });
+    }
+
+    // 3. Hyper Reload (Speed Loader + Weapon)
+    const speedLoaders = items.filter(it => it.type === 'speed_loader');
+    let speedPairs = [];
+    speedLoaders.forEach(loader => {
+      weapons.forEach(w => {
+        if (areItemsAdjacent(loader, w)) {
+          speedPairs.push({ loader, weapon: w });
+          activeItemUids.add(loader.uid);
+          activeItemUids.add(w.uid);
+          const cur = synergyStats.hyperReloadWeapons.get(w.uid) || 0;
+          synergyStats.hyperReloadWeapons.set(w.uid, cur + 1);
+        }
+      });
+    });
+    if (speedPairs.length > 0) {
+      const targetNames = [...new Set(speedPairs.map(p => typeof t === 'function' ? t('gear.' + p.weapon.type + '.name', GEAR_TYPES[p.weapon.type]?.name || p.weapon.type) : (GEAR_TYPES[p.weapon.type]?.name || p.weapon.type)))];
+      activeSynergies.push({
+        id: 'hyper_reload',
+        icon: '⚡',
+        nameKey: 'synergy.hyper_reload.name',
+        descKey: 'synergy.hyper_reload.desc',
+        count: speedPairs.length,
+        targets: targetNames
+      });
+    }
+
+    // 4. Drone Tactical Link (Drone + Weapon)
+    const drones = items.filter(it => it.type === 'drone');
+    let dronePairs = [];
+    drones.forEach(drone => {
+      weapons.forEach(w => {
+        if (areItemsAdjacent(drone, w)) {
+          dronePairs.push({ drone, weapon: w });
+          activeItemUids.add(drone.uid);
+          activeItemUids.add(w.uid);
+          const cur = synergyStats.droneLinkWeapons.get(w.uid) || 0;
+          synergyStats.droneLinkWeapons.set(w.uid, cur + 1);
+        }
+      });
+    });
+    if (dronePairs.length > 0) {
+      const targetNames = [...new Set(dronePairs.map(p => typeof t === 'function' ? t('gear.' + p.weapon.type + '.name', GEAR_TYPES[p.weapon.type]?.name || p.weapon.type) : (GEAR_TYPES[p.weapon.type]?.name || p.weapon.type)))];
+      activeSynergies.push({
+        id: 'drone_link',
+        icon: '🤖',
+        nameKey: 'synergy.drone_link.name',
+        descKey: 'synergy.drone_link.desc',
+        count: dronePairs.length,
+        targets: targetNames
+      });
+    }
+
+    // 5. Aegis Fortress (Vest + Shield)
+    const vests = items.filter(it => it.type === 'vest');
+    const shields = items.filter(it => it.type === 'shield');
+    let hasAegis = false;
+    vests.forEach(v => {
+      shields.forEach(s => {
+        if (areItemsAdjacent(v, s)) {
+          hasAegis = true;
+          activeItemUids.add(v.uid);
+          activeItemUids.add(s.uid);
+        }
+      });
+    });
+    if (hasAegis) {
+      synergyStats.aegisFortress = true;
+      activeSynergies.push({
+        id: 'aegis_fortress',
+        icon: '🛡️',
+        nameKey: 'synergy.aegis_fortress.name',
+        descKey: 'synergy.aegis_fortress.desc',
+        count: 1,
+        targets: [typeof t === 'function' ? t('gear.vest.name', 'Vest') : 'Vest', typeof t === 'function' ? t('gear.shield.name', 'Shield') : 'Shield']
+      });
+    }
+
+    // 6. Inferno Firestorm (Molotov + Flamethrower)
+    const molotovs = items.filter(it => it.type === 'molotov');
+    const flamethrowers = items.filter(it => it.type === 'flamethrower');
+    let hasInferno = false;
+    molotovs.forEach(m => {
+      flamethrowers.forEach(f => {
+        if (areItemsAdjacent(m, f)) {
+          hasInferno = true;
+          activeItemUids.add(m.uid);
+          activeItemUids.add(f.uid);
+        }
+      });
+    });
+    if (hasInferno) {
+      synergyStats.infernoFirestorm = true;
+      activeSynergies.push({
+        id: 'inferno_firestorm',
+        icon: '🔥',
+        nameKey: 'synergy.inferno_firestorm.name',
+        descKey: 'synergy.inferno_firestorm.desc',
+        count: 1,
+        targets: [typeof t === 'function' ? t('gear.molotov.name', 'Molotov') : 'Molotov', typeof t === 'function' ? t('gear.flamethrower.name', 'Flamethrower') : 'Flamethrower']
+      });
+    }
+
+    // 7. Absolute Zero Superconductor (Cryo Grenade + Laser)
+    const cryos = items.filter(it => it.type === 'cryo_grenade');
+    const lasers = items.filter(it => it.type === 'laser');
+    let hasSuper = false;
+    cryos.forEach(c => {
+      lasers.forEach(l => {
+        if (areItemsAdjacent(c, l)) {
+          hasSuper = true;
+          activeItemUids.add(c.uid);
+          activeItemUids.add(l.uid);
+        }
+      });
+    });
+    if (hasSuper) {
+      synergyStats.superconductor = true;
+      activeSynergies.push({
+        id: 'superconductor',
+        icon: '❄️',
+        nameKey: 'synergy.superconductor.name',
+        descKey: 'synergy.superconductor.desc',
+        count: 1,
+        targets: [typeof t === 'function' ? t('gear.cryo_grenade.name', 'Cryo Grenade') : 'Cryo Grenade', typeof t === 'function' ? t('gear.laser.name', 'Laser') : 'Laser']
+      });
+    }
+
+    // 8. Perimeter Trapfield (Barrier + Landmine)
+    const barriers = items.filter(it => it.type === 'barrier');
+    const landmines = items.filter(it => it.type === 'landmine');
+    let hasTrap = false;
+    barriers.forEach(b => {
+      landmines.forEach(lm => {
+        if (areItemsAdjacent(b, lm)) {
+          hasTrap = true;
+          activeItemUids.add(b.uid);
+          activeItemUids.add(lm.uid);
+        }
+      });
+    });
+    if (hasTrap) {
+      synergyStats.perimeterTrap = true;
+      activeSynergies.push({
+        id: 'perimeter_trap',
+        icon: '💣',
+        nameKey: 'synergy.perimeter_trap.name',
+        descKey: 'synergy.perimeter_trap.desc',
+        count: 1,
+        targets: [typeof t === 'function' ? t('gear.barrier.name', 'Barrier') : 'Barrier', typeof t === 'function' ? t('gear.landmine.name', 'Landmine') : 'Landmine']
+      });
+    }
+
+    return { activeSynergies, activeItemUids, synergyStats };
+  }
+
   isGridMaxed() {
     if (!this.gridUnlocked || !Array.isArray(this.gridUnlocked)) return false;
     const unlockedCount = this.gridUnlocked.filter(Boolean).length;
@@ -2172,12 +2412,7 @@ class InRunState {
   }
 
   rollShop(deduct = true) {
-    if (deduct) {
-      if (this.runCash < this.refreshCost) return false;
-      this.runCash -= this.refreshCost;
-    }
-
-    // TỰ ĐỘNG BÁN: Thu hồi và hoàn tiền toàn bộ các trang bị còn lại trong 3 ô shop
+    // 1. TỰ ĐỘNG BÁN: Thu hồi và hoàn tiền toàn bộ các trang bị còn lại trong 3 ô shop
     let autoSoldCash = 0;
     let autoSoldCount = 0;
     this.shopSlots.forEach(it => {
@@ -2187,6 +2422,13 @@ class InRunState {
       }
     });
 
+    // Tính khả năng chi trả trước khi thực hiện giao dịch (tiền hiện có + tiền thu hồi shop cũ)
+    const availableCash = this.runCash + autoSoldCash;
+    if (deduct && availableCash < this.refreshCost) {
+      return false;
+    }
+
+    // Hoàn tất thu hồi và trừ phí
     if (autoSoldCount > 0) {
       this.runCash += autoSoldCash;
       this._lastAutoSoldInfo = { count: autoSoldCount, cash: autoSoldCash };
@@ -2194,14 +2436,15 @@ class InRunState {
       this._lastAutoSoldInfo = null;
     }
 
-    // TIERED ROLL: Chỉ roll ra các trang bị nằm trong Bộ Trang Bị (Loadout) đã chọn trước trận
+    if (deduct) {
+      this.runCash -= this.refreshCost;
+    }
+
+    // 2. TIERED ROLL: Chỉ roll ra các trang bị nằm trong Bộ Trang Bị (Loadout) đã chọn trước trận
     const allowedTypes = (this.meta && this.meta.equippedLoadout && this.meta.equippedLoadout.length > 0)
-      ? this.meta.equippedLoadout
+      ? this.meta.equippedLoadout.filter(t => GEAR_TYPES[t])
       : Object.keys(GEAR_TYPES);
 
-    // YÊU CẦU 4: Tỉ lệ roll bám theo trang bị trong vali.
-    // Tỉ lệ cao nhất ra lv thấp nhất (minTier), tỉ lệ cực thấp ra lv cao nhất (maxTier).
-    // Trang bị đã đạt cấp tối thượng (Lv10) sẽ không xuất hiện trong lượt roll nữa!
     const bpTiers = this.backpackItems.map(it => it.tier || 1);
     const minTierInBp = bpTiers.length > 0 ? Math.min(...bpTiers) : 1;
     const maxTierInBp = bpTiers.length > 0 ? Math.min(10, Math.max(...bpTiers)) : 1;
@@ -2211,24 +2454,28 @@ class InRunState {
     let effectiveAllowedTypes = allowedTypes.filter(t => !maxedTypes.includes(t));
     if (effectiveAllowedTypes.length === 0) effectiveAllowedTypes = allowedTypes;
 
+    let candidatePool = effectiveAllowedTypes.length > 0 ? effectiveAllowedTypes : allowedTypes;
+    if (!candidatePool || candidatePool.length === 0) {
+      candidatePool = Object.keys(GEAR_TYPES);
+    }
+
     for (let slotIdx = 0; slotIdx < 3; slotIdx++) {
       let rolledTier = 1;
       if (bpTiers.length > 0) {
-        // Xây dựng trọng số: minTier chiếm ~60%, các bậc tiếp theo giảm dần, maxTier chỉ ~1-2%
         const tierWeights = [];
         let totalW = 0;
         for (let t = 1; t <= maxTierInBp; t++) {
           let w = 5;
           if (t < minTierInBp) {
-            w = 12; // Bậc thấp hơn minTier vẫn có cơ hội ra để hợp nhất
+            w = 12;
           } else if (t === minTierInBp) {
-            w = 58; // BẬC THẤP NHẤT TRONG VALI CÓ TỈ LỆ CAO NHẤT (58%)
+            w = 58;
           } else {
             const diff = t - minTierInBp;
-            if (diff === 1) w = 24; // Bậc kế tiếp 24%
-            else if (diff === 2) w = 10; // Bậc cao hơn 10%
-            else if (diff === 3) w = 4;  // Bậc cao nữa 4%
-            else w = 1;                  // Bậc cao nhất chỉ 1% (cực hiếm)
+            if (diff === 1) w = 24;
+            else if (diff === 2) w = 10;
+            else if (diff === 3) w = 4;
+            else w = 1;
           }
           tierWeights.push({ tier: t, weight: w });
           totalW += w;
@@ -2260,27 +2507,26 @@ class InRunState {
           slotIndex: slotIdx
         };
       } else {
-        // Weighted random type selection (chỉ trong allowedTypes)
         let totalRollWeight = 0;
-        const weightedTypes = (effectiveAllowedTypes || allowedTypes).map(t => {
+        const weightedTypes = candidatePool.map(t => {
           const rw = ADMIN_GEAR_CONFIG[t]?.rollWeight || 10;
           totalRollWeight += rw;
           return { type: t, weight: rw };
         });
-        let rollW = Math.random() * totalRollWeight;
-        let randType = allowedTypes[0];
+        let rollW = Math.random() * (totalRollWeight || 1);
+        let randType = candidatePool[0] || 'dagger';
         for (const wt of weightedTypes) {
           rollW -= wt.weight;
           if (rollW <= 0) { randType = wt.type; break; }
         }
-        const gInfo = GEAR_TYPES[randType];
+        const gInfo = GEAR_TYPES[randType] || { w: 1, h: 1, name: randType };
         this.shopSlots[slotIdx] = {
           isLand: false,
           uid: 'gear_' + Math.random().toString(36).substr(2, 9),
           type: randType,
           tier: rolledTier,
-          w: gInfo.w,
-          h: gInfo.h,
+          w: gInfo.w || 1,
+          h: gInfo.h || 1,
           slotIndex: slotIdx,
           lastShotTime: 0
         };
@@ -6162,9 +6408,11 @@ class AppController {
 
     // 2. Layer 2: Overlay Equipment Cards (Strictly fitted, NO text overflow)
     this.gridItemsLayer.innerHTML = '';
+    const backpackSynergies = (this.run && typeof this.run.getBackpackSynergies === 'function') ? this.run.getBackpackSynergies() : { activeItemUids: new Set() };
     this.run.backpackItems.forEach(item => {
       const card = document.createElement('div');
-      card.className = `bp-item-card tier-${Math.min(8, item.tier)}`;
+      const isSynergized = backpackSynergies.activeItemUids && backpackSynergies.activeItemUids.has(item.uid);
+      card.className = `bp-item-card tier-${Math.min(8, item.tier)}${isSynergized ? ' has-synergy' : ''}`;
       const gDefRender = GEAR_TYPES[item.type];
       const renderW = gDefRender ? gDefRender.w : (item.w || 1);
       const renderH = gDefRender ? gDefRender.h : (item.h || 1);
@@ -7269,6 +7517,44 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       }
     }
 
+    
+    // SYNERGIES SECTION RENDERING
+    const synergiesContainer = document.getElementById('pause-synergies-summary');
+    if (synergiesContainer) {
+      synergiesContainer.innerHTML = '';
+      const backpackSynergies = (this.run && typeof this.run.getBackpackSynergies === 'function')
+        ? this.run.getBackpackSynergies()
+        : { activeSynergies: [] };
+
+      if (backpackSynergies.activeSynergies.length === 0) {
+        const hintText = typeof t === 'function'
+          ? t('synergy.empty_hint', '💡 Place support items (Belt, Scope, Drone, Speed Loader) next to weapons, or pair Vest with Shield, Molotov with Flamethrower, Cryo with Laser, Barrier with Landmine to trigger powerful Hidden Synergies!')
+          : '💡 Place support items (Belt, Scope, Drone, Speed Loader) next to weapons, or pair Vest with Shield, Molotov with Flamethrower, Cryo with Laser, Barrier with Landmine to trigger powerful Hidden Synergies!';
+        synergiesContainer.innerHTML = `<div class="pause-synergies-empty-hint">${hintText}</div>`;
+      } else {
+        const activeBadgeText = typeof t === 'function' ? t('synergy.active_badge', 'ACTIVE') : 'ACTIVE';
+        backpackSynergies.activeSynergies.forEach(syn => {
+          const itemEl = document.createElement('div');
+          itemEl.className = 'pause-synergy-item';
+          const name = typeof t === 'function' ? t(syn.nameKey, syn.id) : syn.id;
+          const desc = typeof t === 'function' ? t(syn.descKey, '') : '';
+          const targetsHtml = (syn.targets && syn.targets.length > 0)
+            ? `<div class="pause-synergy-targets">${syn.targets.map(trg => `<span class="pause-synergy-target-chip">${trg}</span>`).join('')}</div>`
+            : '';
+
+          itemEl.innerHTML = `
+            <div class="pause-synergy-header">
+              <span class="pause-synergy-title">${syn.icon} ${name}</span>
+              <span class="pause-synergy-badge">✨ ${activeBadgeText}${syn.count > 1 ? ` (x${syn.count})` : ''}</span>
+            </div>
+            <div class="pause-synergy-desc">${desc}</div>
+            ${targetsHtml}
+          `;
+          synergiesContainer.appendChild(itemEl);
+        });
+      }
+    }
+
     const perksContainer = document.getElementById('pause-perks-summary');
     if (perksContainer) {
       perksContainer.innerHTML = '';
@@ -8224,7 +8510,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       if (!this.run.rollShop(true)) {
         const rCost = this.run.refreshCost;
         const rMsg = typeof t === 'function'
-          ? t('toast.need_cash_roll', `⚠️ Need ${rCost} $ to Roll 3 items!`, { val: rCost })
+          ? t('toast.need_cash_roll', `⚠️ Need ${rCost} $ to Roll 3 items!`, { cost: rCost, val: rCost })
           : `⚠️ Need ${rCost} $ to Roll 3 items!`;
         this.showToast(rMsg);
       } else {
@@ -8408,7 +8694,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
           localStorage.setItem('idle_mafia_blackgold_run_save', JSON.stringify(runSaveData));
           this.meta.save();
           sfx.victory();
-          this.showToast('💾 Đã lưu tiến độ ván đấu vào bộ nhớ máy!');
+          this.showToast(typeof t === 'function' ? t('toast.save_success', '💾 Match progress saved to local storage!') : '💾 Match progress saved to local storage!');
         } catch (e) {
           this.showToast('⚠️ Không thể lưu dữ liệu: ' + e.message);
         }
@@ -8417,7 +8703,8 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
 
     if (btnPauseLobby) {
       btnPauseLobby.onclick = () => {
-        if (confirm('Bạn có chắc muốn thoát ra Lobby? Toàn bộ nguyên liệu và tiền tích lũy đến hiện tại sẽ được bảo lưu!')) {
+        const confirmMsg = typeof t === 'function' ? t('dialog.confirm_quit_lobby', 'Are you sure you want to quit to Lobby? All earned loot and cash up to this wave will be saved!') : 'Are you sure you want to quit to Lobby? All earned loot and cash up to this wave will be saved!';
+        if (confirm(confirmMsg)) {
           this.battle.state.isPaused = false;
           if (this.modalPause) this.modalPause.classList.add('hidden');
           const raidBar = document.getElementById('boss-raid-bar');
@@ -8541,7 +8828,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
           this.battle.enemies = [];
           this.battle.bossBullets = [];
           sfx.victory();
-          this.showToast('💖 Đã hồi sinh 100% Sinh lực & Khiên! Tiếp tục chiến đấu!');
+          this.showToast(typeof t === 'function' ? t('toast.revive_success', '✨ Revived 100% HP & Shield! Continue fighting!') : '✨ Revived 100% HP & Shield! Continue fighting!');
           this.showView('battle');
         }
       }, 1000);
