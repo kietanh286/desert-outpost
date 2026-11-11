@@ -1416,6 +1416,45 @@ const ROGUELIKE_PERKS = [
 ];
 
 // ==========================================
+const TOAST_TRANSLATION_FALLBACKS = {
+  '▶️ Tiếp tục trận đấu!': '▶️ Resuming battle!',
+  'Đã chuyển sang chế độ đồ họa Tiết Kiệm': 'Switched to Low VFX mode',
+  'Đã kích hoạt hiệu ứng đồ họa Tối Đa HD': 'High HD VFX mode enabled',
+  '💾 Đã lưu tiến độ ván đấu vào bộ nhớ máy!': '💾 Match progress saved locally!',
+  '🚪 Đã trở về Lobby chính': '🚪 Returned to main Lobby',
+  '💖 Đã hồi sinh 100% Sinh lực & Khiên! Tiếp tục chiến đấu!': '💖 Revived 100% HP & Shield! Continue the fight!',
+  '⚠️ Ô dự bị này đang bị khóa!': '⚠️ This stash slot is locked!',
+  '⚠️ Mảnh đất chỉ có thể ghép vào vali, không thể lưu ở hàng chờ!': '⚠️ Land tile can only be placed on suitcase grid, not stash!',
+  '⚠️ Ô dự bị này đã có trang bị khác loại! Hãy chọn ô trống.': '⚠️ This stash slot has a different item! Select an empty slot.',
+  '⚠️ Mảnh đất phải nằm trọn trong bảng 7x7 và kết nối với ô đã mở!': '⚠️ Land tile must fit within 7x7 grid and connect to existing slots!',
+  '⚠️ Vùng này chưa mở khóa ô hoặc nằm ngoài vali!': '⚠️ This area is locked or outside the suitcase grid!',
+  '⚠️ Không thể hoán đổi: Vướng trang bị khác hoặc lệch kích thước ô!': '⚠️ Cannot swap: Obstructed by other gear or shape mismatch!',
+  '⚠️ Vị trí này đã có trang bị! Hãy kéo vào ô trống hoặc ghép cùng loại.': '⚠️ Position occupied! Drag to empty slot or merge matching tier.',
+  '⚠️ Vị trí này vướng nhiều trang bị khác, không thể đặt!': '⚠️ Position blocked by multiple items!',
+  '🚫 Chế độ Hardcore: Không thể bán trang bị trong vali!': '🚫 Hardcore Mode: Cannot sell gear from suitcase!',
+  '🎉 ĐẠT WAVE 10: ĐÃ MỞ KHÓA [Cung Nỏ Săn Bắn] & [Rào Chắn]!': '🎉 WAVE 10 REACHED: UNLOCKED [Tactical Bow] & [Spike Barrier]!',
+  '🎉 PHÁ ĐẢO MÀN 1: ĐÃ MỞ KHÓA [Hộ Thuẫn] & [Áo Giáp Chống Đạn]!': '🎉 STAGE 1 CLEAR: UNLOCKED [Riot Shield] & [Kevlar Vest]!',
+  '🎉 CHIẾN CÔNG 2 BOSS: ĐÃ MỞ KHÓA [Pháo Laser] & [Thắt Lưng Đạn]!': '🎉 2 BOSSES SLAIN: UNLOCKED [Laser Cannon] & [Ammo Belt]!',
+  '✅ Đã thêm trang bị mới vào Bộ Trang Bị & Hàng Chờ!': '✅ New gear added to Arsenal & Stash!',
+  '💾 Đã lưu dữ liệu! Bạn có thể sao chép Mã Lưu để dùng trên thiết bị khác.': '💾 Saved progress! You can copy Save Code for other devices.',
+  '📋 ĐÃ SAO CHÉP MÃ LƯU VÀO CLIPBOARD! Hãy dán vào ghi chú hoặc gửi sang máy khác.': '📋 COPIED SAVE CODE TO CLIPBOARD! Paste into notes or transfer.',
+  '⚠️ Hãy bôi đen và nhấn Ctrl+C để sao chép mã!': '⚠️ Please highlight and press Ctrl+C to copy!',
+  '⚠️ Vui lòng dán mã tiến trình vào ô trước khi nạp!': '⚠️ Please paste a valid save code before importing!',
+  'Đã chọn Chế độ Hardcore: Khóa bán trang bị từ vali!': 'Hardcore Mode active: Selling from suitcase disabled!',
+  'Đã chọn Chế độ Thường: Cho phép bán trang bị trong vali!': 'Normal Mode active: Suitcase selling enabled!',
+  '⚠️ Không đủ năng lượng! Hãy nạp thêm hoặc đợi hồi phục.': '⚠️ Not enough Energy! Refill or wait to recharge.',
+  '⚠️ Hãy chọn ít nhất 1 trang bị vào Bộ Trang Bị trước khi ra trận!': '⚠️ Select at least 1 gear in your Loadout before battle!',
+  '🎁 Đã nhận Thưởng Tuần: +50 Kim Cương & +1.000 Vàng!': '🎁 Weekly Reward Claimed: +50 Diamonds & +1,000 Gold!',
+  'ℹ️ Bạn đã nhận thưởng tuần này rồi! Vui lòng quay lại tuần sau.': 'ℹ️ You already claimed this week! Please return next week.',
+  '[Quảng Cáo] Nhận +10 Năng Lượng! Hồi chiêu 5 phút bắt đầu.': '[Ad] +10 Energy received! 5-minute cooldown started.',
+  '[Quảng Cáo] Nhận +10 Kim Cương! Hồi chiêu 5 phút bắt đầu.': '[Ad] +10 Diamonds received! 5-minute cooldown started.',
+  '⚠️ Hãy kéo ít nhất 1 vũ khí vào vali trước khi Fight!': '⚠️ Place at least 1 weapon in your suitcase before Fight!',
+  '⏸️ Đã tạm dừng trận đấu! Hãy sắp xếp lại vali rồi bấm Tiếp Tục!': '⏸️ Battle paused! Organize your suitcase then tap Resume!',
+  '[Tốc Độ] Đã kích hoạt Tốc độ x3 cho cả ván chơi!': '[Speed] x3 Speed activated for this match!',
+  '⚠️ Bạn phải mở khóa Tốc độ x3 trước khi mở x5!': '⚠️ Unlock x3 Speed before enabling x5 Speed!',
+  '🔥 Đã mở khóa Siêu Tốc x5 cho cả ván chơi!': '🔥 Super Speed x5 unlocked for this match!'
+};
+
 function getPerkI18n(perk) {
   if (!perk) return { title: '', desc: '', rarityBadge: '', rMeta: PERK_RARITIES.common };
   const rMeta = PERK_RARITIES[perk.rarity] || PERK_RARITIES.common;
@@ -5004,7 +5043,17 @@ class AppController {
       toast.id = 'game-toast';
       document.body.appendChild(toast);
     }
-    toast.textContent = msg;
+    let translatedMsg = msg;
+    const isEn = (typeof currentLang !== 'undefined' ? currentLang : 'vi') === 'en';
+    if (isEn && typeof msg === 'string') {
+      if (typeof TOAST_TRANSLATION_FALLBACKS === 'object' && TOAST_TRANSLATION_FALLBACKS[msg]) {
+        translatedMsg = TOAST_TRANSLATION_FALLBACKS[msg];
+      } else if (typeof t === 'function') {
+        const tryT = t(msg);
+        if (tryT && tryT !== msg) translatedMsg = tryT;
+      }
+    }
+    toast.textContent = translatedMsg;
     toast.className = 'game-toast show';
     clearTimeout(this.toastTimer);
     this.toastTimer = setTimeout(() => {
@@ -7390,6 +7439,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       this.modalRevive.classList.add('hidden');
       this.showDefeatModal(true);
     } else if (!this.run.reviveUsed) {
+      if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
       this.modalRevive.classList.remove('hidden');
     } else {
       this.showDefeatModal(false);
@@ -7397,6 +7447,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
   }
 
   showDefeatModal(isBossBreach = false) {
+    if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
     const raidBar = document.getElementById('boss-raid-bar');
     if (raidBar) raidBar.classList.add('hidden');
 
@@ -8149,7 +8200,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     const closePauseMenu = () => {
       if (this.modalPause) this.modalPause.classList.add('hidden');
       this.battle.state.isPaused = false;
-      this.showToast('▶️ Tiếp tục trận đấu!');
+      this.showToast(typeof t === 'function' ? t('toast.resume_battle', '▶️ Tiếp tục trận đấu!') : '▶️ Tiếp tục trận đấu!');
     };
 
     if (btnBattlePause) btnBattlePause.onclick = openPauseMenu;
