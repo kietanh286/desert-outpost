@@ -4469,6 +4469,197 @@ class DesertBattleEngine {
 // ==========================================
 // MAIN CONTROLLER & BACKPACK SYSTEM
 // ==========================================
+// ==========================================
+// WEAPON PROGRESSION BILINGUAL METADATA
+// ==========================================
+const WEAPON_PROGRESSION_I18N = {
+  vi: {
+    bow: {
+      stat1: 'Sát Thương Mũi Tên', stat2: 'Tốc Độ Giương Cung',
+      milestones: {
+        2: 'Mũi tên tích điện gây choáng nhẹ mục tiêu',
+        3: 'Tăng +25% tỉ lệ Bạo Kích xuyên giáp',
+        4: 'Bắn tỏa 3 mũi tên chùm cùng lúc',
+        5: 'Nỏ Thần Cyber Shenron (Max DMG)'
+      }
+    },
+    laser: {
+      stat1: 'Sát Thương Chùm Tia', stat2: 'Tần Suất Bắn',
+      milestones: {
+        2: 'Chùm tia siêu nhiệt xuyên giáp quái vật',
+        3: 'Tụ năng lượng xung kích bạo kích +18%',
+        4: 'Chùm Mega Laser kép quét 2 mục tiêu cùng lúc',
+        5: 'Pháo đài hạt nhân diệt thế (Max DMG)'
+      }
+    },
+    firearm: {
+      stat1: 'Sát Thương Đạn', stat2: 'Tốc Độ Xả Đạn',
+      milestones: {
+        2: 'Loạt bắn 3 viên (Burst Fire) dồn sát thương',
+        3: 'Đạn xuyên thấu nhiều mục tiêu cùng hàng',
+        4: 'Nòng đôi liên thanh (Twin Barrels +1 đạn)',
+        5: 'Súng máy Vulcan hủy diệt chiến trường'
+      }
+    },
+    dagger: {
+      stat1: 'Sát Thương Dao', stat2: 'Tốc Độ Vung Dao',
+      milestones: {
+        2: 'Đâm hiểm chí mạng x1.8 sát thương',
+        3: 'Vết cắt sâu gây xuất huyết liên tục',
+        4: 'Bão dao xoay 360° phản ứng tức thì',
+        5: 'Lưỡi hái sát thủ vô ảnh'
+      }
+    },
+    belt: {
+      stat1: 'Tăng Uy Lực Ô Kế', stat2: 'Phạm Vi Hiệu Ứng',
+      milestones: {
+        2: 'Kích hoạt thêm +6% sát thương lân cận',
+        3: 'Tiếp đạn thần tốc giảm 10% hồi chiêu',
+        4: 'Đạn bọc thép phá giáp quái vật',
+        5: 'Hộp tiếp đạn vô tận huyền thoại'
+      }
+    },
+    vest: {
+      stat1: 'Phản Sát Thương', stat2: 'Giảm Đòn Đánh',
+      milestones: {
+        2: 'Giảm 12% sát thương va chạm căn cứ',
+        3: 'Sóng xung kích đẩy lùi quái khi bị tấn công',
+        4: 'Khiên chấn động điện từ làm choáng',
+        5: 'Giáp phản lực Titan bất hoại'
+      }
+    },
+    shield: {
+      stat1: 'Dung Lượng Khiên', stat2: 'Tốc Độ Tự Hồi',
+      milestones: {
+        2: 'Tốc độ hồi khiên nhanh hơn 20%',
+        3: 'Lớp phủ nano chống tia laser quái',
+        4: 'Hồi ngay 15% khiên mỗi khi diệt Boss',
+        5: 'Trường lực phòng hộ tuyệt đối'
+      }
+    },
+    barrier: {
+      stat1: 'Máu Rào Chắn Gai', stat2: 'Sát Thương Phản Đòn',
+      milestones: {
+        2: 'Rào chắn gai thép tăng +30% HP',
+        3: 'Bẫy điện từ giật tê liệt quái vật chạm vào',
+        4: 'Gai titan xuyên thấu giáp quái vật',
+        5: 'Pháo đài rào chắn bất khả xâm phạm'
+      }
+    },
+    molotov: {
+      stat1: 'Sát Thương Vệt Lửa', stat2: 'Thời Gian Thiêu Đốt',
+      milestones: {
+        2: 'Vệt lửa cháy lan rộng thêm +1 ô',
+        3: 'Lửa địa ngục giảm 30% tốc độ chạy quái',
+        4: 'Nổ chùm 3 bình cocktail thiêu rụi màn hình',
+        5: 'Bão lửa hủy diệt tro tàn'
+      }
+    },
+    card: {
+      stat1: 'Tỉ Lệ Rớt Tiền', stat2: 'Kinh Nghiệm Thưởng',
+      milestones: {
+        2: 'Tăng +10% tiền vàng khi hạ quái',
+        3: 'Rút bài vận may nhận thêm 1 mảnh vũ khí',
+        4: 'Gấp đôi kinh nghiệm nhận được mỗi wave',
+        5: 'Lá bài quyền năng tối thượng'
+      }
+    }
+  },
+  en: {
+    bow: {
+      stat1: 'Arrow Damage', stat2: 'Draw Speed',
+      milestones: {
+        2: 'Electrified arrows briefly stun targets',
+        3: '+25% Armor-piercing Critical Strike chance',
+        4: 'Triple arrow spread burst barrage',
+        5: 'Cyber Shenron Crossbow (Max DMG)'
+      }
+    },
+    laser: {
+      stat1: 'Laser Beam Damage', stat2: 'Firing Frequency',
+      milestones: {
+        2: 'Thermal beam pierces through beast armor',
+        3: 'Kinetic charge increases critical chance +18%',
+        4: 'Twin Mega Laser sweeps 2 targets simultaneously',
+        5: 'Doomsday Nuclear Citadel (Max DMG)'
+      }
+    },
+    firearm: {
+      stat1: 'Bullet Damage', stat2: 'Rate of Fire',
+      milestones: {
+        2: 'Burst Fire (3 rounds) focused burst damage',
+        3: 'Penetrating rounds pierce through enemy row',
+        4: 'Twin Barrels (+1 extra projectile)',
+        5: 'Vulcan Gatling battlefield annihilator'
+      }
+    },
+    dagger: {
+      stat1: 'Dagger Damage', stat2: 'Swing Speed',
+      milestones: {
+        2: 'Fatal stab deals x1.8 critical damage',
+        3: 'Deep laceration inflicts stacking bleed',
+        4: '360° Whirlwind Blades instant counterattack',
+        5: 'Phantom Assassin Scythe'
+      }
+    },
+    belt: {
+      stat1: 'Adjacent ATK Boost', stat2: 'Effect Range',
+      milestones: {
+        2: 'Extra +6% damage to adjacent weapons',
+        3: 'Rapid reloader reduces cooldown by 10%',
+        4: 'Armor-piercing rounds shatter enemy defenses',
+        5: 'Legendary Infinite Ammo Box'
+      }
+    },
+    vest: {
+      stat1: 'Damage Reflection', stat2: 'Damage Reduction',
+      milestones: {
+        2: 'Reduces base collision damage by 12%',
+        3: 'Kinetic shockwave repels assaulting beasts',
+        4: 'Electromagnetic pulse stuns attacking beasts',
+        5: 'Invulnerable Titan Reactive Armor'
+      }
+    },
+    shield: {
+      stat1: 'Shield Capacity', stat2: 'Recharge Rate',
+      milestones: {
+        2: 'Shield recharge rate increased by 20%',
+        3: 'Nano coating defuses enemy plasma beams',
+        4: 'Instantly restores 15% shield on Boss kill',
+        5: 'Absolute Aegis Forcefield'
+      }
+    },
+    barrier: {
+      stat1: 'Spiked Barrier HP', stat2: 'Retaliation Damage',
+      milestones: {
+        2: 'Reinforced steel spikes increase HP by +30%',
+        3: 'Electromagnetic field shocks touching beasts',
+        4: 'Titanium thorns pierce monster armor',
+        5: 'Impenetrable Bastion Wall'
+      }
+    },
+    molotov: {
+      stat1: 'Flame Patch Damage', stat2: 'Burn Duration',
+      milestones: {
+        2: 'Fire trail spreads +1 tile wider',
+        3: 'Hellfire slows beast movement speed by 30%',
+        4: 'Cluster cocktail explosion blankets combat area',
+        5: 'Ashen Cataclysm Firestorm'
+      }
+    },
+    card: {
+      stat1: 'Gold Drop Rate', stat2: 'Bonus EXP',
+      milestones: {
+        2: '+10% gold coins earned from beast kills',
+        3: 'Lucky draw grants +1 bonus weapon shard',
+        4: 'Doubles match EXP earned per wave',
+        5: 'Omnipotent Ace of Destiny'
+      }
+    }
+  }
+};
+
+
 class AppController {
   constructor() {
     this.meta = new MetagameState();
@@ -5252,6 +5443,8 @@ class AppController {
     }
   }
 
+  
+
   renderLobbyArsenal() {
     // 1. Render Khung Bộ Trang Bị (Loadout Selection)
     const loadoutBox = document.getElementById('arsenal-loadout-container');
@@ -5260,17 +5453,21 @@ class AppController {
       const maxSlots = this.meta.getMaxLoadoutSlots();
       const curCount = this.meta.equippedLoadout.length;
 
+      const titleText = typeof t === 'function' ? t('arsenal.loadout_box_title', '🎒 BỘ TRANG BỊ RA TRẬN') : '🎒 BỘ TRANG BỊ RA TRẬN';
+      const badgeText = typeof t === 'function' ? t('arsenal.slots_badge', `${curCount}/${maxSlots} Ô ĐANG CHỌN`, { cur: curCount, max: maxSlots }) : `${curCount}/${maxSlots} Ô ĐANG CHỌN`;
+      const descText = typeof t === 'function' ? t('arsenal.loadout_box_desc', `Chỉ ${curCount} trang bị này xuất hiện trong ván đấu. Chạm vào ô để tháo hoặc chọn món bên dưới để thêm.`, { cur: curCount }) : `Chỉ ${curCount} trang bị này xuất hiện trong ván đấu. Chạm vào ô để tháo hoặc chọn món bên dưới để thêm.`;
+
       const headerDiv = document.createElement('div');
       headerDiv.className = 'alb-title-row';
       headerDiv.innerHTML = `
-        <span class="alb-title">🎒 BỘ TRANG BỊ RA TRẬN</span>
-        <span class="alb-slots-badge">${curCount}/${maxSlots} Ô ĐANG CHỌN</span>
+        <span class="alb-title">${titleText}</span>
+        <span class="alb-slots-badge">${badgeText}</span>
       `;
       loadoutBox.appendChild(headerDiv);
 
       const descP = document.createElement('p');
       descP.className = 'alb-desc';
-      descP.textContent = `Chỉ ${curCount} trang bị này xuất hiện trong ván đấu. Chạm vào ô để tháo hoặc chọn món bên dưới để thêm.`;
+      descP.textContent = descText;
       loadoutBox.appendChild(descP);
 
       const gridDiv = document.createElement('div');
@@ -5280,15 +5477,17 @@ class AppController {
       this.meta.equippedLoadout.forEach(tId => {
         const gInfo = GEAR_TYPES[tId];
         const lvl = this.meta.weaponLevels[tId] || 1;
+        const gName = gInfo ? gInfo.name : tId;
         const slotEl = document.createElement('div');
         slotEl.className = 'alb-slot filled';
-        slotEl.title = `Chạm để tháo ${gInfo ? gInfo.name : tId}`;
+        slotEl.title = typeof t === 'function' ? t('arsenal.slot_unequip_hint', `Chạm để tháo ${gName}`, { name: gName }) : `Chạm để tháo ${gName}`;
+        const removeTip = typeof t === 'function' ? t('arsenal.slot_remove_tip', 'Tháo món này') : 'Tháo món này';
         slotEl.innerHTML = `
-          <div class="alb-slot-x" title="Tháo món này">✕</div>
+          <div class="alb-slot-x" title="${removeTip}">✕</div>
           <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;">
             ${getGearSVG(tId, lvl, false)}
           </div>
-          <span class="alb-slot-name">${gInfo ? gInfo.name : tId}</span>
+          <span class="alb-slot-name">${gName}</span>
         `;
         slotEl.onclick = () => {
           const res = this.meta.toggleLoadoutGear(tId);
@@ -5304,9 +5503,10 @@ class AppController {
       for (let s = curCount; s < maxSlots; s++) {
         const emptySlot = document.createElement('div');
         emptySlot.className = 'alb-slot empty';
+        const emptyLabel = typeof t === 'function' ? t('arsenal.empty_slot', `Trống #${s + 1}`, { num: s + 1 }) : `Trống #${s + 1}`;
         emptySlot.innerHTML = `
           <span style="font-size:16px;color:#475569;">+</span>
-          <span style="font-size:7.5px;color:#64748b;margin-top:2px;">Trống #${s + 1}</span>
+          <span style="font-size:7.5px;color:#64748b;margin-top:2px;">${emptyLabel}</span>
         `;
         gridDiv.appendChild(emptySlot);
       }
@@ -5318,11 +5518,15 @@ class AppController {
     if (!this.arsenalDetailedList) return;
     this.arsenalDetailedList.innerHTML = '';
 
-    const allGearTypes = ['dagger', 'firearm', 'laser', 'molotov', 'vest', 'shield', 'barrier', 'belt', 'card'];
+    const langKey = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'vi';
+    const allGearTypes = ['dagger', 'firearm', 'laser', 'molotov', 'vest', 'shield', 'barrier', 'belt', 'card', 'bow'];
+    
     allGearTypes.forEach(tId => {
       const gInfo = GEAR_TYPES[tId];
       const prog = WEAPON_PROGRESSION[tId];
       if (!gInfo || !prog) return;
+
+      const pData = (WEAPON_PROGRESSION_I18N && WEAPON_PROGRESSION_I18N[langKey] && WEAPON_PROGRESSION_I18N[langKey][tId]) ? WEAPON_PROGRESSION_I18N[langKey][tId] : null;
 
       const isUnlocked = this.meta.isGearUnlocked(tId);
       const isEquipped = this.meta.equippedLoadout.includes(tId);
@@ -5337,19 +5541,46 @@ class AppController {
 
       const curStats = prog.getStats(curLvl);
       const nextStats = prog.getStats(nextLvl);
-      const milestone = prog.milestones[nextLvl] || `Cường hóa toàn diện chỉ số Lv.${nextLvl}`;
+      
+      const stat1Label = pData ? pData.stat1 : prog.stat1Label;
+      const stat2Label = pData ? pData.stat2 : prog.stat2Label;
+      const milestone = (pData && pData.milestones && pData.milestones[nextLvl]) ? pData.milestones[nextLvl] : (prog.milestones[nextLvl] || (typeof t === 'function' ? t('arsenal.milestone_default', `Cường hóa toàn diện chỉ số Lv.${nextLvl}`, { lvl: nextLvl }) : `Cường hóa toàn diện chỉ số Lv.${nextLvl}`));
 
       const card = document.createElement('div');
       card.className = `arsenal-card ${!isUnlocked ? 'is-locked' : (isEquipped ? 'is-equipped' : '')}`;
 
       let loadoutBtnHtml = '';
       if (!isUnlocked) {
-        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-locked" type="button" disabled>🔒 MỞ HÒM ĐỂ MỞ KHÓA</button>`;
+        const btnTxt = typeof t === 'function' ? t('arsenal.btn_open_chest', '🔒 MỞ HÒM ĐỂ MỞ KHÓA') : '🔒 MỞ HÒM ĐỂ MỞ KHÓA';
+        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-locked" type="button" disabled>${btnTxt}</button>`;
       } else if (isEquipped) {
-        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-equipped" type="button">✅ ĐÃ TRANG BỊ (THÁO)</button>`;
+        const btnTxt = typeof t === 'function' ? t('arsenal.btn_equipped_remove', '✅ ĐÃ TRANG BỊ (THÁO)') : '✅ ĐÃ TRANG BỊ (THÁO)';
+        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-equipped" type="button">${btnTxt}</button>`;
       } else {
-        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-add" type="button">➕ ĐEM VÀO TRẬN</button>`;
+        const btnTxt = typeof t === 'function' ? t('arsenal.btn_equip_add', '➕ ĐEM VÀO TRẬN') : '➕ ĐEM VÀO TRẬN';
+        loadoutBtnHtml = `<button class="btn-toggle-loadout btn-add" type="button">${btnTxt}</button>`;
       }
+
+      const notOwnedBadge = typeof t === 'function' ? t('arsenal.not_owned', '🔒 CHƯA SỞ HỮU') : '🔒 CHƯA SỞ HỮU';
+      const curLvlTag = isUnlocked 
+        ? (typeof t === 'function' ? t('arsenal.cur_lvl', `Cấp Hiện Tại: Lv.${curLvl}`, { lvl: curLvl }) : `Cấp Hiện Tại: Lv.${curLvl}`)
+        : (typeof t === 'function' ? t('arsenal.locked_hint', 'Khóa (Cần mở hòm gacha)') : 'Khóa (Cần mở hòm gacha)');
+
+      const shardsText = typeof t === 'function' ? t('arsenal.shards_label', `📦 Mảnh: <b>${frags}/${reqFrags}</b>`, { cur: frags, req: reqFrags }) : `📦 Mảnh: <b>${frags}/${reqFrags}</b>`;
+      const costText = typeof t === 'function' ? t('arsenal.cost_label', `Phí: <b>${reqCash}</b>`, { cost: reqCash }) : `Phí: <b>${reqCash}</b>`;
+
+      let upgradeBtnText = '';
+      if (!isUnlocked) {
+        upgradeBtnText = typeof t === 'function' ? t('arsenal.btn_locked', 'CHƯA MỞ KHÓA') : 'CHƯA MỞ KHÓA';
+      } else if (isMaxLvl) {
+        upgradeBtnText = typeof t === 'function' ? t('arsenal.btn_max_lvl', 'CẤP TỐI THƯỢNG (MAX)') : 'CẤP TỐI THƯỢNG (MAX)';
+      } else if (canUpgrade) {
+        upgradeBtnText = typeof t === 'function' ? t('arsenal.btn_upgrade_to', `NÂNG LÊN LV.${nextLvl}`, { lvl: nextLvl }) : `NÂNG LÊN LV.${nextLvl}`;
+      } else {
+        upgradeBtnText = typeof t === 'function' ? t('arsenal.btn_no_resource', 'THIẾU TÀI NGUYÊN') : 'THIẾU TÀI NGUYÊN';
+      }
+
+      const msPrefix = typeof t === 'function' ? t('arsenal.milestone_prefix', `Mốc Lv.${nextLvl}:`, { lvl: nextLvl }) : `Mốc Lv.${nextLvl}:`;
 
       card.innerHTML = `
         <div class="arsenal-card-top">
@@ -5360,9 +5591,9 @@ class AppController {
             <div class="arsenal-title-group">
               <div style="display:flex;align-items:center;gap:6px;">
                 <h4 style="margin:0;">${gInfo.name}</h4>
-                ${!isUnlocked ? '<span style="font-size:8px;background:#7f1d1d;color:#fca5a5;padding:1px 5px;border-radius:4px;font-weight:900;">🔒 CHƯA SỞ HỮU</span>' : ''}
+                ${!isUnlocked ? `<span style="font-size:8px;background:#7f1d1d;color:#fca5a5;padding:1px 5px;border-radius:4px;font-weight:900;">${notOwnedBadge}</span>` : ''}
               </div>
-              <span class="arsenal-lvl-tag">${isUnlocked ? `Cấp Hiện Tại: Lv.${curLvl}` : `Khóa (Cần mở hòm gacha)`}</span>
+              <span class="arsenal-lvl-tag">${curLvlTag}</span>
             </div>
           </div>
           ${loadoutBtnHtml}
@@ -5370,7 +5601,7 @@ class AppController {
 
         <div class="arsenal-stats-grid">
           <div class="stat-metric">
-            <span class="stat-lbl">${prog.stat1Label}</span>
+            <span class="stat-lbl">${stat1Label}</span>
             <div class="stat-val-row">
               <span>${curStats.val1}</span>
               <span style="color:#64748b;">➜</span>
@@ -5378,7 +5609,7 @@ class AppController {
             </div>
           </div>
           <div class="stat-metric">
-            <span class="stat-lbl">${prog.stat2Label}</span>
+            <span class="stat-lbl">${stat2Label}</span>
             <div class="stat-val-row">
               <span>${curStats.val2}</span>
               <span style="color:#64748b;">➜</span>
@@ -5388,43 +5619,44 @@ class AppController {
         </div>
 
         <div class="arsenal-milestone-pill">
-          Năng Lượng <b>Mốc Lv.${nextLvl}:</b> ${milestone}
+          ⚡ <b>${msPrefix}</b> ${milestone}
         </div>
 
         <div class="arsenal-card-footer">
           <div class="cost-req-chips">
-            <span class="frag-chip">📦 Mảnh: <b>${frags}/${reqFrags}</b></span>
-            <span class="cash-chip"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> Phí: <b>${reqCash}</b></span>
+            <span class="frag-chip">${shardsText}</span>
+            <span class="cash-chip"><img src="assets/icons/gold_coin.png" class="pixel-mini-icon"> ${costText}</span>
           </div>
           <button class="btn-card-upgrade" ${canUpgrade ? '' : 'disabled'}>
-            ${!isUnlocked ? 'CHƯA MỞ KHÓA' : (isMaxLvl ? 'CẤP TỐI THƯỢNG (MAX)' : (canUpgrade ? `NÂNG LÊN LV.${nextLvl}` : `THIẾU TÀI NGUYÊN`))}
+            ${upgradeBtnText}
           </button>
         </div>
       `;
 
-      // Xử lý nút Đem Vào Trận / Tháo Gỡ
+      // Handle equip/unequip
       const toggleBtn = card.querySelector('.btn-toggle-loadout');
       if (toggleBtn && isUnlocked) {
         toggleBtn.onclick = () => {
           const res = this.meta.toggleLoadoutGear(tId);
           this.showToast(res.msg);
-          if (res.success) {
-            sfx.playTone(res.action === 'added' ? 440 : 330, 'sine', 0.06, 0.1);
-            this.renderLobbyArsenal();
-            this.renderBattleTabLoadout();
-          }
+          sfx.playTone(320, 'sine', 0.05, 0.08);
+          this.renderLobbyArsenal();
+          this.renderBattleTabLoadout();
         };
       }
 
-      // Xử lý nút Nâng Cấp
-      const btnUpgrade = card.querySelector('.btn-card-upgrade');
-      if (btnUpgrade && isUnlocked) {
-        btnUpgrade.onclick = () => {
+      // Handle upgrade
+      const upBtn = card.querySelector('.btn-card-upgrade');
+      if (upBtn && canUpgrade) {
+        upBtn.onclick = () => {
           if (this.meta.upgradeWeapon(tId)) {
-            this.showToast(`🎉 Nâng cấp ${gInfo.name} lên Lv.${this.meta.weaponLevels[tId]} thành công!`);
+            const upName = gInfo.name;
+            const upSuccessMsg = typeof t === 'function' ? t('toast.upgrade_success', `⚡ Đã nâng cấp ${upName} lên Lv.${nextLvl}!`, { name: upName, lvl: nextLvl }) : `⚡ Đã nâng cấp ${upName} lên Lv.${nextLvl}!`;
+            this.showToast(upSuccessMsg);
+            sfx.victory();
             this.renderLobby();
-          } else {
-            this.showToast('⚠️ Không đủ mảnh nguyên liệu hoặc tiền để nâng cấp!');
+            this.renderLobbyArsenal();
+            this.renderBattleTabLoadout();
           }
         };
       }
@@ -5432,6 +5664,7 @@ class AppController {
       this.arsenalDetailedList.appendChild(card);
     });
   }
+
 
   // --- LEVEL UP ROGUELIKE PERK CHOICES (THÔNG MINH: GIỚI HẠN 1/1, LỌC THEO TRANG BỊ & ĐỘ HIẾM) ---
   showLevelUpModal() {
