@@ -2389,21 +2389,22 @@ class InRunState {
     });
 
     // Tính khả năng chi trả trước khi thực hiện giao dịch (tiền hiện có + tiền thu hồi shop cũ)
-    const availableCash = this.runCash + autoSoldCash;
-    if (deduct && availableCash < this.refreshCost) {
+    const availableCash = Number(this.runCash || 0) + autoSoldCash;
+    const cost = Number(this.refreshCost || 10);
+    if (deduct && availableCash < cost) {
       return false;
     }
 
     // Hoàn tất thu hồi và trừ phí
     if (autoSoldCount > 0) {
-      this.runCash += autoSoldCash;
+      this.runCash = Number(this.runCash || 0) + autoSoldCash;
       this._lastAutoSoldInfo = { count: autoSoldCount, cash: autoSoldCash };
     } else {
       this._lastAutoSoldInfo = null;
     }
 
     if (deduct) {
-      this.runCash -= this.refreshCost;
+      this.runCash = Math.max(0, Number(this.runCash || 0) - cost);
     }
 
     // 2. TIERED ROLL: Chỉ roll ra các trang bị nằm trong Bộ Trang Bị (Loadout) đã chọn trước trận
@@ -2524,6 +2525,7 @@ class InRunState {
   }
 
   calculateBuffs() {
+    const isEn = (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : 'en') === 'en';
     const buffs = [];
     let beltCount = 0;
     let vestCount = 0;
@@ -2540,33 +2542,53 @@ class InRunState {
     if (beltCount > 0) {
       buffs.push({
         icon: '🥋',
-        text: `Adjacent Firearm's ATK +${beltCount * 12}%`
+        text: isEn ? ('Adjacent Weapon ATK +' + (beltCount * 12) + '%') : ('Vũ khí tiếp giáp Thắt Lưng: ATK +' + (beltCount * 12) + '%')
       });
     }
     if (laserCount > 0) {
       buffs.push({
         icon: '★',
-        text: `Laser Guns' ATK +${laserCount * 15}%`
+        text: isEn ? ('Laser Cannons ATK +' + (laserCount * 15) + '%') : ('Pháo Laser: ATK +' + (laserCount * 15) + '%')
       });
     }
     if (vestCount > 0) {
       buffs.push({
         icon: '🦺',
-        text: `Bulletproof Vest's DMG Reflection Ratio +${Math.round(vestCount * 35 * this.perkMultipliers.vestReflection)}%`
+        text: isEn
+          ? ('Bulletproof Vest DMG Reflection +' + Math.round(vestCount * 35 * this.perkMultipliers.vestReflection) + '%')
+          : ('Áo Giáp Chống Đạn: Phản đòn +' + Math.round(vestCount * 35 * this.perkMultipliers.vestReflection) + '%')
       });
     }
     if (firearmCount > 0) {
       buffs.push({
         icon: '🔫',
-        text: `Firearm's ATK +${firearmCount * 4}% (Tốc độ x${this.perkMultipliers.firearmRate.toFixed(2)})`
+        text: isEn
+          ? ('Firearm ATK +' + (firearmCount * 4) + '% (Fire rate x' + this.perkMultipliers.firearmRate.toFixed(2) + ')')
+          : ('Súng Lục / Tiểu Liên: ATK +' + (firearmCount * 4) + '% (Tốc độ bắn x' + this.perkMultipliers.firearmRate.toFixed(2) + ')')
       });
     }
 
-    // Active in-wave Roguelike Perks (Ảnh 4)
-    this.perks.forEach(p => {
+    // Tích hợp toàn bộ Nội Tại Ẩn / Tiếp Giáp (Hidden Synergies)
+    if (typeof this.getBackpackSynergies === 'function') {
+      const synData = this.getBackpackSynergies();
+      if (synData && synData.activeSynergies) {
+        synData.activeSynergies.forEach(syn => {
+          const synName = typeof t === 'function' ? t(syn.nameKey, syn.id) : syn.id;
+          const synDesc = typeof t === 'function' ? t(syn.descKey, '') : '';
+          buffs.push({
+            icon: syn.icon || '✨',
+            text: '<b>' + synName + '</b>: ' + synDesc
+          });
+        });
+      }
+    }
+
+    // Tích hợp toàn bộ Roguelike Perks đã chọn trong ván đấu
+    (this.perks || []).forEach(p => {
+      const pI18n = (typeof getPerkI18n === 'function') ? getPerkI18n(p) : { title: p.title, desc: p.desc };
       buffs.push({
-        icon: p.icon,
-        text: `${p.title} (${p.desc})`
+        icon: p.icon || '★',
+        text: '<b>' + pI18n.title + '</b>: ' + pI18n.desc
       });
     });
 
@@ -5321,18 +5343,20 @@ class AppController {
       toast.id = 'game-toast';
       document.body.appendChild(toast);
     }
+    const actualCost = (this.run && this.run.refreshCost) ? this.run.refreshCost : 10;
     let translatedMsg = msg;
-    if (typeof translatedMsg === 'string' && translatedMsg.includes('{cost}')) {
-      const actualCost = (this.run && this.run.refreshCost) ? this.run.refreshCost : 10;
-      translatedMsg = translatedMsg.replace(/\{cost\}/g, actualCost);
+    if (typeof translatedMsg === 'string') {
+      translatedMsg = translatedMsg
+        .replace(/\{cost\}/g, actualCost)
+        .replace(/\{val\}/g, actualCost);
     }
     const isEn = (typeof currentLang !== 'undefined' ? currentLang : 'en') === 'en';
-    if (isEn && typeof msg === 'string') {
-      if (typeof TOAST_TRANSLATION_FALLBACKS === 'object' && TOAST_TRANSLATION_FALLBACKS[msg]) {
-        translatedMsg = TOAST_TRANSLATION_FALLBACKS[msg];
+    if (isEn && typeof translatedMsg === 'string') {
+      if (typeof TOAST_TRANSLATION_FALLBACKS === 'object' && TOAST_TRANSLATION_FALLBACKS[translatedMsg]) {
+        translatedMsg = TOAST_TRANSLATION_FALLBACKS[translatedMsg];
       } else {
         // Universal dynamic regex translation for all dynamic messages
-        let m = msg;
+        let m = translatedMsg;
         m = m.replace(/^🔄 Tự động bán (\d+) món cũ \(\+(\d+) \$\) → Roll 3 món mới!$/, '🔄 Auto-sold $1 old items (+$2 $) → Rolled 3 new items!');
         m = m.replace(/^👉 Đã chọn (.+?): Chạm ô trong vali hoặc kéo thả để trang bị!$/, '👉 Selected $1: Tap cell in suitcase or drag to equip!');
         m = m.replace(/^▶️? Tiếp tục trận đấu!?$/, '▶️ Resuming battle!');
@@ -5511,21 +5535,21 @@ class AppController {
     // --- CỘT MỐC TIẾN TRÌNH CHIẾN TRƯỜNG (YÊU CẦU 4: BỎ MÙA, THEO MÀN & DIỆT QUÁI/BOSS) ---
   getStageMilestones() {
     return [
-      { id: 'w3', title: 'Tập Sự Sống Sót (Wave 3)', desc: 'Vượt qua 3 Wave khởi đầu trận đấu', target: 3, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+300 Vàng & +15 Mảnh Phi Tiêu', claimFn: () => { this.meta.cash += 300; this.meta.materials.dagger = (this.meta.materials.dagger || 0) + 15; } },
-      { id: 'w5', title: 'Vượt Qua Wave 5 (Tiểu Trùm)', desc: 'Chinh phục đợt quái & tiểu trùm Wave 5', target: 5, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+500 Vàng & +20 Mảnh Súng Lục', claimFn: () => { this.meta.cash += 500; this.meta.materials.firearm = (this.meta.materials.firearm || 0) + 20; } },
-      { id: 'b1', title: 'Hạ Gục Boss Đầu Tiên (Wave 5)', desc: 'Tiêu diệt Trùm Boss tại Wave 5', target: 1, current: this.meta.bossKills, icon: 'assets/icons/gem.png', reward: '+20 Kim Cương & +20 Mảnh Áo Giáp', claimFn: () => { this.meta.gems += 20; this.meta.materials.vest = (this.meta.materials.vest || 0) + 20; } },
-      { id: 'w8', title: 'Chiến Binh Kiên Cường (Wave 8)', desc: 'Trụ vững qua 8 Wave chiến trận khốc liệt', target: 8, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+800 Vàng & +25 Mảnh Khiên', claimFn: () => { this.meta.cash += 800; this.meta.materials.shield = (this.meta.materials.shield || 0) + 25; } },
-      { id: 'w10', title: 'Vượt Qua Wave 10 (Ảo Ảnh)', desc: 'Sống sót qua đợt tấn công tiểu trùm ảo ảnh Wave 10', target: 10, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.000 Vàng & +30 Mảnh Bom Xăng', claimFn: () => { this.meta.cash += 1000; this.meta.materials.molotov = (this.meta.materials.molotov || 0) + 30; } },
-      { id: 'b2', title: 'Tiêu Diệt 2 Trùm Boss', desc: 'Hạ gục 2 boss trong các chiến dịch', target: 2, current: this.meta.bossKills, icon: 'assets/weapons/bow_lv1.png', reward: '+35 Kim Cương & +30 Mảnh Cung Nỏ', claimFn: () => { this.meta.gems += 35; this.meta.materials.bow = (this.meta.materials.bow || 0) + 30; } },
-      { id: 'w13', title: 'Cận Kề Chiến Thắng (Wave 13)', desc: 'Vượt qua đợt quái cuồng nộ Wave 13', target: 13, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.200 Vàng & +35 Mảnh Pháo Laser', claimFn: () => { this.meta.cash += 1200; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } },
-      { id: 'w15', title: 'Phá Đảo Màn 1 (Wave 15)', desc: 'Vượt toàn bộ 15 Wave & tiêu diệt Boss Chizuru tối thượng!', target: 15, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: 'Hòm Hoàng Kim Bố Già (+120 Mảnh) & +2.000 Vàng & +50 💎', claimFn: () => { this.meta.cash += 2000; this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 60; this.meta.materials.laser = (this.meta.materials.laser || 0) + 60; } },
-      { id: 'w20', title: 'Phá Đảo Màn 2 (Wave 20)', desc: 'Chinh phục toàn bộ 20 Wave & hạ gục Chúa Tể Cơ Giới Mech GM-X!', target: 20, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+3.500 Vàng & +80 Kim Cương', claimFn: () => { this.meta.cash += 3500; this.meta.gems += 80; } },
-      { id: 'w25', title: 'Phá Đảo Màn 3 (Wave 25)', desc: 'Vượt 25 Wave bão cát & tiêu diệt Bọ Cạp Hoàng Kim!', target: 25, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+5.000 Vàng & +120 Kim Cương', claimFn: () => { this.meta.cash += 5000; this.meta.gems += 120; } },
-      { id: 'w30', title: 'Phá Đảo Màn 4 (Wave 30)', desc: 'Vượt 30 Wave không gian & hạ gục Rồng Máy Cyber Shenron!', target: 30, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+8.000 Vàng & +200 Kim Cương', claimFn: () => { this.meta.cash += 8000; this.meta.gems += 200; } },
-      { id: 'w35', title: 'Bố Già Tối Thượng (Wave 35)', desc: 'Đỉnh cao chiến dịch: Đánh bại Bố Già Don Corleone tại Wave 35!', target: 35, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+15.000 Vàng & +500 Kim Cương', claimFn: () => { this.meta.cash += 15000; this.meta.gems += 500; } },
-      { id: 'k50', title: 'Tiêu Diệt 50 Quái Vật', desc: 'Tích lũy 50 quái vật bị hạ gục', target: 50, current: this.meta.monsterKills, icon: 'assets/icons/chest_wood.png', reward: '+300 Vàng & +15 Mảnh Rào Chắn', claimFn: () => { this.meta.cash += 300; this.meta.materials.barrier = (this.meta.materials.barrier || 0) + 15; } },
-      { id: 'k150', title: 'Tiêu Diệt 150 Quái Vật', desc: 'Tích lũy 150 quái vật bị hạ gục', target: 150, current: this.meta.monsterKills, icon: 'assets/icons/chest_silver.png', reward: '+600 Vàng & +25 Mảnh Thắt Lưng', claimFn: () => { this.meta.cash += 600; this.meta.materials.belt = (this.meta.materials.belt || 0) + 25; } },
-      { id: 'k300', title: 'Tiêu Diệt 300 Quái Vật', desc: 'Tích lũy 300 quái vật bị hạ gục', target: 300, current: this.meta.monsterKills, icon: 'assets/icons/chest_gold.png', reward: '+50 Kim Cương & Hòm Bạc Tinh Anh', claimFn: () => { this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 35; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } }
+      { id: 'w3', target: 3, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+300 Vàng & +15 Mảnh Dao Găm', claimFn: () => { this.meta.cash += 300; this.meta.materials.dagger = (this.meta.materials.dagger || 0) + 15; } },
+      { id: 'w5', target: 5, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+500 Vàng & +20 Mảnh Súng Lục', claimFn: () => { this.meta.cash += 500; this.meta.materials.firearm = (this.meta.materials.firearm || 0) + 20; } },
+      { id: 'b1', target: 1, current: this.meta.bossKills, icon: 'assets/icons/gem.png', reward: '+20 Kim Cương & +20 Mảnh Áo Giáp', claimFn: () => { this.meta.gems += 20; this.meta.materials.vest = (this.meta.materials.vest || 0) + 20; } },
+      { id: 'w8', target: 8, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+800 Vàng & +25 Mảnh Khiên', claimFn: () => { this.meta.cash += 800; this.meta.materials.shield = (this.meta.materials.shield || 0) + 25; } },
+      { id: 'w10', target: 10, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.000 Vàng & +30 Mảnh Bom Xăng', claimFn: () => { this.meta.cash += 1000; this.meta.materials.molotov = (this.meta.materials.molotov || 0) + 30; } },
+      { id: 'b2', target: 2, current: this.meta.bossKills, icon: 'assets/weapons/bow_lv1.png', reward: '+35 Kim Cương & +30 Mảnh Cung Nỏ', claimFn: () => { this.meta.gems += 35; this.meta.materials.bow = (this.meta.materials.bow || 0) + 30; } },
+      { id: 'w13', target: 13, current: this.meta.maxWave, icon: 'assets/icons/gold_coin.png', reward: '+1.200 Vàng & +35 Mảnh Pháo Laser', claimFn: () => { this.meta.cash += 1200; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } },
+      { id: 'w15', target: 15, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: 'Hòm Hoàng Kim Bố Già (+120 Mảnh) & +2.000 Vàng & +50 💎', claimFn: () => { this.meta.cash += 2000; this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 60; this.meta.materials.laser = (this.meta.materials.laser || 0) + 60; } },
+      { id: 'w20', target: 20, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+3.500 Vàng & +80 Kim Cương', claimFn: () => { this.meta.cash += 3500; this.meta.gems += 80; } },
+      { id: 'w25', target: 25, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+5.000 Vàng & +120 Kim Cương', claimFn: () => { this.meta.cash += 5000; this.meta.gems += 120; } },
+      { id: 'w30', target: 30, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+8.000 Vàng & +200 Kim Cương', claimFn: () => { this.meta.cash += 8000; this.meta.gems += 200; } },
+      { id: 'w35', target: 35, current: this.meta.maxWave, icon: 'assets/icons/chest_gold.png', reward: '+15.000 Vàng & +500 Kim Cương', claimFn: () => { this.meta.cash += 15000; this.meta.gems += 500; } },
+      { id: 'k50', target: 50, current: this.meta.monsterKills, icon: 'assets/icons/chest_wood.png', reward: '+300 Vàng & +15 Mảnh Rào Chắn', claimFn: () => { this.meta.cash += 300; this.meta.materials.barrier = (this.meta.barrier || 0) + 15; } },
+      { id: 'k150', target: 150, current: this.meta.monsterKills, icon: 'assets/icons/chest_silver.png', reward: '+600 Vàng & +25 Mảnh Thắt Lưng', claimFn: () => { this.meta.cash += 600; this.meta.materials.belt = (this.meta.materials.belt || 0) + 25; } },
+      { id: 'k300', target: 300, current: this.meta.monsterKills, icon: 'assets/icons/chest_gold.png', reward: '+50 Kim Cương & Hòm Bạc Tinh Anh', claimFn: () => { this.meta.gems += 50; this.meta.materials.bow = (this.meta.materials.bow || 0) + 35; this.meta.materials.laser = (this.meta.materials.laser || 0) + 35; } }
     ];
   }
 
@@ -5578,27 +5602,26 @@ class AppController {
       const claimedLabel = typeof t === 'function' ? t('milestone.claimed', 'ĐÃ NHẬN') : 'ĐÃ NHẬN';
       const claimBtnLabel = typeof t === 'function' ? t('milestone.claim', 'NHẬN') : 'NHẬN';
       const targetLabel = typeof t === 'function' ? t('milestone.target_label', `Mục tiêu: ${mItem.target}`, { target: mItem.target }) : `Mục tiêu: ${mItem.target}`;
-      const mTitle = typeof t === 'function' ? t('milestone.' + mItem.id + '.title', mItem.title) : mItem.title;
+      const mTitle = typeof t === 'function' ? t('milestone.' + mItem.id + '.title', mItem.id) : mItem.id;
+      const mReward = typeof t === 'function' ? t('milestone.' + mItem.id + '.reward', mItem.reward) : mItem.reward;
 
       let actionHtml = '';
       if (isClaimed) {
-        actionHtml = `<span class="m-btn-claimed">${claimedLabel}</span>`;
+        actionHtml = '<span class="m-btn-claimed">' + claimedLabel + '</span>';
       } else if (isReached) {
-        actionHtml = `<button class="m-btn-claim-action" data-id="${mItem.id}">${claimBtnLabel}</button>`;
+        actionHtml = '<button class="m-btn-claim-action" data-id="' + mItem.id + '">' + claimBtnLabel + '</button>';
       } else {
-        actionHtml = `<span class="m-pill-progress">${mItem.current || 0}/${mItem.target}</span>`;
+        actionHtml = '<span class="m-pill-progress">' + (mItem.current || 0) + '/' + mItem.target + '</span>';
       }
 
       card.innerHTML = `
-        <div class="m-icon-box">
-          <img src="${mItem.icon}" class="m-pixel-img" alt="">
-        </div>
+        <div class="m-icon-box"><img src="${mItem.icon}" class="m-pixel-img" alt=""></div>
         <div class="m-detail-box">
           <div class="m-detail-header">
             <span class="m-detail-title">${mTitle}</span>
             <span class="m-detail-target">${targetLabel}</span>
           </div>
-          <div class="m-detail-reward">${mItem.reward}</div>
+          <div class="m-detail-reward">${mReward}</div>
           <div class="m-row-bar-track">
             <div class="m-row-bar-fill" style="width:${pct}%"></div>
           </div>
@@ -5620,7 +5643,9 @@ class AppController {
           target.claimFn();
           this.meta.save();
           sfx.victory();
-          this.showToast(`🎁 Đã nhận thưởng [${target.title}]!`);
+          const claimedTitle = typeof t === 'function' ? t('milestone.' + target.id + '.title', target.id) : target.id;
+          const claimedMsg = typeof t === 'function' ? t('toast.milestone_claimed', ('🎁 Claimed milestone [' + claimedTitle + ']!'), { title: claimedTitle }) : ('🎁 Claimed milestone [' + claimedTitle + ']!');
+          this.showToast(claimedMsg);
           this.renderLobby();
           this.openMilestonesModal();
         }
@@ -8276,12 +8301,13 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     this.showChestRewardModal = (chestName, chestIcon, lootList) => {
       const modal = document.getElementById('modal-chest-reward');
       if (!modal) return;
-      
+      if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
+
       const iconEl = document.getElementById('chest-reward-icon');
       if (iconEl) iconEl.src = chestIcon || 'assets/icons/chest_gold.png';
       
       const titleEl = document.getElementById('chest-reward-title');
-      if (titleEl) titleEl.textContent = typeof t === 'function' ? t('shop.chest_opened_title', 'MỞ RƯƠNG THÀNH CÔNG!') : 'MỞ RƯƠNG THÀNH CÔNG!';
+      if (titleEl) titleEl.textContent = typeof t === 'function' ? t('shop.chest_opened_title', 'CHEST OPENED SUCCESSFULLY!') : 'CHEST OPENED SUCCESSFULLY!';
       
       const subEl = document.getElementById('chest-reward-sub');
       if (subEl) subEl.textContent = chestName.toUpperCase();
@@ -8291,21 +8317,19 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
         itemsContainer.innerHTML = '';
         lootList.forEach(item => {
           const card = document.createElement('div');
-          card.className = `loot-card-item ${item.isNew ? 'is-unlocked-new' : ''}`;
+          card.className = 'loot-card-item ' + (item.isNew ? 'is-unlocked-new' : '');
           
           let amountClass = 'loot-item-amount';
           if (item.type === 'cash') amountClass += ' gold-amount';
           if (item.type === 'gem') amountClass += ' gem-amount';
 
-          const newBadge = item.isNew ? `<span style="color:#22c55e;font-size:10px;">${typeof t === 'function' ? t('shop.new_badge', '★ MỚI') : '★ MỚI'}</span>` : '';
-          card.innerHTML = `
-            <img src="${item.icon}" class="loot-item-icon" alt="${item.name}" onerror="this.onerror=null;this.src='assets/icons/star.png';">
-            <div class="loot-item-info">
-              <div class="loot-item-name">${item.name} ${newBadge}</div>
-              <div class="loot-item-sub">${item.sub || (typeof t === 'function' ? t('shop.upgrade_material', 'Nguyên liệu nâng cấp') : 'Nguyên liệu nâng cấp')}</div>
-            </div>
-            <div class="${amountClass}">${item.amount}</div>
-          `;
+          const newBadge = item.isNew ? ('<span style="color:#22c55e;font-size:10px;">' + (typeof t === 'function' ? t('shop.new_badge', '★ NEW') : '★ NEW') + '</span>') : '';
+          card.innerHTML = '<img src="' + item.icon + '" class="loot-item-icon" alt="' + item.name + '" onerror="this.onerror=null;this.src=\'assets/icons/star.png\';">' +
+            '<div class="loot-item-info">' +
+              '<div class="loot-item-name">' + item.name + ' ' + newBadge + '</div>' +
+              '<div class="loot-item-sub">' + (item.sub || (typeof t === 'function' ? t('shop.upgrade_material', 'Upgrade Material') : 'Upgrade Material')) + '</div>' +
+            '</div>' +
+            '<div class="' + amountClass + '">' + item.amount + '</div>';
           itemsContainer.appendChild(card);
         });
       }
@@ -8354,34 +8378,40 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
       }
       this.meta.save();
 
+      const isEn = (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : 'en') === 'en';
+      const shardText = typeof t === 'function' ? t('shop.shards_amount', ('+' + shards + ' Mảnh'), { count: shards }) : (isEn ? ('+' + shards + ' Shards') : ('+' + shards + ' Mảnh'));
+      const subText = unlockedNew
+        ? (typeof t === 'function' ? t('shop.unlocked_new_sub', 'Mở khóa vũ khí mới vào Vali!') : 'Unlocked new weapon to Suitcase!')
+        : (typeof t === 'function' ? t('shop.upgrade_material_sub', 'Dùng để tiến hóa cấp sao') : 'Used for star tier evolution');
+
       const lootList = [
         {
           name: gName,
           icon: gIcon,
-          amount: `+${shards} Mảnh`,
-          sub: unlockedNew ? 'Mở khóa vũ khí mới vào Vali!' : 'Dùng để tiến hóa cấp sao',
+          amount: shardText,
+          sub: subText,
           isNew: unlockedNew
         }
       ];
 
-      if (chestName.includes('Hoàng Kim')) {
+      if (chestKey === 'shop.gold_chest_name' || chestName.includes('Hoàng Kim') || chestName.includes('Golden')) {
         const bonusGems = 25;
         this.meta.gems += bonusGems;
         lootList.push({
-          name: 'Kim Cương Bố Già',
+          name: typeof t === 'function' ? t('shop.loot_godfather_gems', 'Kim Cương Bố Già') : 'Godfather Diamonds',
           icon: 'assets/icons/gem.png',
-          amount: `+${bonusGems} KC`,
-          sub: 'Kho báu Hoàng Kim',
+          amount: '+' + bonusGems + ' 💎',
+          sub: typeof t === 'function' ? t('shop.loot_gold_chest_sub', 'Kho báu Hoàng Kim') : 'Golden Treasure Bonus',
           type: 'gem'
         });
-      } else if (chestName.includes('Bạc')) {
+      } else if (chestKey === 'shop.silver_chest_name' || chestName.includes('Bạc') || chestName.includes('Silver')) {
         const bonusCash = 300;
         this.meta.cash += bonusCash;
         lootList.push({
-          name: 'Vàng Mafia Thưởng Thêm',
+          name: typeof t === 'function' ? t('shop.loot_bonus_cash', 'Vàng Mafia Thưởng Thêm') : 'Bonus Mafia Gold',
           icon: 'assets/icons/gold_coin.png',
-          amount: `+${bonusCash}`,
-          sub: 'Kho báu Bạc Tinh Anh',
+          amount: '+' + bonusCash + ' 🪙',
+          sub: typeof t === 'function' ? t('shop.loot_silver_chest_sub', 'Kho báu Bạc Tinh Anh') : 'Elite Silver Treasure Bonus',
           type: 'cash'
         });
       }
@@ -8403,7 +8433,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     });
 
     document.getElementById('btn-buy-gold-chest')?.addEventListener('click', () => {
-      openChest('Hòm Hoàng Kim Bố Già', 'gem', 80, 80, 160, Math.random() < 0.6 ? 'bow' : null, 'assets/icons/chest_gold.png');
+      openChest('shop.gold_chest_name', 'Hòm Hoàng Kim Bố Già', 'gem', 80, 80, 160, Math.random() < 0.6 ? 'bow' : null, 'assets/icons/chest_gold.png');
     });
 
         // Helper cập nhật đếm ngược hồi chiêu 5 phút xem QC nhận Quà trong Shop (Yêu cầu 2: Chuẩn xác 5 phút 300s)
@@ -8518,7 +8548,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     document.getElementById('btn-refresh-shop').onclick = () => {
       sfx.init();
       if (!this.run.rollShop(true)) {
-        const rCost = this.run.refreshCost;
+        const rCost = (this.run && this.run.refreshCost) ? this.run.refreshCost : 10;
         const rMsg = typeof t === 'function'
           ? t('toast.need_cash_roll', `⚠️ Need ${rCost} $ to Roll 3 items!`, { cost: rCost, val: rCost })
           : `⚠️ Need ${rCost} $ to Roll 3 items!`;
@@ -8728,18 +8758,21 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
 
     // Buff list popup
     document.getElementById('btn-buff-list').onclick = () => {
+      if (typeof applyLanguageToDOM === 'function') applyLanguageToDOM();
       const container = document.getElementById('buff-items-container');
       container.innerHTML = '';
       const buffs = this.run.calculateBuffs();
-      buffs.forEach(b => {
-        const item = document.createElement('div');
-        item.className = 'buff-card-item';
-        item.innerHTML = `
-          <div class="buff-card-icon">${b.icon}</div>
-          <div class="buff-card-text">${b.text}</div>
-        `;
-        container.appendChild(item);
-      });
+      if (!buffs || buffs.length === 0) {
+        const emptyMsg = typeof t === 'function' ? t('modal.buff_list_empty', 'No active buffs or hidden synergies yet.') : 'No active buffs or hidden synergies yet.';
+        container.innerHTML = '<div style="color:#94a3b8;font-size:12px;text-align:center;padding:16px;">' + emptyMsg + '</div>';
+      } else {
+        buffs.forEach(b => {
+          const item = document.createElement('div');
+          item.className = 'buff-card-item';
+          item.innerHTML = '<div class="buff-card-icon">' + b.icon + '</div><div class="buff-card-text">' + b.text + '</div>';
+          container.appendChild(item);
+        });
+      }
       this.modalBuffs.classList.remove('hidden');
     };
     document.getElementById('btn-close-buffs').onclick = () => {

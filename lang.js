@@ -1397,8 +1397,29 @@ function t(key, fallback = '', vars = null) {
 
   if (vars && typeof vars === 'object') {
     Object.keys(vars).forEach(k => {
-      str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+      if (vars[k] !== undefined && vars[k] !== null) {
+        str = str.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]);
+      }
     });
+    // Universal parameter cross-fallbacks
+    const costVal = vars.cost ?? vars.val ?? vars.cash;
+    if (costVal !== undefined && costVal !== null) {
+      str = str.replace(/\{cost\}/g, costVal).replace(/\{val\}/g, costVal);
+    }
+    const countVal = vars.count ?? vars.num;
+    if (countVal !== undefined && countVal !== null) {
+      str = str.replace(/\{count\}/g, countVal).replace(/\{num\}/g, countVal);
+    }
+    const cashVal = vars.cash ?? vars.val ?? vars.cost;
+    if (cashVal !== undefined && cashVal !== null) {
+      str = str.replace(/\{cash\}/g, cashVal);
+    }
+  } else if (typeof vars === 'number' || (typeof vars === 'string' && vars !== '')) {
+    str = str.replace(/\{cost\}/g, vars)
+             .replace(/\{val\}/g, vars)
+             .replace(/\{count\}/g, vars)
+             .replace(/\{num\}/g, vars)
+             .replace(/\{cash\}/g, vars);
   }
   return str;
 }
