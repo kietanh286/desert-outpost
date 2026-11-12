@@ -455,7 +455,8 @@ const LAND_TILE_SHAPES = [
 function getLandTileName(shape) {
   if (!shape) return typeof t === 'function' ? t('gear.land.name', 'Expansion Tile') : 'Expansion Tile';
   const isVi = (typeof getCurrentLanguage === 'function' ? getCurrentLanguage() : (typeof currentLang !== 'undefined' ? currentLang : 'en')) === 'vi';
-  const found = LAND_SHAPES.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
+  const list = (typeof LAND_TILE_SHAPES !== 'undefined' && Array.isArray(LAND_TILE_SHAPES)) ? LAND_TILE_SHAPES : [];
+  const found = list.find(s => s.id === shape.id || s.name === shape.name || s.nameVi === shape.name || (s.w === shape.w && s.h === shape.h));
   if (found) {
     return isVi
       ? (typeof t === 'function' ? t('land.' + found.id, found.nameVi) : found.nameVi)
@@ -2373,42 +2374,7 @@ class InRunState {
 
   isGridMaxed() {
     if (!this.gridUnlocked || !Array.isArray(this.gridUnlocked)) return false;
-    const unlockedCount = this.gridUnlocked.filter(Boolean).length;
-    if (unlockedCount >= 49) return true;
-
-    // Check if any land tile shape can actually expand remaining locked cells
-    let canExpandAny = false;
-    for (const shape of LAND_TILE_SHAPES) {
-      const w = shape.w;
-      const h = shape.h;
-      for (let rootR = 0; rootR <= 7 - h; rootR++) {
-        for (let rootC = 0; rootC <= 7 - w; rootC++) {
-          let hasAdj = false;
-          let newCount = 0;
-          for (let dr = 0; dr < h; dr++) {
-            for (let dc = 0; dc < w; dc++) {
-              const r = rootR + dr;
-              const c = rootC + dc;
-              const idx = r * 7 + c;
-              if (!this.gridUnlocked[idx]) {
-                newCount++;
-              }
-              const nbs = [(r - 1) * 7 + c, (r + 1) * 7 + c, r * 7 + (c - 1), r * 7 + (c + 1)];
-              if (nbs.some(n => n >= 0 && n < 49 && this.gridUnlocked[n])) {
-                hasAdj = true;
-              }
-            }
-          }
-          if (hasAdj && newCount > 0) {
-            canExpandAny = true;
-            break;
-          }
-        }
-        if (canExpandAny) break;
-      }
-      if (canExpandAny) break;
-    }
-    return !canExpandAny;
+    return this.gridUnlocked.filter(Boolean).length >= 49;
   }
 
   rollShop(deduct = true) {
@@ -2492,11 +2458,25 @@ class InRunState {
         }
       }
 
-      // YÊU CẦU: Khi người chơi đã mở khóa tối đa ô vali -> BỎ HOÀN TOÀN khả năng roll ra ô đất
+      // YÊU CẦU: Khi người chơi đã mở khóa tối đa ô vali (49/49) -> BỎ HOÀN TOÀN khả năng roll ra ô đất
       const gridMaxed = this.isGridMaxed();
-      const isLand = !gridMaxed && (Math.random() < 0.11);
+      const unlockedCount = this.gridUnlocked.filter(Boolean).length;
+      let landChance = 0;
+      if (!gridMaxed) {
+        if (unlockedCount <= 16) {
+          landChance = 0.35; // Giai đoạn đầu mở rộng nhanh
+        } else if (unlockedCount < 30) {
+          landChance = 0.22;
+        } else {
+          landChance = 0.14;
+        }
+      }
+      // Đảm bảo ở Wave 1 khi vali mới 9 ô, slot thứ 3 chắc chắn có 1 ô đất để người chơi mở rộng
+      const isInitialWave1NeedLand = (this.wave === 1 && unlockedCount <= 9 && slotIdx === 2);
+      const isLand = !gridMaxed && (isInitialWave1NeedLand || Math.random() < landChance);
       if (isLand) {
-        const shape = LAND_TILE_SHAPES[Math.floor(Math.random() * LAND_TILE_SHAPES.length)];
+        const shapeList = (typeof LAND_TILE_SHAPES !== 'undefined' && Array.isArray(LAND_TILE_SHAPES)) ? LAND_TILE_SHAPES : [];
+        const shape = shapeList[Math.floor(Math.random() * shapeList.length)] || { id: 'square_2x2', name: 'Square 2x2', w: 2, h: 2 };
         this.shopSlots[slotIdx] = {
           isLand: true,
           uid: 'land_' + Math.random().toString(36).substr(2, 9),
@@ -2685,14 +2665,14 @@ class DesertBattleEngine {
   }
 
   getEnemySprite(e) {
+    if (e.bossRole === 'healer') return this.sprites.monster_healer || this.sprites.boss_stage1;
+    if (e.bossRole === 'phantom') return this.sprites.monster_phantom || this.sprites.boss_stage1;
     if (e.type === 'boss' || e.isBoss) {
       const curStage = (this.meta && this.meta.selectedStage ? this.meta.selectedStage : 1);
       return this.sprites[`boss_stage${curStage}`] || this.sprites.boss_stage1;
     }
     if (e.type === 'scorpion') return this.sprites.monster_scorpion;
     if (e.type === 'mech_tank') return this.sprites.monster_tank;
-    if (e.bossRole === 'healer') return this.sprites.monster_healer;
-    if (e.bossRole === 'phantom') return this.sprites.monster_phantom;
     return this.sprites.monster_thug;
   }
 
@@ -2834,16 +2814,18 @@ class DesertBattleEngine {
         // MINI BOSS WAVE 5: CYBER HEALER (Buff Hồi Máu cho quái nhỏ)
         isMiniBoss = true;
         bossRole = 'healer';
-        hp = Math.round((stageConfig.maxHp || 70000) * 0.35); // Tiểu trùm = 35% máu trùm cuối
+        // Cân bằng máu: Wave 5 quái thường ~590 HP -> Mini-boss ~4,800 HP (NOT 26,250 HP!)
+        hp = Math.round(220 * Math.pow(1.28, 4) * 8.0);
         speed = 18;
         radius = 32;
         color = '#10b981';
         icon = '🧬';
-        armorReduction = 0.20;
-        buffAuraRadius = 160;
-        buffSpeedAura = 1.30;
-        buffHealAura = 40; // Hồi +40 HP/giây
-        bossTitle = `🧬 TIỂU TRÙM DƯỢC SĨ (WAVE ${wave}) - BUFF HỒI MÁU`;
+        dodgeChance = 0;
+        armorReduction = 0.15;
+        buffAuraRadius = 130;
+        buffSpeedAura = 1.20;
+        buffHealAura = 8; // Hồi +8 HP/giây (vừa sức với DPS tân thủ)
+        bossTitle = typeof t === 'function' ? t('boss.title_healer_w5', `🧬 MINI BOSS HEALER (WAVE ${wave})`, { wave: wave }) : `🧬 MINI BOSS HEALER (WAVE ${wave})`;
       } else if (isMiniBossWave10) {
         // MINI BOSS WAVE 10: PHANTOM SCOUT (Buff Né Đòn cho quái nhỏ & bản thân)
         isMiniBoss = true;
@@ -5340,6 +5322,10 @@ class AppController {
       document.body.appendChild(toast);
     }
     let translatedMsg = msg;
+    if (typeof translatedMsg === 'string' && translatedMsg.includes('{cost}')) {
+      const actualCost = (this.run && this.run.refreshCost) ? this.run.refreshCost : 10;
+      translatedMsg = translatedMsg.replace(/\{cost\}/g, actualCost);
+    }
     const isEn = (typeof currentLang !== 'undefined' ? currentLang : 'en') === 'en';
     if (isEn && typeof msg === 'string') {
       if (typeof TOAST_TRANSLATION_FALLBACKS === 'object' && TOAST_TRANSLATION_FALLBACKS[msg]) {
@@ -5955,7 +5941,7 @@ class AppController {
     this.arsenalDetailedList.innerHTML = '';
 
     const langKey = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'en' : 'vi';
-    const allGearTypes = ['dagger', 'firearm', 'laser', 'molotov', 'vest', 'shield', 'barrier', 'belt', 'card', 'bow'];
+    const allGearTypes = Object.keys(ADMIN_GEAR_CONFIG);
     
     allGearTypes.forEach(tId => {
       const gInfo = GEAR_TYPES[tId];
@@ -7637,23 +7623,17 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     });
 
         // YÊU CẦU 6: Mở khóa trang bị mới theo màn chơi
-    // Màn 1 Wave 10: Mở khóa Nỏ (bow) và Rào chắn (barrier)
-    if (this.run.wave >= 10 && !this.meta.isGearUnlocked('bow')) {
-      this.meta.unlockGear('bow');
-      this.meta.unlockGear('barrier');
-      this.showToast('🎉 ĐẠT WAVE 10: ĐÃ MỞ KHÓA [Cung Nỏ Săn Bắn] & [Rào Chắn]!');
+    // YÊU CẦU: Không mở khóa hoặc roll ra trang bị mới giữa trận!
+    // Ghi nhận thành tích để thông báo mở khóa sau khi kết thúc trận đấu, người chơi tự trang bị tại Lobby
+    if (!this.run.pendingGearUnlocks) this.run.pendingGearUnlocks = [];
+    if (completedWave >= 10 && !this.meta.isGearUnlocked('bow') && !this.run.pendingGearUnlocks.includes('bow')) {
+      this.run.pendingGearUnlocks.push('bow', 'barrier');
     }
-    // Màn 2 (Wave 15): Mở khóa Hộ thuẫn (shield) & Áo giáp (vest)
-    if (this.run.wave >= 15 && !this.meta.isGearUnlocked('shield')) {
-      this.meta.unlockGear('shield');
-      this.meta.unlockGear('vest');
-      this.showToast('🎉 PHÁ ĐẢO MÀN 1: ĐÃ MỞ KHÓA [Hộ Thuẫn] & [Áo Giáp Chống Đạn]!');
+    if (completedWave >= 15 && !this.meta.isGearUnlocked('shield') && !this.run.pendingGearUnlocks.includes('shield')) {
+      this.run.pendingGearUnlocks.push('shield', 'vest');
     }
-    // Tiêu diệt Boss hoặc Màn cao hơn: Mở khóa Laser & Thắt lưng
-    if ((this.meta.bossKills || 0) >= 2 && !this.meta.isGearUnlocked('laser')) {
-      this.meta.unlockGear('laser');
-      this.meta.unlockGear('belt');
-      this.showToast('🎉 CHIẾN CÔNG 2 BOSS: ĐÃ MỞ KHÓA [Pháo Laser] & [Thắt Lưng Đạn]!');
+    if ((this.meta.bossKills || 0) >= 2 && !this.meta.isGearUnlocked('laser') && !this.run.pendingGearUnlocks.includes('laser')) {
+      this.run.pendingGearUnlocks.push('laser', 'belt');
     }
 
     this.meta.save();
@@ -7880,6 +7860,20 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
     if (raidBar) raidBar.classList.add('hidden');
 
     this.modalDefeat.classList.remove('hidden');
+    if (this.run && this.run.pendingGearUnlocks && this.run.pendingGearUnlocks.length > 0) {
+      const pending = [...this.run.pendingGearUnlocks];
+      this.run.pendingGearUnlocks = [];
+      pending.forEach(gId => {
+        if (!this.meta.unlockedGears.includes(gId)) {
+          this.meta.unlockedGears.push(gId);
+        }
+      });
+      this.meta.save();
+      const unlockedObjs = pending.map(id => ADMIN_GEAR_CONFIG[id] || { id, name: id, category: 'weapon' });
+      setTimeout(() => {
+        this.showGearUnlockModal(unlockedObjs, (this.meta && this.meta.selectedStage) ? this.meta.selectedStage : 1);
+      }, 600);
+    }
     document.getElementById('d-max-wave').textContent = this.meta.maxWave;
     document.getElementById('d-cur-wave').textContent = this.run.wave;
 
@@ -8305,7 +8299,7 @@ badges += `<span class="p-chip-dmg" style="color:#ef4444;background:rgba(239,68,
 
           const newBadge = item.isNew ? `<span style="color:#22c55e;font-size:10px;">${typeof t === 'function' ? t('shop.new_badge', '★ MỚI') : '★ MỚI'}</span>` : '';
           card.innerHTML = `
-            <img src="${item.icon}" class="loot-item-icon" alt="${item.name}">
+            <img src="${item.icon}" class="loot-item-icon" alt="${item.name}" onerror="this.onerror=null;this.src='assets/icons/star.png';">
             <div class="loot-item-info">
               <div class="loot-item-name">${item.name} ${newBadge}</div>
               <div class="loot-item-sub">${item.sub || (typeof t === 'function' ? t('shop.upgrade_material', 'Nguyên liệu nâng cấp') : 'Nguyên liệu nâng cấp')}</div>

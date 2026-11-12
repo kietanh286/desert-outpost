@@ -94,6 +94,8 @@ const I18N = {
     'toast.quit_to_lobby': "🚪 Đã trở về Lobby chính",
     'toast.revive_success': "💖 Đã hồi sinh 100% Sinh lực & Khiên! Tiếp tục chiến đấu!",
 
+        'boss.title_healer_w5': "🧬 TIỂU TRÙM DƯỢC SĨ (WAVE {wave}) - BUFF HỒI MÁU",
+    'toast.equip_in_lobby_hint': "💡 Hãy vào Kho Vũ Khí tại Lobby để trang bị vũ khí mới vào bộ 6 món ra trận!",
     'modal.revive_title': "CĂN CỨ BỊ NỔ TUNG!",
     'modal.revive_sub': "Xem 1 video ngắn để hồi sinh ngay 100% máu và bảo toàn toàn bộ ván đấu!",
     'modal.revive_ad_btn': "Xem Quảng Cáo Hồi Sinh (100% Máu)",
@@ -687,6 +689,8 @@ const I18N = {
     'shop.ad_wait_timer': "Wait {m}:{s}",
     'shop.chest_energy_ad_btn': "Watch Ad (+10 ⚡)",
     'shop.chest_gem_ad_btn': "Watch Ad (+10 💎)",
+        'boss.title_healer_w5': "🧬 MINI BOSS HEALER (WAVE {wave}) - HEAL AURA",
+    'toast.equip_in_lobby_hint': "💡 Go to Arsenal in Lobby to equip your new weapons into your 6-slot Loadout!",
     'modal.revive_title': "OUTPOST DESTROYED!",
     'modal.revive_sub': "Watch a short ad to revive with 100% HP and save your match progress!",
     'modal.revive_ad_btn': "Watch Ad to Revive (100% HP)",
