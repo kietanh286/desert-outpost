@@ -2427,38 +2427,6 @@ class InRunState {
     }
 
     for (let slotIdx = 0; slotIdx < 3; slotIdx++) {
-      let rolledTier = 1;
-      if (bpTiers.length > 0) {
-        const tierWeights = [];
-        let totalW = 0;
-        for (let t = 1; t <= maxTierInBp; t++) {
-          let w = 5;
-          if (t < minTierInBp) {
-            w = 12;
-          } else if (t === minTierInBp) {
-            w = 58;
-          } else {
-            const diff = t - minTierInBp;
-            if (diff === 1) w = 24;
-            else if (diff === 2) w = 10;
-            else if (diff === 3) w = 4;
-            else w = 1;
-          }
-          tierWeights.push({ tier: t, weight: w });
-          totalW += w;
-        }
-
-        const randVal = Math.random() * totalW;
-        let cumulative = 0;
-        for (const tw of tierWeights) {
-          cumulative += tw.weight;
-          if (randVal <= cumulative) {
-            rolledTier = tw.tier;
-            break;
-          }
-        }
-      }
-
       // YÊU CẦU: Khi người chơi đã mở khóa tối đa ô vali (49/49) -> BỎ HOÀN TOÀN khả năng roll ra ô đất
       const gridMaxed = this.isGridMaxed();
       const unlockedCount = this.gridUnlocked.filter(Boolean).length;
@@ -2475,6 +2443,7 @@ class InRunState {
       // Đảm bảo ở Wave 1 khi vali mới 9 ô, slot thứ 3 chắc chắn có 1 ô đất để người chơi mở rộng
       const isInitialWave1NeedLand = (this.wave === 1 && unlockedCount <= 9 && slotIdx === 2);
       const isLand = !gridMaxed && (isInitialWave1NeedLand || Math.random() < landChance);
+
       if (isLand) {
         const shapeList = (typeof LAND_TILE_SHAPES !== 'undefined' && Array.isArray(LAND_TILE_SHAPES)) ? LAND_TILE_SHAPES : [];
         const shape = shapeList[Math.floor(Math.random() * shapeList.length)] || { id: 'square_2x2', name: 'Square 2x2', w: 2, h: 2 };
@@ -2488,6 +2457,7 @@ class InRunState {
           slotIndex: slotIdx
         };
       } else {
+        // Chọn loại trang bị từ candidatePool dựa theo trọng số ADMIN_GEAR_CONFIG
         let totalRollWeight = 0;
         const weightedTypes = candidatePool.map(t => {
           const rw = ADMIN_GEAR_CONFIG[t]?.rollWeight || 10;
@@ -2500,6 +2470,65 @@ class InRunState {
           rollW -= wt.weight;
           if (rollW <= 0) { randType = wt.type; break; }
         }
+
+        // TÍNH TOÁN CẤP ĐỘ (TIER) RIÊNG BIỆT CHO TỪNG LOẠI TRANG BỊ (CHỐNG NHẢY CẤP / SKIPPING):
+        // Cấp roll ra phải bám sát cấp độ hiện tại của chính món trang bị đó trong vali và hàng dự bị,
+        // tuyệt đối không dùng maxTier chung của toàn bộ balo khiến dao găm lv6 bị nhảy cóc lên lv10.
+        const existingGears = [
+          ...this.backpackItems,
+          ...(this.stashSlots ? this.stashSlots.filter(Boolean) : [])
+        ].filter(it => it && it.type === randType);
+
+        let rolledTier = 1;
+        if (existingGears.length === 0) {
+          // Chưa sở hữu món này: 90% ra Cấp 1, 10% ra Cấp 2
+          rolledTier = Math.random() < 0.1 ? 2 : 1;
+        } else {
+          const curTypeTier = Math.max(...existingGears.map(it => it.tier || 1));
+          if (curTypeTier >= 10) {
+            rolledTier = 10;
+          } else {
+            // Trọng số roll hợp lý để người chơi ghép sao:
+            // - Cấp hiện tại (curTypeTier): 58% (ghép trực tiếp lên curTypeTier + 1)
+            // - Cấp - 1: 24%
+            // - Cấp - 2: 10%
+            // - Cấp + 1 (Lucky roll): 5% (tối đa chỉ được +1 so với hiện có)
+            // - Cấp 1: 3%
+            const tierWeights = [];
+            let totalW = 0;
+            tierWeights.push({ tier: curTypeTier, weight: 58 });
+            totalW += 58;
+            if (curTypeTier > 1) {
+              tierWeights.push({ tier: curTypeTier - 1, weight: 24 });
+              totalW += 24;
+            }
+            if (curTypeTier > 2) {
+              tierWeights.push({ tier: curTypeTier - 2, weight: 10 });
+              totalW += 10;
+            }
+            if (curTypeTier < 10) {
+              tierWeights.push({ tier: curTypeTier + 1, weight: 5 });
+              totalW += 5;
+            }
+            if (curTypeTier > 3) {
+              tierWeights.push({ tier: 1, weight: 3 });
+              totalW += 3;
+            }
+
+            const randVal = Math.random() * totalW;
+            let cumulative = 0;
+            for (const tw of tierWeights) {
+              cumulative += tw.weight;
+              if (randVal <= cumulative) {
+                rolledTier = tw.tier;
+                break;
+              }
+            }
+            // Khống chế trần an toàn tuyệt đối: không bao giờ vượt quá curTypeTier + 1
+            rolledTier = Math.min(10, Math.min(curTypeTier + 1, Math.max(1, rolledTier)));
+          }
+        }
+
         const gInfo = GEAR_TYPES[randType] || { w: 1, h: 1, name: randType };
         this.shopSlots[slotIdx] = {
           isLand: false,
@@ -6365,7 +6394,7 @@ class AppController {
         return;
       }
 
-      slotEl.className = `stash-slot unlocked tier-${Math.min(8, item.tier || 1)}`;
+      slotEl.className = `stash-slot unlocked tier-${Math.min(10, item.tier || 1)}`;
       const previewSvg = getGearSVG(item.type, item.tier || 1, false);
       slotEl.innerHTML = `
         <div style="width:24px;height:24px;display:flex;align-items:center;justify-content:center;">
@@ -6430,7 +6459,7 @@ class AppController {
     this.run.backpackItems.forEach(item => {
       const card = document.createElement('div');
       const isSynergized = backpackSynergies.activeItemUids && backpackSynergies.activeItemUids.has(item.uid);
-      card.className = `bp-item-card tier-${Math.min(8, item.tier)}${isSynergized ? ' has-synergy' : ''}`;
+      card.className = `bp-item-card tier-${Math.min(10, item.tier)}${isSynergized ? ' has-synergy' : ''}`;
       const gDefRender = GEAR_TYPES[item.type];
       const renderW = gDefRender ? gDefRender.w : (item.w || 1);
       const renderH = gDefRender ? gDefRender.h : (item.h || 1);
@@ -6476,11 +6505,14 @@ class AppController {
         4: { bg: '#581c87', border: '#a855f7', text: '#d8b4fe', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 4 ★★★★', { tier: 4 }) : 'Cấp 4 ★★★★' },
         5: { bg: '#7f1d1d', border: '#ef4444', text: '#fca5a5', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 5 ★★★★★', { tier: 5 }) : 'Cấp 5 ★★★★★' },
         6: { bg: '#164e63', border: '#06b6d4', text: '#67e8f9', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 6 ★★★★★★', { tier: 6 }) : 'Cấp 6 ★★★★★★' },
-        7: { bg: '#78350f', border: '#f59e0b', text: '#fde68a', name: typeof t === 'function' ? t('bp.tier_star', 'Cấp 7 👑 Thần Thoại', { tier: 7 }) : 'Cấp 7 👑 Thần Thoại' }
+        7: { bg: '#78350f', border: '#f59e0b', text: '#fde68a', name: typeof t === 'function' ? t('bp.tier_7_name', 'Cấp 7 👑 Thần Thoại', { tier: 7 }) : 'Cấp 7 👑 Thần Thoại' },
+        8: { bg: '#3b0764', border: '#d946ef', text: '#f0abfc', name: typeof t === 'function' ? t('bp.tier_8_name', 'Cấp 8 🔮 Vô Cực', { tier: 8 }) : 'Cấp 8 🔮 Vô Cực' },
+        9: { bg: '#4c0519', border: '#f43f5e', text: '#fda4af', name: typeof t === 'function' ? t('bp.tier_9_name', 'Cấp 9 ⚡ Siêu Thần', { tier: 9 }) : 'Cấp 9 ⚡ Siêu Thần' },
+        10: { bg: '#09090b', border: '#e11d48', text: '#fef08a', name: typeof t === 'function' ? t('bp.tier_10_name', 'Cấp 10 👑 Tối Thượng', { tier: 10 }) : 'Cấp 10 👑 Tối Thượng' }
       };
-      const tMeta = tierColors[Math.min(7, tier)] || tierColors[1];
+      const tMeta = tierColors[Math.min(10, Math.max(1, tier))] || tierColors[1];
 
-      slotEl.className = `shop-item-slot tier-${Math.min(8, tier)}`;
+      slotEl.className = `shop-item-slot tier-${Math.min(10, tier)}`;
       slotEl.style.borderColor = tMeta.border;
       slotEl.style.boxShadow = `0 0 10px ${tMeta.border}55`;
 
@@ -6907,7 +6939,9 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
         this.run.stashSlots[dragObj.stashIndex] = null;
       }
       sfx.merge();
-      this.showToast(`✨ Hợp nhất ${GEAR_TYPES[existingStashItem.type].name} lên ★${existingStashItem.tier} tại Hàng Dự Bị!`);
+      const sGName = typeof t === 'function' ? t('gear.' + existingStashItem.type + '.name', GEAR_TYPES[existingStashItem.type]?.name || existingStashItem.type) : (GEAR_TYPES[existingStashItem.type]?.name || existingStashItem.type);
+      const sMergeMsg = typeof t === 'function' ? t('toast.merged_in_stash', '✨ Merged ' + sGName + ' to ★' + existingStashItem.tier + ' in Stash!', { name: sGName, tier: existingStashItem.tier }) : '✨ Hợp nhất ' + sGName + ' lên ★' + existingStashItem.tier + ' tại Hàng Dự Bị!';
+      this.showToast(sMergeMsg);
       this.renderBackpack();
       return;
     }
@@ -7045,7 +7079,9 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
       }
       sfx.merge();
       if (navigator.vibrate) { try { navigator.vibrate([40, 30, 60]); } catch(e){} }
-      this.showToast(`✨ Hợp nhất  lên ★!`);
+      const gName = typeof t === 'function' ? t('gear.' + mergeTarget.type + '.name', GEAR_TYPES[mergeTarget.type]?.name || mergeTarget.type) : (GEAR_TYPES[mergeTarget.type]?.name || mergeTarget.type);
+      const mergeMsg = typeof t === 'function' ? t('toast.merged_gear', '✨ Merged ' + gName + ' to ★' + mergeTarget.tier + '!', { name: gName, tier: mergeTarget.tier }) : '✨ Hợp nhất ' + gName + ' lên ★' + mergeTarget.tier + '!';
+      this.showToast(mergeMsg);
       if (this.gtutActive && (this.gtutStep === 3 || this.gtutStep === 4)) setTimeout(() => this.setGameplayTutorialStep(5), 100);
       this.renderBackpack();
       return;
@@ -7134,7 +7170,9 @@ document.getElementById('sell-zone-text').textContent = typeof t === 'function' 
           this.run.stashSlots[dragObj.stashIndex] = null;
         }
         sfx.merge();
-        this.showToast(`✨ Hợp nhất ${GEAR_TYPES[targetItem.type].name} lên ★${targetItem.tier}!`);
+        const gName2 = typeof t === 'function' ? t('gear.' + targetItem.type + '.name', GEAR_TYPES[targetItem.type]?.name || targetItem.type) : (GEAR_TYPES[targetItem.type]?.name || targetItem.type);
+        const mergeMsg2 = typeof t === 'function' ? t('toast.merged_gear', '✨ Merged ' + gName2 + ' to ★' + targetItem.tier + '!', { name: gName2, tier: targetItem.tier }) : '✨ Hợp nhất ' + gName2 + ' lên ★' + targetItem.tier + '!';
+        this.showToast(mergeMsg2);
         this.renderBackpack();
         return;
       }

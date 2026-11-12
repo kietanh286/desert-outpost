@@ -1475,13 +1475,17 @@ body.is-dragging #view-backpack {
   position: absolute;
   top: 2px;
   right: 2px;
-  background: rgba(0, 0, 0, 0.85);
-  color: #f59e0b;
+  background: rgba(0, 0, 0, 0.88);
+  color: #fbbf24;
   font-size: 8px;
   font-weight: 900;
   padding: 1px 3px;
   border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
   pointer-events: none;
+  z-index: 6;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 /* RARITIES & DYNAMIC TIER THEMES (1 TỚI 8+) */
@@ -1502,11 +1506,38 @@ body.is-dragging #view-backpack {
   box-shadow: 0 0 18px rgba(251, 191, 36, 0.9); 
   animation: goldenShimmer 1.4s infinite alternate ease-in-out; 
 }
-.tier-8, .tier-9, .tier-10 {
-  background: linear-gradient(135deg, #3b0764, #0f172a);
-  border: 2.5px solid #ec4899;
-  box-shadow: 0 0 22px rgba(236, 72, 153, 0.9), 0 0 12px rgba(56, 189, 248, 0.7);
-  animation: cosmicRotate 3s infinite linear;
+.tier-8 {
+  background: linear-gradient(135deg, #3b0764, #1e1b4b);
+  border: 2px solid #d946ef;
+  box-shadow: 0 0 16px rgba(217, 70, 239, 0.7);
+  animation: cosmicPulse8 2.2s infinite alternate ease-in-out;
+}
+.tier-9 {
+  background: linear-gradient(135deg, #4c0519, #1f0827);
+  border: 2.5px solid #f43f5e;
+  box-shadow: 0 0 20px rgba(244, 63, 94, 0.85);
+  animation: cosmicPulse9 1.8s infinite alternate ease-in-out;
+}
+.tier-10 {
+  background: linear-gradient(135deg, #09090b, #450a0a);
+  border: 2.5px solid #e11d48;
+  box-shadow: 0 0 24px rgba(225, 29, 72, 0.95), 0 0 12px rgba(254, 240, 138, 0.85);
+  animation: divineRadiance 1.6s infinite alternate ease-in-out;
+}
+
+@keyframes cosmicPulse8 {
+  0% { box-shadow: 0 0 10px rgba(217, 70, 239, 0.5); }
+  100% { box-shadow: 0 0 22px rgba(217, 70, 239, 0.95), inset 0 0 8px rgba(217, 70, 239, 0.4); }
+}
+
+@keyframes cosmicPulse9 {
+  0% { box-shadow: 0 0 12px rgba(244, 63, 94, 0.6); }
+  100% { box-shadow: 0 0 26px rgba(244, 63, 94, 1), inset 0 0 10px rgba(244, 63, 94, 0.45); }
+}
+
+@keyframes divineRadiance {
+  0% { box-shadow: 0 0 15px rgba(225, 29, 72, 0.7), 0 0 8px rgba(254, 240, 138, 0.6); border-color: #e11d48; }
+  100% { box-shadow: 0 0 30px rgba(225, 29, 72, 1), 0 0 18px rgba(254, 240, 138, 0.9); border-color: #fef08a; }
 }
 
 @keyframes highTierPulse {
